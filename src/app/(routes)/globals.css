@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+}
+
+.text-shadow-custom {
+  text-shadow: #e7e5e6 1px 0 10px;
+}
+
+input[type="radio"] { display: none; }
+#section1-python:checked ~ .section1 #section1-python-tab,
+#section1-r:checked ~ .section1 #section1-r-tab,
+#section2-python:checked ~ .section2 #section2-python-tab,
+#section2-r:checked ~ .section2 #section2-r-tab,
+#section3-python:checked ~ .section3 #section3-python-tab,
+#section3-r:checked ~ .section3 #section3-r-tab { 
+    @apply bg-gray-200 text-gray-900;
+}
+#section1-python:checked ~ .section1 #section1-python-content,
+#section1-r:checked ~ .section1 #section1-r-content,
+#section2-python:checked ~ .section2 #section2-python-content,
+#section2-r:checked ~ .section2 #section2-r-content,
+#section3-python:checked ~ .section3 #section3-python-content,
+#section3-r:checked ~ .section3 #section3-r-content {
+    display: block;
+}
+
+@layer utilities {
+  .scrollbar-custom {
+
+    &::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      @apply bg-gray-100 rounded-lg;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      @apply bg-gray-300 rounded-lg;
+
+      &:hover {
+        @apply bg-gray-400;
+      }
+    }
+
+    scrollbar-width: thin;
+    scrollbar-color: theme('colors.gray.300') theme('colors.gray.100');
+  }
+}

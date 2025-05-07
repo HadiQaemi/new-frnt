@@ -1,0 +1,27 @@
+FROM alpine:latest
+
+# Specify PocketBase version
+ARG PB_VERSION=0.25.0
+
+# Install required packages
+RUN apk add --no-cache \
+    unzip \
+    ca-certificates
+
+# Create a directory for PocketBase
+WORKDIR /pb
+
+# Download and unzip PocketBase
+ADD https://github.com/pocketbase/pocketbase/releases/download/v${PB_VERSION}/pocketbase_${PB_VERSION}_linux_amd64.zip /tmp/pb.zip
+RUN unzip /tmp/pb.zip -d /pb/ && \
+    rm /tmp/pb.zip
+
+# Create a data directory for PocketBase
+RUN mkdir -p /pb/pb_data
+
+# Expose the port
+
+EXPOSE 8091
+
+# Start PocketBase
+CMD ["/pb/pocketbase", "serve", "--http=0.0.0.0:8091"]
