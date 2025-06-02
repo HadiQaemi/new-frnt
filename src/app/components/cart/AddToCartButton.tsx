@@ -21,6 +21,7 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
     const { addItem, removeItem, isInCart } = useCartStore();
     const { toast } = useToast();
     const [isLoad, setIsLoad] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     useEffect(() => {
         if (typeof window !== 'undefined') {
             setIsLoad(true)
@@ -36,21 +37,27 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
 
     const handleClick = (e: React.MouseEvent) => {
         e.stopPropagation();
-
+        setIsLoading(true);
         if (inCart) {
             removeItem(statement.statement_id);
-            toast({
-                title: 'Removed from list',
-                description: 'Statement has been removed from your list',
-                className: 'bg-yellow-100',
-            });
+            setTimeout(() => {
+                setIsLoading(false);
+                toast({
+                    title: 'Removed from list',
+                    description: 'Statement has been removed from your list',
+                    className: 'bg-yellow-100',
+                });
+            }, 500);
         } else {
             addItem(statement, article);
-            toast({
-                title: 'Added to list',
-                description: 'Statement has been added to your list',
-                className: 'bg-green-100',
-            });
+            setTimeout(() => {
+                setIsLoading(false);
+                toast({
+                    title: 'Added to list',
+                    description: 'Statement has been added to your list',
+                    className: 'bg-green-100',
+                });
+            }, 500);
         }
     };
 
@@ -61,7 +68,11 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
                 className={`${sizeClasses[size]} ${inCart ? 'text-green-700' : 'text-blue-700'} rounded-full transition-colors flex items-center justify-center ${className}`}
                 title={inCart ? 'Remove from list' : 'Add to list'}
             >
-                {inCart ? (
+                {isLoading ? (
+                    <div
+                        className={`${size === 'md' ? 'h-3 w-3' : 'h-4 w-4'} animate-spin rounded-full border-2 border-gray-300 border-t-blue-600`}
+                    ></div>
+                ) : inCart ? (
                     <Check className={size === 'md' ? 'h-3 w-3' : 'h-4 w-4'} />
                 ) : (
                     <Square className={size === 'md' ? 'h-3 w-3' : 'h-4 w-4'} />

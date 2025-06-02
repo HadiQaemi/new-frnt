@@ -79,7 +79,7 @@ export default function StatementsPage() {
       ) : !data ? (
         <div className="text-center py-8 text-gray-600">No statements found</div>
       ) : (
-        <StatementList data={data.content} />
+        <StatementList data={data.content} statements={undefined} />
       )}
     </main>
   );
