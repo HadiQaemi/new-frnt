@@ -63,15 +63,26 @@ const CartComponent: React.FC = () => {
         return contentTypes[extension] || null;
     };
 
-    const getFileTypeFromUrl = (url: string): string => {
+    const getFileInfoFromUrl = (url: string): { filename: string; fileType: string } => {
         try {
             const urlObj = new URL(url);
-            let filename = urlObj.pathname.split('/').pop() || 'file';
-            filename = filename.split('?')[0];
-            return `${filename.split('.').pop()}`;
+            let fullFilename = urlObj.pathname.split('/').pop() || 'file';
+            fullFilename = fullFilename.split('?')[0]; // Remove query parameters
+
+            const parts = fullFilename.split('.');
+            const fileType = parts.length > 1 ? parts.pop() || '' : '';
+            const filename = parts.join('.') || 'file';
+
+            return {
+                filename: filename,
+                fileType: fileType
+            };
         } catch (error) {
             console.error('Error parsing URL:', error);
-            return `file_${Date.now()}`;
+            return {
+                filename: `file_${Date.now()}`,
+                fileType: 'unknown'
+            };
         }
     };
 
@@ -149,89 +160,97 @@ const CartComponent: React.FC = () => {
                     const statementName = `${folderName}_${statementIndex + 1}`;
                     const statementFolder = articleFolder.folder(statementName);
                     statementFolder?.file(`${statementName}_Metadata.txt`, statement_metadata);
-                    const nodeKey = statement.content['@type']
-                        .replace('doi:', '')
-                        .replace('21.T11969/', '');
-
-                    const cachedTypeInfo: TypeInfo = getTypeFromStorage(nodeKey)!;
-                    let source_code = "";
-
-                    for (const property of cachedTypeInfo.properties) {
-                        if (property === 'is_implemented_by') {
-                            const URL_code = helper.checkType(property, statement.content, true);
-                            const source_code_type = getFileTypeFromUrl(URL_code);
-                            if (source_code_type.length < 3) {
-                                const response = await fetch(URL_code);
+                    let has_part_index = 0
+                    for (const data_type of statement.content) {
+                        console.log(data_type)
+                        for (const is_implemented_by of data_type.is_implemented_by) {
+                            let source_code = "";
+                            const source_code_type = getFileInfoFromUrl(is_implemented_by);
+                            if (source_code_type.fileType.length < 3) {
+                                const response = await fetch(is_implemented_by);
                                 source_code = await response.text();
-                                statementFolder?.file(`${statementName}_Implementation_1.${source_code_type}`, source_code);
+                                statementFolder?.file(`${statementName}_Implementation_1.${source_code_type.fileType}`, source_code);
                             }
                         }
-                        if (property === 'has_part') {
-                            const has_parts = helper.checkType(property, statement.content, true);
-                            let has_partIndex = 0
-                            const iterableParts = Array.isArray(has_parts) ? has_parts : [has_parts];
-                            for (const has_part of iterableParts) {
-                                const HasPartName = `${statementName}_${++has_partIndex}`;
-                                const HasPartFolder = statementFolder?.folder(HasPartName);
-                                const nodeKey = has_part['@type'].replace('doi:', '').replace('21.T11969/', '')
-                                let hasPartTypeInfo: TypeInfo = getTypeFromStorage(nodeKey)!;
-                                if (!hasPartTypeInfo) {
-                                    const response = await fetch(`/service/type-info?key=${encodeURIComponent(nodeKey)}`);
-                                    if (!response.ok) {
-                                        throw new Error(`API error: ${response.status}`);
+                        const HasPartName = `${statementName}_${++has_part_index}`;
+                        const HasPartFolder = statementFolder?.folder(HasPartName);
+                        for (const property of data_type.type.properties) {
+                            if (property === 'label') {
+                                const label = data_type.has_part[property]
+                                if (label) {
+                                    const name = data_type.type.name.replace(/_/g, ' ').replace(/\b\w/g, (char: string) => char.toLowerCase())
+                                    const HasPartMetadata = statement_metadata + '\n\n' +
+                                        `${name[0].toUpperCase() + name.slice(1)}: ${label}\n`
+                                    HasPartFolder?.file(`${HasPartName}_Metadata.txt`, HasPartMetadata);
+                                }
+                            }
+                            if (property === 'has_input') {
+                                const has_inputs = data_type.has_part[property]
+                                for (const [has_input_index, has_input] of has_inputs.entries()) {
+                                    let name = ''
+                                    if (has_input['label'] !== null) {
+                                        name = `_${has_input['label'].replace(/_/g, ' ').replace(/\b\w/g, (char: string) => char.toLowerCase())}`
                                     }
-                                    const fetchedTypeInfo = await response.json();
-                                    if (fetchedTypeInfo.error) {
-                                        throw new Error(fetchedTypeInfo.error);
-                                    }
+                                    const has_expressions = has_input.has_expressions
+                                    const source_url = has_input.source_url
+                                    const source_table = has_input.source_table
+                                    if (has_expressions.length) {
+                                        for (const [index, has_expression] of has_expressions.entries()) {
+                                            const source_url = has_expression.source_url
+                                            if (source_url) {
+                                                const file_type = getFileInfoFromUrl(source_url);
+                                                await downloadAndAddToZip(source_url, HasPartFolder, `${HasPartName}_Input_Figure${name}_${index + 1}.${file_type.fileType}`)
+                                            }
+                                        }
 
-                                    saveTypeToStorage(nodeKey, fetchedTypeInfo);
-                                    hasPartTypeInfo = getTypeFromStorage(nodeKey)!;
-                                }
-                                for (const property of hasPartTypeInfo.properties) {
-                                    if (property === 'label') {
-                                        const label = helper.checkType(property, has_part, true);
-                                        if (label) {
-                                            const name = hasPartTypeInfo.name.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toLowerCase())
-                                            const HasPartMetadata = statement_metadata + '\n\n' +
-                                                `${name[0].toUpperCase() + name.slice(1)}: ${label}\n`
-                                            HasPartFolder?.file(`${HasPartName}_Metadata.txt`, HasPartMetadata);
+                                    }
+                                    if (source_url) {
+                                        const file_type = getFileInfoFromUrl(source_url);
+                                        console.log(source_url)
+                                        if (file_type.fileType === 'txt' || file_type.fileType === 'csv') {
+                                            await downloadAndAddToZip(source_url, HasPartFolder, `${HasPartName}_Input_Data${name}_${has_input_index + 1}.${file_type.fileType}`)
                                         }
                                     }
-                                    if (property === 'has_input') {
-                                        const has_input = helper.checkType(property, has_part, true);
-                                        const has_expression = helper.checkType("has_expression", has_input, true);
-                                        const source_url = helper.checkType("source_url", has_expression, true);
-                                        if (source_url) {
-                                            const file_type = getFileTypeFromUrl(source_url);
-                                            await downloadAndAddToZip(source_url, HasPartFolder, `${HasPartName}_Input_Figure_1.${file_type}`)
-                                        }
-                                        const source_table = helper.checkType('source_table', has_input, true);
-                                        if (source_table) {
-                                            const buffer = helper.convertTableToCSVBlob(source_table)
-                                            if (buffer) {
-                                                HasPartFolder?.file(`${HasPartName}_Input_Data_1.csv`, buffer);
-                                            }
-                                        }
-                                    }
-                                    if (property === 'has_output') {
-                                        const has_output = helper.checkType(property, has_part, true);
-                                        const has_expression = helper.checkType("has_expression", has_output, true);
-                                        const source_url = helper.checkType("source_url", has_expression, true);
-                                        if (source_url) {
-                                            const file_type = getFileTypeFromUrl(source_url);
-                                            await downloadAndAddToZip(source_url, HasPartFolder, `${HasPartName}_Output_Figure_1.${file_type}`)
-                                        }
-                                        const source_table = helper.checkType('source_table', has_output, true);
-                                        if (source_table) {
-                                            const buffer = helper.convertTableToCSVBlob(source_table)
-                                            if (buffer) {
-                                                HasPartFolder?.file(`${HasPartName}_Output_Data_1.csv`, buffer);
-                                            }
+                                    if (source_table) {
+                                        const buffer = helper.convertTableToCSVBlob(source_table)
+                                        if (buffer) {
+                                            HasPartFolder?.file(`${HasPartName}_Input_Table${name}_${has_input_index + 1}.csv`, buffer);
                                         }
                                     }
                                 }
-                                const label = helper.checkType("label", has_part, true);
+                            }
+                            if (property === 'has_output') {
+                                const has_outputs = data_type.has_part[property]
+                                for (const [has_output_index, has_output] of has_outputs.entries()) {
+                                    let name = ''
+                                    if (has_output['label'] !== null) {
+                                        name = `_${has_output['label'].replace(/_/g, ' ').replace(/\b\w/g, (char: string) => char.toLowerCase())}`
+                                    }
+                                    const has_expressions = has_output.has_expressions
+                                    const source_url = has_output.source_url
+                                    const source_table = has_output.source_table
+                                    if (has_expressions.length) {
+                                        for (const [index, has_expression] of has_expressions.entries()) {
+                                            const source_url = has_expression.source_url
+                                            if (source_url) {
+                                                const file_type = getFileInfoFromUrl(source_url);
+                                                await downloadAndAddToZip(source_url, HasPartFolder, `${HasPartName}_Output_Figure${name}_${index + 1}.${file_type.fileType}`)
+                                            }
+                                        }
+                                    }
+                                    if (source_url) {
+                                        const file_type = getFileInfoFromUrl(source_url);
+                                        if (file_type.fileType === 'txt' || file_type.fileType === 'csv') {
+                                            await downloadAndAddToZip(source_url, HasPartFolder, `${HasPartName}_Output_Data${name}_${has_output_index + 1}.${file_type.fileType}`)
+                                        }
+                                    }
+                                    if (source_table) {
+                                        const buffer = helper.convertTableToCSVBlob(source_table)
+                                        if (buffer) {
+                                            HasPartFolder?.file(`${HasPartName}_Output_Table${name}_${has_output_index + 1}.csv`, buffer);
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

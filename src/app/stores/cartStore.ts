@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { getTypeFromStorage } from '../components/json/utils/storage';
+import { getStatementServer } from '../lib/api/server-side';
+import { getStatement } from '../lib/api/statements';
 
 export interface Author {
     id: string;
@@ -33,7 +35,7 @@ export interface Items {
 }
 interface CartState {
     items: Items[];
-    addItem: (item: Statement) => void;
+    addItem: (item: Statement, article: any) => void;
     removeItem: (id: string) => void;
     clearItems: () => void;
     isInCart: (id: string) => boolean;
@@ -43,41 +45,42 @@ export const useCartStore = create<CartState>()(
     persist(
         (set, get) => ({
             items: [],
-            addItem: (item: any) => {
-                const authors = item.article.authors.map((author: any) => {
+            addItem: async (item: any, article: any) => {
+                const authors = article.authors.map((author: any) => {
                     return {
-                        name: `${author.givenName} ${author.familyName}`,
-                        id: author['@id']
+                        name: `${author.label}`,
+                        id: author.author_id,
+                        orcid: author.orcid
                     }
                 })
-                const article = {
-                    'abstract': item.article.abstract,
-                    'articleDatePublished': item.article.articleDatePublished,
+                const article_info = {
+                    'abstract': article.abstract,
+                    'articleDatePublished': article.date_published,
                     'authors': authors,
-                    'id': item.article.id,
-                    'doi': item.article.doi,
-                    'rebornDOI': item.article.rebornDOI,
-                    'rebornDatePublished': item.article.rebornDatePublished,
-                    'name': item.article.name,
+                    'id': article.article_id,
+                    'doi': article.dois,
+                    'rebornDOI': article.reborn_doi,
+                    'rebornDatePublished': article.reborn_date,
+                    'name': article.name,
                     'journal': {
-                        'label': item.article.journal ? item.article.journal.label : item.article.conference.label,
-                        'id': item.article.journal ? item.article.journal['@id'] : item.article.conference['@id'],
+                        'label': article.academic_publication ? article.academic_publication.label : "",
+                        'id': article.academic_publication ? article.academic_publication.academic_publication_id : "",
                     },
                 }
+                const initialData = await getStatementServer(item.statement_id);
                 const statement = {
-                    '_id': item._id,
-                    'content': item.content,
-                    'name': item.supports[0].notation.label
+                    '_id': item.statement_id,
+                    'content': initialData.data_type,
+                    'concepts': item.concepts,
+                    'authors': item.authors,
+                    'name': item.label
                 }
                 const data = {
-                    _id: item._id,
-                    article_id: item.article.id,
-                    article: article,
+                    _id: item.statement_id,
+                    article_id: article.article_id,
+                    article: article_info,
                     statement: statement
                 }
-
-                const nodeKey = item.content['@type'].replace('doi:', '').replace('21.T11969/', '');
-                const cachedTypeInfo = getTypeFromStorage(nodeKey);
                 const { items } = get();
                 if (!items.some(i => i._id === data._id)) {
                     set({ items: [...items, data] });

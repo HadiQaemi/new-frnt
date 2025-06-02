@@ -314,7 +314,7 @@ const TabComponent: React.FC<TabComponentProps> = ({
                             {activeTab === 'statements' ? (
                                 <span key={`statements-${item.id}`}>
                                     <Link
-                                        href={`/statement/${item.id}`}
+                                        href={`/statement/${item.statement_id}`}
                                         className="text-[#000] cursor-pointer hover:text-[#555] block"
                                     >
                                         <h4 className="font-inter font-[700]">{item.name}</h4>

@@ -23,7 +23,7 @@ export default function PageClient({ initialData, id }: PaperClientProps) {
                 </div>
             ) : (
                 <div className="animate-fade-in">
-                    <StatementList data={data} isOpenSideSearch={false} statementId={id} />
+                    <StatementList data={data} statements={data.statements} isOpenSideSearch={false} statementId={id} />
                 </div>
             )}
         </main>

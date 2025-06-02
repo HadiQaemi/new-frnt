@@ -28,6 +28,7 @@ interface Statement {
 }
 interface ListStatementsProps {
     data: Statement[] | Record<string, Statement[]> | any;
+    statements: Record<string, Statement[]> | any;
     isOpenSideSearch?: boolean;
     statementId?: any;
 }
@@ -44,13 +45,12 @@ interface QueryParams {
     concepts?: string[];
 }
 
-export default function ListStatements({ data, statementId = null, isOpenSideSearch = true }: ListStatementsProps) {
+export default function ListStatements({ data, statements, statementId = null, isOpenSideSearch = true }: ListStatementsProps) {
     const statementRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
     const [currentPage, setCurrentPage] = useState(1);
     const [isSidebarOpen, setIsSidebarOpen] = useState(isOpenSideSearch);
     const [queryData, setQueryData] = useState();
-    const [statements, setStatements] = useState(data.statements);
     const [article, setArticle] = useState(data.article);
     const [isLoading, setIsLoading] = useState(false);
     const [statementDetails, setStatementDetails] = useState<any>(null);
@@ -64,12 +64,6 @@ export default function ListStatements({ data, statementId = null, isOpenSideSea
         concepts: []
     });
     const { data: filteredStatements, isLoading: isQueryLoading, error } = useQueryData(filterParams);
-
-    useEffect(() => {
-        if (filteredStatements) {
-            setStatements(filteredStatements.content);
-        }
-    }, [filteredStatements]);
 
     const handleFilter = (formData: QueryParams) => {
         setFilterParams(formData);
@@ -104,40 +98,48 @@ export default function ListStatements({ data, statementId = null, isOpenSideSea
             }
         }
     }, [statementId]);
-
     useEffect(() => {
-        const handleScroll = () => {
-            const scrollPosition = window.scrollY;
-            let currentActiveHeader = null;
-
-            Object.entries(headerRefs.current).forEach(([index, headerRef]) => {
-                if (headerRef) {
-                    const headerRect = headerRef.getBoundingClientRect();
-                    const headerPosition = headerRect.top + scrollPosition;
-
-                    if (headerPosition <= scrollPosition + headerHeight) {
-                        currentActiveHeader = parseInt(index);
-                    }
-                }
-            });
-            if (scrollPosition < 20) {
-                currentActiveHeader = null;
+        if (statementId && statements) {
+            const matchingStatement = statements.find((statement: any) => statement.statement_id === statementId);
+            if (matchingStatement) {
+                setOpenStatementId(statementId);
+                setStatementDetails(matchingStatement);
             }
-            if (currentActiveHeader !== activeHeader) {
-                if (!isHeaderVisible) {
-                    setIsHeaderVisible(true);
-                }
-                prevActiveHeader.current = activeHeader;
-                setIsTransitioning(true);
-                setTimeout(() => setIsTransitioning(false), 300);
-            }
+        }
+    }, [statementId, statements]);
+    // useEffect(() => {
+    //     const handleScroll = () => {
+    //         const scrollPosition = window.scrollY;
+    //         let currentActiveHeader = null;
 
-            setActiveHeader(currentActiveHeader);
-        };
+    //         Object.entries(headerRefs.current).forEach(([index, headerRef]) => {
+    //             if (headerRef) {
+    //                 const headerRect = headerRef.getBoundingClientRect();
+    //                 const headerPosition = headerRect.top + scrollPosition;
 
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, [headerHeight, activeHeader]);
+    //                 if (headerPosition <= scrollPosition + headerHeight) {
+    //                     currentActiveHeader = parseInt(index);
+    //                 }
+    //             }
+    //         });
+    //         if (scrollPosition < 20) {
+    //             currentActiveHeader = null;
+    //         }
+    //         if (currentActiveHeader !== activeHeader) {
+    //             if (!isHeaderVisible) {
+    //                 setIsHeaderVisible(true);
+    //             }
+    //             prevActiveHeader.current = activeHeader;
+    //             setIsTransitioning(true);
+    //             setTimeout(() => setIsTransitioning(false), 300);
+    //         }
+
+    //         setActiveHeader(currentActiveHeader);
+    //     };
+
+    //     window.addEventListener('scroll', handleScroll);
+    //     return () => window.removeEventListener('scroll', handleScroll);
+    // }, [headerHeight, activeHeader]);
 
     useEffect(() => {
         if (headerRefs.current[0]) {
@@ -257,45 +259,37 @@ export default function ListStatements({ data, statementId = null, isOpenSideSea
     const [openStatementId, setOpenStatementId] = useState<string | null>(statementId);
     const router = useRouter();
     const handleTreeViewerClick = async (itemId: string) => {
-        console.log(itemId)
+        if (statementId === itemId) {
+            return true
+        }
         try {
             const response = await fetch(`${REBORN_API_URL}/articles/get_statement/?id=${itemId}`);
             if (!response.ok) {
                 throw new Error(`Error fetching statement: ${response.status}`);
             }
             const data = await response.json();
-            // console.log(data)
-            // console.log(`${REBORN_API_URL}/articles/get_statement/?id=${itemId}`)
-            // console.log(statementDetails)
             setOpenStatementId(itemId);
             setStatementDetails(data);
-            // console.log(statementDetails)
-            // router.push(`/statement/${itemId}`);
         } catch (error) {
             console.error("Error fetching statement details:", error);
-            // toast({
-            //     title: "Error",
-            //     description: "Failed to fetch statement details",
-            //     className: "bg-red-100",
-            // });
         } finally {
             setIsLoading(false);
-        }
-        if (statementId) {
-            if (itemId === openStatementId) {
-                // setOpenStatementId(null);
-            } else {
-                setIsLoading(true);
-            }
         }
         // if (statementId) {
         //     if (itemId === openStatementId) {
         //         // setOpenStatementId(null);
         //     } else {
-        //         setOpenStatementId(itemId);
-        //         router.push(`/statement/${itemId}`);
+        //         setIsLoading(true);
         //     }
         // }
+        if (statementId) {
+            if (itemId === openStatementId) {
+                // setOpenStatementId(null);
+            } else {
+                setOpenStatementId(itemId);
+                router.push(`/statement/${itemId}`);
+            }
+        }
     };
     return (
         <div className={`relative gap-4 mt-8 ${isSidebarOpen ? 'grid grid-cols-1 md:grid-cols-12' : 'flex'}`}>
@@ -328,7 +322,7 @@ export default function ListStatements({ data, statementId = null, isOpenSideSea
                 </div>
             </div>
 
-            <div className={`transition-all duration-300 ease-in-out ${isSidebarOpen ? 'col-span-1 md:col-span-9' : 'w-23/24'}`}>
+            <div className={`transition-all duration-300 ease-in-out overflow-x-auto ${isSidebarOpen ? 'col-span-1 md:col-span-9' : 'max-w-23/24'}`}>
                 <Card className="bg-white shadow-lg">
                     <CardContent className="p-6">
                         {Object.values(statements).length === 0 ? (
@@ -363,7 +357,7 @@ export default function ListStatements({ data, statementId = null, isOpenSideSea
                                                                 onAuthorSelect={handleSelect('author')}
                                                                 onResearchFieldSelect={handleSelect('field')}
                                                                 showMore={showMore}
-                                                                paper={statements[Object.keys(statements)[activeHeader]][0].article}
+                                                                paper={article}
                                                             />
                                                         </div>
                                                     </div>
@@ -378,57 +372,29 @@ export default function ListStatements({ data, statementId = null, isOpenSideSea
                                                 onAuthorSelect={handleSelect('author')}
                                                 onJournalSelect={handleSelect('journal')}
                                                 onResearchFieldSelect={handleSelect('field')} />
-                                            {/* {Object.entries(statements).map((statement: any, index) => { */}
                                             {statements.map((statement: any, index: any) => {
-                                                // const hasPart = statement[1][0].article.hasPart
-                                                // const jsonItems = hasPart.filter((item: any) => item["@id"].includes(".json"))
                                                 return (
-                                                    // <div key={index} ref={(el: HTMLDivElement | null): void => { headerRefs.current[index] = el; }}>
-                                                    <div key={index}>
+                                                    <div key={index} ref={(el: HTMLDivElement | null): void => { headerRefs.current[index] = el; }}>
                                                         <div
                                                             key={`list-${index}`}
-                                                        // ref={(el: HTMLDivElement | null) => {
-                                                        //     if (_item['_id'] === statementId) {
-                                                        //         statementRefs.current[_item['_id']] = el;
-                                                        //     }
-                                                        // }}
+                                                            ref={(el: HTMLDivElement | null) => {
+                                                                if (statement['statement_id'] === statementId) {
+                                                                    statementRefs.current[statement['statement_id']] = el;
+                                                                }
+                                                            }}
                                                         >
                                                             <JsonTreeViewer
                                                                 handleTreeViewerClick={() => handleTreeViewerClick(statement.statement_id)}
-                                                                parentOpen={statement.statement_id === statementId}
+                                                                parentOpen={statement.statement_id === statementId && statement.data_type.length > 0}
                                                                 onAuthorSelect={handleSelect('author')}
                                                                 onConceptSelect={handleSelect('concept')}
                                                                 jsonData={statement}
+                                                                article={article}
                                                                 single={true}
                                                                 statement={statement}
                                                                 statementDetails={statement.statement_id === openStatementId ? statementDetails : null}
                                                             />
                                                         </div>
-                                                        {/* {jsonItems.map((item: any, key: any) => {
-                                                        const _item = statement[1].filter((_item: any) => _item["name"].includes(item["@id"]))[0]
-                                                        if (_item)
-                                                            return (
-                                                                <div
-                                                                    key={`list-${key}`}
-                                                                    ref={(el: HTMLDivElement | null) => {
-                                                                        if (_item['_id'] === statementId) {
-                                                                            statementRefs.current[_item['_id']] = el;
-                                                                        }
-                                                                    }}
-                                                                >
-                                                                    <JsonTreeViewer
-                                                                        handleTreeViewerClick={() => handleTreeViewerClick(_item['_id'])}
-                                                                        parentOpen={_item['_id'] === statementId}
-                                                                        onAuthorSelect={handleSelect('author')}
-                                                                        onConceptSelect={handleSelect('concept')}
-                                                                        jsonData={_item.content}
-                                                                        single={true}
-                                                                        statement={_item}
-                                                                    />
-                                                                </div>
-                                                            )
-                                                    }
-                                                    )} */}
                                                     </div>
                                                 );
                                             })}

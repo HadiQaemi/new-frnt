@@ -33,7 +33,7 @@ const Executes: React.FC<ExecutesProps> = ({ executes, styles }) => {
     const label = executes['label'];
     const is_implemented_by = executes['is_implemented_by'];
     const has_support_url = executes['has_support_url'];
-    const part_of = executes['part_of'];
+    const part_of = executes['part_of'][0];
 
     let part_of_label = '';
     let part_of_url = '';

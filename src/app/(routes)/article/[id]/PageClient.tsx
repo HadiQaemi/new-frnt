@@ -21,7 +21,7 @@ export default function PageClient({ initialData, id }: PaperClientProps) {
                 <div className="text-center py-8 text-gray-600">No statements found</div>
             ) : (
                 <>
-                    <StatementList data={data} isOpenSideSearch={false} />
+                    <StatementList data={data} statements={data.statements} isOpenSideSearch={false} />
                 </>
             )}
         </main>

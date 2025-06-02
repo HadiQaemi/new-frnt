@@ -39,6 +39,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
   onConceptSelect,
   onAuthorSelect,
   statement,
+  article,
   statementDetails,
   parent = null,
   label = null,
@@ -51,10 +52,8 @@ const TreeNode: React.FC<TreeNodeProps> = ({
   const [details, setDetails] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
   useEffect(() => {
     if (statementDetails) {
-      console.log(statementDetails)
       setDetails(statementDetails)
     }
   }, [statementDetails]);
@@ -171,12 +170,13 @@ const TreeNode: React.FC<TreeNodeProps> = ({
                         <div className="transition-transform duration-300">
                           <AddToCartButton
                             statement={statement}
+                            article={article}
                             size="sm"
                           />
                         </div>
                         <div className="flex flex-col items-center mt-4 space-y-1">
                           <Link
-                            href={`/statement/${statement?._id?.$oid ? statement?._id?.$oid : statement?._id}`}
+                            href={`/statement/${statement?._id?.$oid ? statement?._id?.$oid : statement?.statement_id}`}
                             className="text-[#e86161] cursor-pointer hover:text-[#d45454] block"
                           >
                             <ExternalLink className="h-3 w-3 text-gray-400 hover:text-gray-600 cursor-pointer" />
@@ -214,249 +214,106 @@ const TreeNode: React.FC<TreeNodeProps> = ({
             )}
           </div>
         </div>
-
         <div className={`transition-all duration-300 ${isOpen || parentOpen ? 'max-h-full opacity-100' : 'max-h-0 opacity-0'}`}>
-          {details !== null && (
+          {details !== null && isOpen && (
             <div className="pl-4">
-              <div
-                key={`entry-${nanoid()}`}
-              >
-                {
-                  details.data_type.map((data_type: {
-                    type: {
-                      name: string;
-                      properties: string[]
-                    };
-                    has_part: any;
-                    is_implemented_by: any;
-                  }) => {
-                    let evaluates = true
-                    let level_targets = true
-                    return (
-                      <div key={`data-type-${data_type.type.name}-${nanoid()}`} className="d-flex p-2 border-t border-r border-b border-[#5b9bd5] border-l-[10px] border-l-[#5b9bd5] my-1 mb-4">
-                        <span className={`bg-[#5b9bd5] relative -top-[18px] -left-[18px] p-1 text-[12px] text-white pl-4`}>
-                          {helper.capitalizeFirstLetter(helper.cleanFirstLetter(data_type.type.name))}
-                        </span>
-                        <div>
-                          {data_type.type.properties?.map((type) => {
-                            return (
-                              <div key={`property-${type}-${nanoid()}`}>
-                                {type === 'has_input' ? (
-                                  <div className="mx-0 pt-4" key={`has_input-all-${nanoid()}`}>
-                                    <div key={`has_input-parent-${nanoid()}`} className="p-2 border-t border-r border-b border-[#00b050] border-l-[10px] border-l-[#00b050] my-1 relative scrollbar-custom sm:overflow-visible overflow-auto">
-                                      <span className={`bg-[#00b050] absolute -top-[12px] text-[12px] -left-[10px] p-[2px] text-white pl-4 pr-2`}>
-                                        Input data
-                                      </span>
-                                      {data_type.has_part[type]?.map((input: any) => (
-                                        <div
-                                          key={`entry-${input.label}-${nanoid()}`}
-                                          className="d-flex pb-2"
-                                        >
-                                          <HasInput has_input={input} label={input.label} key={`has_input-${input.label}-${nanoid()}`} components={[]} />
-                                        </div>
-                                      ))}
-                                    </div>
+              {
+                details.data_type.map((data_type: {
+                  type: {
+                    name: string;
+                    properties: string[]
+                  };
+                  has_part: any;
+                  is_implemented_by: any;
+                }) => {
+                  let evaluates = true
+                  let level_targets = true
+                  return (
+                    <div key={`data-type-${data_type.type.name}-${nanoid()}`} className="d-flex p-2 border-t border-r border-b border-[#5b9bd5] border-l-[10px] border-l-[#5b9bd5] my-1 mb-4">
+                      <span className={`bg-[#5b9bd5] relative -top-[18px] -left-[18px] p-1 text-[12px] text-white pl-4`}>
+                        {helper.capitalizeFirstLetter(helper.cleanFirstLetter(data_type.type.name))}
+                      </span>
+                      <div>
+                        {data_type.type.properties?.map((type) => {
+                          return (
+                            <div key={`property-${type}-${nanoid()}`}>
+                              {type === 'has_input' ? (
+                                <div className="mx-0 pt-4" key={`has_input-all-${nanoid()}`}>
+                                  <div key={`has_input-parent-${nanoid()}`} className="p-2 border-t border-r border-b border-[#00b050] border-l-[10px] border-l-[#00b050] my-1 relative scrollbar-custom sm:overflow-visible overflow-auto">
+                                    <span className={`bg-[#00b050] absolute -top-[12px] text-[12px] -left-[10px] p-[2px] text-white pl-4 pr-2`}>
+                                      Input data
+                                    </span>
+                                    {data_type.has_part[type]?.map((input: any) => (
+                                      <div
+                                        key={`entry-${input.label}-${nanoid()}`}
+                                        className="d-flex pb-2"
+                                      >
+                                        <HasInput has_input={input} label={input.label} key={`has_input-${input.label}-${nanoid()}`} components={[]} />
+                                      </div>
+                                    ))}
                                   </div>
-                                ) : type === 'has_output' ? (
-                                  <div className="mx-0 pt-4" key={`has_output-all-${nanoid()}`}>
-                                    <div key={`has_output-parent-${nanoid()}`} className="p-2 border-t border-r border-b border-[#00b050] border-l-[10px] border-l-[#00b050] my-1 relative scrollbar-custom sm:overflow-visible overflow-auto">
-                                      <span className={`bg-[#00b050] absolute -top-[12px] text-[12px] -left-[10px] p-[2px] text-white pl-4 pr-2`}>
-                                        Output data
-                                      </span>
-                                      {data_type.has_part[type]?.map((input: any) => (
-                                        <div
-                                          key={`entry-${input.label}-${nanoid()}`}
-                                          className="d-flex pb-2"
-                                        >
-                                          <HasOutput has_output={input} label={input.label} key={`has_input-${input.label}-${nanoid()}`} statement={[]} />
-                                        </div>
-                                      ))}
-                                    </div>
+                                </div>
+                              ) : type === 'has_output' ? (
+                                <div className="mx-0 pt-4" key={`has_output-all-${nanoid()}`}>
+                                  <div key={`has_output-parent-${nanoid()}`} className="p-2 border-t border-r border-b border-[#00b050] border-l-[10px] border-l-[#00b050] my-1 relative scrollbar-custom sm:overflow-visible overflow-auto">
+                                    <span className={`bg-[#00b050] absolute -top-[12px] text-[12px] -left-[10px] p-[2px] text-white pl-4 pr-2`}>
+                                      Output data
+                                    </span>
+                                    {data_type.has_part[type]?.map((input: any) => (
+                                      <div
+                                        key={`entry-${input.label}-${nanoid()}`}
+                                        className="d-flex pb-2"
+                                      >
+                                        <HasOutput has_output={input} label={input.label} key={`has_input-${input.label}-${nanoid()}`} statement={[]} />
+                                      </div>
+                                    ))}
                                   </div>
-                                ) : type === 'executes' ? (
-                                  data_type.has_part[type] && (
-                                    <Executes executes={data_type.has_part[type]} key={`executes-${type}-${nanoid()}`} />
-                                  )
-                                ) : (type === 'evaluates' || type === 'evaluates_for') ? (
-                                  (() => {
-                                    if (evaluates) {
-                                      evaluates = false
-                                      return (data_type.has_part[type] && (
-                                        <Evaluates evaluates={data_type.has_part['evaluates']} evaluates_for={data_type.has_part['evaluates_for']} key={`evaluates-${type}-${nanoid()}`} />
-                                      ))
-                                    }
-                                  })()
-                                ) : (type === 'level' || type === 'targets') ? (
-                                  (() => {
-                                    if (level_targets) {
-                                      level_targets = false
-                                      return (data_type.has_part[type] && (
-                                        // <Evaluates evaluates={data_type.has_part['evaluates']} evaluates_for={data_type.has_part['evaluates_for']} key={`evaluates-${type}`} />
-                                        <Level key={`targets-${type}-${nanoid()}`} level={data_type.has_part['level']} targets={data_type.has_part['targets']} components={statement.components} />
-                                      ))
-                                    }
-                                  })()
-                                ) : type === 'label' ? (
-                                  (() => {
-                                    if (data_type.has_part[type].length) {
-                                      return <h5 className="group cursor-default text-black text-[18px] leading-tight mb-2 pb-2 font-medium flex items-center gap-2">
-                                        <span className="flex-1 cursor-pointer">{data_type.has_part[type]}</span>
-                                      </h5>
-                                    }
-                                  })()
-                                ) : (
-                                  <>{type}{JSON.stringify(data_type.has_part[type])}</>
-                                )}
-                              </div>
-                            )
-                          })}
-                          {
-                            // else if (key === 'executes') {
-                            //   return <div key={`span-executes-${key}`}>executes</div>
-                            //   const executes = helper.checkType('executes', data, true)
-                            //   if (executes === undefined)
-                            //     return true
-                            //   return <Executes data={data} key={`executes-${key}`} />
-                            // }
-                            // return <div key={`span-is_implemented_by-${key}`}>is_implemented_by</div>
-                            // const is_implemented_by = helper.checkType('is_implemented_by', data, true)
-                            // if (is_implemented_by)
-                            //   return <IsImplementedBy data={data} key={`is_implemented_by-${level}`} />
-                          }
-                        </div>
+                                </div>
+                              ) : type === 'executes' ? (
+                                data_type.has_part[type] && (
+                                  <Executes executes={data_type.has_part[type][0]} key={`executes-${type}-${nanoid()}`} />
+                                )
+                              ) : (type === 'evaluates' || type === 'evaluates_for') ? (
+                                (() => {
+                                  if (evaluates) {
+                                    evaluates = false
+                                    return (data_type.has_part[type] && (
+                                      <Evaluates evaluates={data_type.has_part['evaluates']} evaluates_for={data_type.has_part['evaluates_for']} key={`evaluates-${type}-${nanoid()}`} />
+                                    ))
+                                  }
+                                })()
+                              ) : (type === 'level' || type === 'targets') ? (
+                                (() => {
+                                  if (level_targets) {
+                                    level_targets = false
+                                    return (data_type.has_part[type] && (
+                                      // <Evaluates evaluates={data_type.has_part['evaluates']} evaluates_for={data_type.has_part['evaluates_for']} key={`evaluates-${type}`} />
+                                      <Level key={`targets-${type}-${nanoid()}`} level={data_type.has_part['level']} targets={data_type.has_part['targets']} components={statement.components} />
+                                    ))
+                                  }
+                                })()
+                              ) : type === 'label' ? (
+                                (() => {
+                                  if (data_type.has_part[type].length) {
+                                    return <h5 className="group cursor-default text-black text-[18px] leading-tight mb-2 pb-2 font-medium flex items-center gap-2">
+                                      <span className="flex-1 cursor-pointer">{data_type.has_part[type]}</span>
+                                    </h5>
+                                  }
+                                })()
+                              ) : (
+                                // <>{type}{JSON.stringify(data_type.has_part[type])}</>
+                                <></>
+                              )}
+                            </div>
+                          )
+                        })}
                       </div>
-                    )
-                  })
-                }
-
-              </div>
+                    </div>
+                  )
+                })
+              }
               {details.data_type[0].is_implemented_by && details.data_type[0].is_implemented_by.map((implement: any) => {
                 return <IsImplementedBy data={implement} key={`is_implemented_by-${level}-${nanoid()}`} />
-              })}
-            </div>
-          )}
-          {isOpen && hasChildren && statement.type && false && (
-            <div className="pl-4">
-              {statement.type.properties.map((key: any) => {
-                // if (!data['@type'] || key === 'label') return null;
-                if (key === 'has_part') {
-                  return <div key={`span-has_part-${key}`}>has_part</div>
-                  const has_part = helper.checkType('has_part', data, true)
-                  let label = helper.checkType('label', has_part, true)
-                  if (Array.isArray(has_part)) {
-                    return Object.entries(has_part).map(([key, value], index) => (
-                      <div
-                        key={`entry-${key}-${index}`}
-                        className="d-flex p-2 border-t border-r border-b border-[#5b9bd5] border-l-[10px] border-l-[#5b9bd5] my-1 mb-4"
-                      >
-                        <TreeNode statement={statement} parentOpen={isOpen} key={`has_part-${key}`} data={value} level={level} parent={"has_part"} label={helper.checkType('label', value, true)} tooltip={"has_part"} button={label} color={'#5b9bd5'} />
-                      </div>
-                    ));
-                  } else {
-                    return (
-                      <div key={`${key}`} className="d-flex p-2 border-t border-r border-b border-[#5b9bd5] border-l-[10px] border-l-[#5b9bd5] my-1">
-                        <TreeNode statement={statement} parentOpen={isOpen} key={`has_part-${key}`} data={has_part} level={level} parent={"has_part"} label={label} tooltip={"has_part"} button={label} color={'#5b9bd5'} />
-                      </div>
-                    );
-                  }
-                }
-                else if (key === 'has_input') {
-                  return <div key={`span-has_input-${key}`}>has_input</div>
-                  const has_input = helper.checkType('has_input', data, true)
-                  let label = helper.checkType('label', has_input, true)
-                  return (
-                    <div className="mx-0 pt-4" key={`has_input-all`}>
-                      <div key={`has_input-parent`} className="p-2 border-t border-r border-b border-[#00b050] border-l-[10px] border-l-[#00b050] my-1 relative scrollbar-custom sm:overflow-visible overflow-auto">
-                        <span className={`bg-[#00b050] absolute -top-[12px] text-[12px] -left-[10px] p-[2px] text-white pl-4 pr-2`}>
-                          Input data
-                        </span>
-                        {Array.isArray(has_input) ? (
-                          Object.entries(has_input).map(([key, value], index) => (
-                            <div
-                              key={`entry-${key}-${index}`}
-                              className="d-flex pb-2"
-                            >
-                              <HasInput has_input={value} label={helper.checkType('label', value, true)} key={`has_input-${key}`} components={statement} />
-                            </div>
-                          ))
-                        ) : (
-                          <div key={`${has_input}`} className="d-flex">
-                            <HasInput has_input={has_input} label={label} key={`has_input-${has_input}`} components={statement} />
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  );
-                }
-                else if (key === 'has_output') {
-                  return <div key={`span-has_output-${key}`}>has_output</div>
-                  const has_output = helper.checkType('has_output', data, true)
-                  let label = helper.checkType('label', has_output, true)
-                  return (
-                    <div className="mx-0 pt-4" key={`has_output-all`}>
-                      <div key={`has_output-parent`} className="p-2 border-t border-r border-b border-[#00b050] border-l-[10px] border-l-[#00b050] my-1 relative scrollbar-custom sm:overflow-visible overflow-auto">
-                        <span className={`bg-[#00b050] absolute -top-[12px] text-[12px] -left-[10px] p-[2px] text-white pl-4 pr-2`}>
-                          Output data
-                        </span>
-                        {Array.isArray(has_output) ? (
-                          Object.entries(has_output).map(([key, value], index) => (
-                            <div
-                              key={`entry-${key}-${index}`}
-                              className="d-flex pb-2"
-                            >
-                              <HasOutput has_output={value} label={helper.checkType('label', value, true)} key={`has_output-${key}`} statement={statement} />
-                            </div>
-                          ))
-                        ) : (
-                          <div key={`${has_output}`} className="d-flex">
-                            <HasOutput has_output={has_output} label={label} key={`has_output-${has_output}`} statement={statement} />
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  );
-                }
-                else if (key === 'is_implemented_by') {
-                  return <div key={`span-is_implemented_by-${key}`}>is_implemented_by</div>
-                  const is_implemented_by = helper.checkType('is_implemented_by', data, true)
-                  if (is_implemented_by)
-                    return <IsImplementedBy data={data} key={`is_implemented_by-${level}`} />
-                }
-                else if (key === 'executes') {
-                  return <div key={`span-executes-${key}`}>executes</div>
-                  const executes = helper.checkType('executes', data, true)
-                  if (executes === undefined)
-                    return true
-                  return <Executes executes={data} key={`executes-${key}`} />
-                }
-                else if (key === 'evaluates_for') {
-                  return <div key={`span-evaluates_for-${key}`}>evaluates_for</div>
-                  if (!evaluates_evaluates_for) {
-                    evaluates_evaluates_for = 1
-                    return <Evaluates evaluates={[]} evaluates_for={[]} key={`evaluates_for-${key}`} data={data} />
-                  }
-                }
-                else if (key === 'evaluates') {
-                  return <div key={`span-evaluates-${key}`}>evaluates</div>
-                  if (!evaluates_evaluates_for) {
-                    evaluates_evaluates_for = 1
-                    return <Evaluates evaluates={[]} evaluates_for={[]} data={data} />
-                  }
-                }
-                else
-                  if (key === 'targets') {
-                    return <div key={`span-targets-${key}`}>targets</div>
-                    if (!level_targets) {
-                      level_targets = 1
-                      return <Level level={[]} targets={[]} key={`targets-${key}`} components={statement.components} />
-                    }
-                  } else if (key === 'level') {
-                    return <div key={`span-level-${key}`}>level</div>
-                    if (!level_targets) {
-                      level_targets = 1
-                      return <Level level={[]} targets={[]} key={`targets-${key}`} components={statement.components} />
-                    }
-                  }
               })}
             </div>
           )}
@@ -474,6 +331,7 @@ interface JsonTreeViewerProps {
   onAuthorSelect?: (author: string) => void;
   single?: boolean;
   statement?: any;
+  article?: any;
   statementDetails?: any;
 }
 
@@ -484,6 +342,7 @@ const JsonTreeViewer: React.FC<JsonTreeViewerProps> = ({
   onAuthorSelect,
   parentOpen = false,
   statement = null,
+  article = null,
   statementDetails = null,
 }) => {
   return (
@@ -491,6 +350,7 @@ const JsonTreeViewer: React.FC<JsonTreeViewerProps> = ({
       parentOpen={parentOpen}
       data={jsonData}
       statement={statement}
+      article={article}
       statementDetails={statementDetails}
       onConceptSelect={onConceptSelect}
       handleTreeViewerClick={handleTreeViewerClick}

@@ -24,7 +24,8 @@ export async function getPaperServer(id: string) {
 
 export async function getStatementServer(id: string) {
     try {
-        const response = await fetch(`${REBORN_API_URL}/articles/get_statement_by_id/?id=${id}`, {
+        // const response = await fetch(`${REBORN_API_URL}/articles/get_statement_by_id/?id=${id}`, {
+        const response = await fetch(`${REBORN_API_URL}/articles/get_statement/?id=${id}`, {
             next: {
                 revalidate: 3600
             },

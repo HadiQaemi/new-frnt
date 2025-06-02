@@ -85,14 +85,12 @@ const PaperShortInfo: React.FC<PaperShortInfoProps> = ({
     )
   }
 
-  const venue = paper.journal ? paper.journal : paper.conference
+  const venue = paper.academic_publication ? paper.academic_publication : paper.journal ? paper.journal : paper.conference
   let research_field = null
-  if (paper.research_field !== undefined) {
-    research_field = paper.research_field
-    if (paper.research_field[0] !== undefined)
-      research_field = paper.research_field[0]
-  } else if (paper.researchField !== undefined) {
-    research_field = paper.researchField[0]
+  if (paper.research_fields !== undefined) {
+    research_field = paper.research_fields
+    if (Array.isArray(paper.research_fields))
+      research_field = paper.research_fields[0]
   }
   const copyToClipboard = (rawText: any) => {
     const formattedText = rawText;
@@ -123,7 +121,7 @@ const PaperShortInfo: React.FC<PaperShortInfoProps> = ({
         <div className="col-span-12">
           <span className="badge me-2 text-sm">
             <Calendar className="me-1 inline underline" />
-            {paper.articleDatePublished}
+            {paper.date_published}
           </span>
 
           <CustomPopover
@@ -153,11 +151,11 @@ const PaperShortInfo: React.FC<PaperShortInfoProps> = ({
           {paper.authors.map((author: any, index: any) => (
             <CustomPopover
               key={`author-${index}`}
-              id={`popover-${`${author.givenName} ${author.familyName}`}-${index}`}
+              id={`popover-${`${author.label}`}-${index}`}
               subTitle="Show content for "
-              title={`${author.givenName} ${author.familyName}`}
-              show={activePopover === `${author.givenName} ${author.familyName}`}
-              onToggle={(show) => handlePopoverToggle(`${author.givenName} ${author.familyName}`, show)}
+              title={`${author.label}`}
+              show={activePopover === `${author.label}`}
+              onToggle={(show) => handlePopoverToggle(`${author.label}`, show)}
               onSelect={() => onAuthorSelect(author)}
               icon={User}
               trigger={
@@ -165,11 +163,11 @@ const PaperShortInfo: React.FC<PaperShortInfoProps> = ({
                   className={`badge cursor-pointer overlay-trigger me-2 mb-2 underline text-sm ${index < 1 ? 'inline md:inline' : 'hidden sm:hidden md:inline'}`}
                   onClick={(e) => {
                     e.stopPropagation()
-                    handlePopoverToggle(`${author.givenName} ${author.familyName}`, activePopover !== `${author.givenName} ${author.familyName}`)
+                    handlePopoverToggle(`${author.label}`, activePopover !== `${author.label}`)
                   }}
                 >
                   <User className="me-1 inline" />
-                  {`${author.givenName} ${author.familyName}`}
+                  {`${author.label}`}
                 </span>
               }
             >
@@ -188,7 +186,7 @@ const PaperShortInfo: React.FC<PaperShortInfoProps> = ({
           ${showMore ? 'opacity-100 max-h-96 translate-y-0' : 'opacity-0 max-h-0 -translate-y-4'}
           overflow-auto
         `}>
-        <div className='my-[0.5rem]'>
+        <div className='my-4'>
           {paper && <TruncatedAbstract text={paper.abstract} />}
         </div>
         <div className="grid grid-cols-12">
@@ -214,27 +212,19 @@ const PaperShortInfo: React.FC<PaperShortInfoProps> = ({
                 </span>
               }
             >
-              {renderIdentifiersList([venue['@id']])}
+              {renderIdentifiersList([venue.academic_publication_id])}
             </CustomPopover>
             <div className='text-black inline text-sm'>
               <BookText className="mx-1 inline text-gray-500" />
-              {venue.publisher[0].label}
+              {paper.publisher}
             </div>
             <div className='my-1'>
-              <a href={paper.identifier} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline text-sm">
-                {paper.identifier}
+              <a href={paper.dois} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline text-sm">
+                {paper.dois}
               </a>
-              <CopyIcon onClick={() => copyToClipboard(paper.identifier)} className="inline ml-2 h-4 w-4 text-gray-700 hover:text-gray-900 cursor-pointer" />
+              <CopyIcon onClick={() => copyToClipboard(paper.dois)} className="inline ml-2 h-4 w-4 text-gray-700 hover:text-gray-900 cursor-pointer" />
             </div>
           </div>
-          {/* <div className="col-span-12 sm:col-span-6 text-left sm:text-right">
-            <Link
-              href={`/article/${paper.id}`}
-              className="text-[#e86161] cursor-pointer hover:text-[#d45454]"
-            >
-              <ExternalLink className="inline ml-2 h-4 w-4 text-gray-700 hover:text-gray-900 cursor-pointer" />
-            </Link>
-          </div> */}
         </div>
       </div>
     </div>

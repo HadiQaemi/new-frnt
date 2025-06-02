@@ -101,7 +101,8 @@ export function getStatements() {
 
 export function getStatement(id: any) {
     const { data, error, isLoading } = useSWR<any>(
-        `${REBORN_API_URL}/articles/get_statement_by_id/?id=${id}`,
+        // `${REBORN_API_URL}/articles/get_statement_by_id/?id=${id}`,
+        `${REBORN_API_URL}/articles/get_article_statement/?id=${id}`,
         fetcher
     );
 

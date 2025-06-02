@@ -12,6 +12,7 @@ export interface TreeNodeProps {
     onConceptSelect?: (concept: string) => void;
     onAuthorSelect?: (author: string) => void;
     statement?: any;
+    article?: any;
     statementDetails?: any;
     parent?: string | null;
     label?: string | null;

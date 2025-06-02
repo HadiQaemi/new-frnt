@@ -37,10 +37,10 @@ const Level: React.FC<LevelProps> = ({ level, targets, components }) => {
                 {Array.isArray(targets) ? (
                     <div className="flex-grow text-left w-[85%] font-bold" key={`targets-${targets}`}>
                         {targets && `Targets: `}
-                        {
-                            Object.entries(targets).map((item: any, key) => (
+                        {targets.map((item, index) => (
+                            helper.filterByStringMatch(components, item['label']).length ?
                                 <CustomPopover
-                                    key={`targets-key-${key}`}
+                                    key={`targets-key-${index}`}
                                     id={`popover-targetsText`}
                                     subTitle=""
                                     title={item[1]['label']}
@@ -54,7 +54,7 @@ const Level: React.FC<LevelProps> = ({ level, targets, components }) => {
                                                 handlePopoverToggle(item[1]['label'], activePopover !== item[1]['label'])
                                             }}
                                         >
-                                            {item[1]['label']}
+                                            {item['label']}
                                         </span>
                                     }
                                 >
@@ -64,8 +64,8 @@ const Level: React.FC<LevelProps> = ({ level, targets, components }) => {
                                         ) + `</span>`
                                     }} />
                                 </CustomPopover>
-                            ))
-                        }
+                                : (item['label'])
+                        ))}
                     </div>
                 ) : (
                     <div className="flex-grow text-left w-[85%] font-bold">
