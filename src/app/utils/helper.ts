@@ -2,27 +2,6 @@ import { utils, write } from 'xlsx-js-style';
 import axios from 'axios';
 import { REBORN_URL } from '../lib/config/constants';
 
-interface Variable {
-    "@id": string;
-    "@type": string[];
-    "_id": string;
-    stringMatch?: string[];
-    objectOfInterest?: {
-        label: string[];
-    };
-    property?: {
-        label: string[];
-    };
-    unit?: {
-        label: string[];
-    };
-    operation?: {
-        label: string[];
-    };
-    constraint?: {
-        label: string[];
-    };
-}
 interface ResizeOptions {
     name?: string;
     width?: number;
@@ -62,7 +41,6 @@ export const helper = {
         if (!colorMap[key]) return original;
         return part === "all" ? colorMap[key] : colorMap[key].backgroundColor;
     },
-
     analyzeJSONStructure: (jsonElement: unknown): string => {
         if (typeof jsonElement !== 'object' || jsonElement === null) {
             return "The input is not a JSON object";
@@ -88,19 +66,18 @@ export const helper = {
         return allPrimitive ? "Key-value pairs" : "Object with mixed value types";
     },
     filterByStringMatch: (
-        variables: Variable[],
+        variables: any,
         searchTerm: string
-    ): Variable[] => {
+    ): any => {
         if (!Array.isArray(variables)) {
             return [];
         }
         if (!searchTerm) return variables;
         const normalizedSearchTerm = searchTerm.toLowerCase();
+        return variables.filter((variable: any) => {
+            if (!variable.string_match) return false;
 
-        return variables.filter(variable => {
-            if (!variable.stringMatch) return false;
-
-            return variable.stringMatch.some(match =>
+            return variable.string_match.some((match: any) =>
                 match.toLowerCase() === normalizedSearchTerm
             );
         });
@@ -202,7 +179,6 @@ export const helper = {
             };
         }
     },
-
     getLevelColor: (level: number): string => {
         const colors = [
             'bg-white',
@@ -404,77 +380,77 @@ export const helper = {
 
         } else {
             identifiers = identifiers[0]
-            if (identifiers['@type'].find((identifier: string) => identifier === 'Measure')) {
+            if (identifiers['type'].find((identifier: string) => identifier === 'Measure')) {
                 let text = ``
                 let links = ``
-                if (identifiers['label'][0])
-                    text = `${text} <span>${identifiers['label'][0]}</span>`
-                if (identifiers['exactMatch'])
-                    if (identifiers['exactMatch'][0])
-                        links = `${links} <div class='ml-2'><a href=${identifiers['exactMatch'][0]} class='underline text-blue-600' target="_blank">${identifiers['exactMatch'][0]}</a></div>`
-                if (identifiers['closeMatch'])
-                    if (identifiers['closeMatch'][0])
-                        links = `${links} <div class='ml-2'><a href=${identifiers['closeMatch'][0]} class='underline text-blue-600' target="_blank">${identifiers['closeMatch'][0]}</a></div>`
+                if (identifiers['label'])
+                    text = `${text} <span>${helper.cleanString(identifiers['label'])}</span>`
+                if (identifiers['exact_match'])
+                    if (identifiers['exact_match'][0])
+                        links = `${links} <div class='ml-2'><a href=${identifiers['exact_match'][0]} class='underline text-blue-600' target="_blank">${identifiers['exact_match'][0]}</a></div>`
+                if (identifiers['close_match'])
+                    if (identifiers['close_match'][0])
+                        links = `${links} <div class='ml-2'><a href=${identifiers['close_match'][0]} class='underline text-blue-600' target="_blank">${identifiers['close_match'][0]}</a></div>`
                 return `${text} ${links === `` ? `` : `<div class='mt-1'>See also ${links}</div>`}`
             }
             let text = ''
             let links = ''
             if (identifiers['operation'] !== undefined) {
                 let temp = ''
-                if (identifiers['operation']['exactMatch'] !== undefined) {
-                    if (identifiers['operation']['exactMatch'][0]) {
-                        temp = identifiers['operation']['exactMatch'][0]
+                if (identifiers['operation'][0]['exact_match'] !== undefined) {
+                    if (identifiers['operation'][0]['exact_match'][0]) {
+                        temp = identifiers['operation'][0]['exact_match'][0]
                     }
                 }
-                else if (identifiers['operation']['closeMatch'] !== undefined) {
-                    if (identifiers['operation']['closeMatch'][0]) {
-                        temp = identifiers['operation']['closeMatch'][0]
+                else if (identifiers['operation'][0]['close_match'] !== undefined) {
+                    if (identifiers['operation'][0]['close_match'][0]) {
+                        temp = identifiers['operation'][0]['close_match'][0]
                     }
                 }
-                text = temp.length === 0 ? `<span>${identifiers['operation']['label'][0]}</span>` : `<a href=${temp} class='underline' target="_blank">${identifiers['operation']['label'][0]}</a>`
-                links = `<span class='text-black pt-2 block' target="_blank">${identifiers['operation']['label'][0]} (<a href=${temp} class='underline' target="_blank">${temp}</a>)</span>`
+                text = temp.length === 0 ? `<span>${identifiers['operation'][0]['label'][0]}</span>` : `<a href=${temp} class='underline' target="_blank">${identifiers['operation'][0]['label'][0]}</a>`
+                links = `<span class='text-black pt-2 block' target="_blank">${identifiers['operation'][0]['label'][0]} (<a href=${temp} class='underline' target="_blank">${temp}</a>)</span>`
             }
-            if (identifiers['property'] !== undefined) {
+            if (identifiers['properties'][0] !== undefined) {
                 let temp = ''
-                if (identifiers['property']['exactMatch'] !== undefined) {
-                    if (identifiers['property']['exactMatch'][0]) {
-                        temp = identifiers['property']['exactMatch'][0]
+                if (identifiers['properties'][0]['exact_match'] !== undefined) {
+                    if (identifiers['properties'][0]['exact_match'][0]) {
+                        temp = identifiers['properties'][0]['exact_match'][0]
                     }
                 }
-                else if (identifiers['property']['closeMatch'] !== undefined) {
-                    if (identifiers['property']['closeMatch'][0]) {
-                        temp = identifiers['property']['closeMatch'][0]
+                else if (identifiers['properties'][0]['close_match'] !== undefined) {
+                    if (identifiers['properties'][0]['close_match'][0]) {
+                        temp = identifiers['properties'][0]['close_match'][0]
                     }
                 }
-                text = text + (text === '' ? '' : ' of ') + (temp.length === 0 ? `<span>${identifiers['property']['label'][0]}</span>` : `<a href=${temp} class='underline' target="_blank">${identifiers['property']['label'][0]}</a>`)
-                links = links + (links === '' ? '' : '') + `<span class='text-black pt-2 block' target="_blank">${identifiers['property']['label'][0]} (<a href=${temp} class='underline' target="_blank">${temp}</a>)</span>`
+                text = text + (text === '' ? '' : ' of ') + (temp.length === 0 ? `<span>${identifiers['properties'][0]['label'][0]}</span>` : `<a href=${temp} class='underline' target="_blank">${identifiers['properties'][0]['label'][0]}</a>`)
+                links = links + (links === '' ? '' : '') + `<span class='text-black pt-2 block' target="_blank">${identifiers['properties'][0]['label'][0]} (<a href=${temp} class='underline' target="_blank">${temp}</a>)</span>`
             }
-            if (identifiers['objectOfInterest'] !== undefined) {
+            if (identifiers['object_of_interests'][0] !== undefined) {
                 let temp = ''
-                if (identifiers['objectOfInterest']['exactMatch'] !== undefined) {
-                    if (identifiers['objectOfInterest']['exactMatch'][0]) {
-                        temp = identifiers['objectOfInterest']['exactMatch'][0]
+                if (identifiers['object_of_interests'][0]['exact_match'] !== undefined) {
+                    if (identifiers['object_of_interests'][0]['exact_match'][0]) {
+                        temp = identifiers['object_of_interests'][0]['exact_match'][0]
                     }
                 }
-                else if (identifiers['objectOfInterest']['closeMatch'] !== undefined) {
-                    if (identifiers['objectOfInterest']['closeMatch'][0]) {
-                        temp = identifiers['objectOfInterest']['closeMatch'][0]
+                else if (identifiers['object_of_interests'][0]['close_match'] !== undefined) {
+                    if (identifiers['object_of_interests'][0]['close_match'][0]) {
+                        temp = identifiers['object_of_interests'][0]['close_match'][0]
                     }
                 }
-                text = text + (text === '' ? '' : ' of ') + (temp.length === 0 ? `<span>${identifiers['objectOfInterest']['label'][0]}</span>` : `<a href=${temp} class='underline' target="_blank">${identifiers['objectOfInterest']['label'][0]}</a>`)
-                links = links + (links === '' ? '' : '') + `<span class='text-black pt-2 block' target="_blank">${identifiers['objectOfInterest']['label'][0]} (<a href=${temp} class='underline' target="_blank">${temp}</a>)</span>`
+                text = text + (text === '' ? '' : ' of ') + (temp.length === 0 ? `<span>${identifiers['object_of_interests'][0]['label'][0]}</span>` : `<a href=${temp} class='underline' target="_blank">${identifiers['object_of_interests'][0]['label'][0]}</a>`)
+                links = links + (links === '' ? '' : '') + `<span class='text-black pt-2 block' target="_blank">${identifiers['object_of_interests'][0]['label'][0]} (<a href=${temp} class='underline' target="_blank">${temp}</a>)</span>`
             }
 
             if (identifiers['label'] !== undefined) {
-                if (identifiers['exactMatch'] !== undefined) {
-                    if (identifiers['exactMatch'][0]) {
-                        text = text + (text === '' ? '' : ' in ') + `<a href=${identifiers['exactMatch'][0]} class='underline' target="_blank">${identifiers['label'][0]}</a>`
+                if (identifiers['exact_match'] !== undefined) {
+                    if (identifiers['exact_match'][0]) {
+                        text = text + (text === '' ? '' : ' in ') + `<a href=${identifiers['exact_match'][0]} class='underline' target="_blank">${identifiers['label'][0]}</a>`
                     } else {
                         text = text + (text === '' ? '' : ' in ') + `<span>${identifiers['label'][0]}</span>`
                     }
-                } else if (identifiers['closeMatch'] !== undefined) {
-                    if (identifiers['closeMatch'][0]) {
-                        text = text + (text === '' ? '' : ' in ') + `<a href=${identifiers['closeMatch'][0]} class='underline' target="_blank">${identifiers['label'][0]}</a>`
+                } else if (identifiers['close_match'] !== undefined) {
+                    if (identifiers['close_match'][0]) {
+                        text = text + (text === '' ? '' : ' in ') + `<a href=${identifiers['close_match'][0]} class='underline' target="_blank">${identifiers['label'][0]}</a>`
                     } else {
                         text = text + (text === '' ? '' : ' in ') + `<span>${identifiers['label'][0]}</span>`
                     }
@@ -483,41 +459,44 @@ export const helper = {
                 }
             }
 
-            if (identifiers['matrix'] !== undefined) {
+            if (identifiers['matrices'][0] !== undefined) {
                 let temp = ''
-                if (identifiers['matrix']['exactMatch'] !== undefined) {
-                    if (identifiers['matrix']['exactMatch'][0]) {
-                        temp = identifiers['matrix']['exactMatch'][0]
+                if (identifiers['matrices'][0]['exact_match'] !== undefined) {
+                    if (identifiers['matrices'][0]['exact_match'][0]) {
+                        temp = identifiers['matrices'][0]['exact_match'][0]
                     }
                 }
-                else if (identifiers['matrix']['closeMatch'] !== undefined) {
-                    if (identifiers['matrix']['closeMatch'][0]) {
-                        temp = identifiers['matrix']['closeMatch'][0]
+                else if (identifiers['matrices'][0]['close_match'] !== undefined) {
+                    if (identifiers['matrices'][0]['close_match'][0]) {
+                        temp = identifiers['matrices'][0]['close_match'][0]
                     }
                 }
-                text = text + (text === '' ? '' : ' in ') + (temp.length === 0 ? `<span>${identifiers['matrix']['label'][0]}</span>` : `<a href=${temp} class='underline' target="_blank">${identifiers['matrix']['label'][0]}</a>`)
-                links = links + (links === '' ? '' : '') + `<span class='text-black pt-2 block' target="_blank">${identifiers['matrix']['label'][0]} (<a href=${temp} class='underline' target="_blank">${temp}</a>)</span>`
+                text = text + (text === '' ? '' : ' in ') + (temp.length === 0 ? `<span>${identifiers['matrices'][0]['label'][0]}</span>` : `<a href=${temp} class='underline' target="_blank">${identifiers['matrices'][0]['label'][0]}</a>`)
+                links = links + (links === '' ? '' : '') + `<span class='text-black pt-2 block' target="_blank">${identifiers['matrices'][0]['label'][0]} (<a href=${temp} class='underline' target="_blank">${temp}</a>)</span>`
             }
 
-            if (identifiers['unit'] !== undefined) {
+            if (identifiers['units'][0] !== undefined) {
                 let temp = ''
-                if (identifiers['unit']['exactMatch'] !== undefined) {
-                    if (identifiers['unit']['exactMatch'][0]) {
-                        temp = identifiers['unit']['exactMatch'][0]
+                if (identifiers['units'][0]['exact_match'] !== undefined) {
+                    if (identifiers['units'][0]['exact_match'][0]) {
+                        temp = identifiers['units'][0]['exact_match'][0]
                     }
-                } else if (identifiers['unit']['closeMatch'] !== undefined) {
-                    if (identifiers['unit']['closeMatch'][0]) {
-                        temp = identifiers['unit']['closeMatch'][0]
+                } else if (identifiers['units'][0]['close_match'] !== undefined) {
+                    if (identifiers['units'][0]['close_match'][0]) {
+                        temp = identifiers['units'][0]['close_match'][0]
                     }
                 }
-                text = text + (text === '' ? '' : ' ') + (temp.length === 0 ? `[<span>${identifiers['unit']['label'][0]}</span>]` : `[<a href=${temp} class='underline' target="_blank">${identifiers['unit']['label'][0]}</a>]`)
-                links = links + (links === '' ? '' : ' ') + `<span class='text-black pt-2 block' target="_blank">${identifiers['unit']['label'][0]} (<a href=${temp} class='underline' target="_blank">${temp}</a>)</span>`
+                text = text + (text === '' ? '' : ' ') + (temp.length === 0 ? `[<span>${identifiers['units'][0]['label'][0]}</span>]` : `[<a href=${temp} class='underline' target="_blank">${identifiers['units'][0]['label'][0]}</a>]`)
+                links = links + (links === '' ? '' : ' ') + `<span class='text-black pt-2 block' target="_blank">${identifiers['units'][0]['label'][0]} (<a href=${temp} class='underline' target="_blank">${temp}</a>)</span>`
             }
             return text
         }
     },
     cleanFirstLetter: (val: string): string => {
         return String(val).replace('_', ' ');
+    },
+    cleanString: (val: string): string => {
+        return String(val).replace(/[\[\]']/g, '');
     },
     newGetLevelColor: (color: string, level: number): string => {
         const opacityMap: Record<number, string> = {

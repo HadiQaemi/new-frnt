@@ -77,7 +77,7 @@ const PaperShortInfo: React.FC<PaperShortInfoProps> = ({
                 }
               }}
             >
-              {id}
+              {helper.cleanString(id)}
             </a>
           </div>
         ))}

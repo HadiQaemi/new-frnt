@@ -6,7 +6,7 @@ export const useAuthors = (searchTerm: string) => {
     queryKey: ['author', searchTerm],
     queryFn: async () => {
       if (!searchTerm || searchTerm.length < 1) return [];
-      const response = await fetch(`${REBORN_API_URL}/get-authors?name=${searchTerm}`);
+      const response = await fetch(`${REBORN_API_URL}/auto-complete/get_authors_by_name/?search=${searchTerm}`);
       if (!response.ok) throw new Error('Failed to fetch research fields');
       return response.json();
     },

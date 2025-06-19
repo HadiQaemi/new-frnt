@@ -224,6 +224,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
                     properties: string[]
                   };
                   has_part: any;
+                  components: any;
                   is_implemented_by: any;
                 }) => {
                   let evaluates = true
@@ -248,7 +249,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
                                         key={`entry-${input.label}-${nanoid()}`}
                                         className="d-flex pb-2"
                                       >
-                                        <HasInput has_input={input} label={input.label} key={`has_input-${input.label}-${nanoid()}`} components={[]} />
+                                        <HasInput has_input={input} label={input.label} key={`has_input-${input.label}-${nanoid()}`} components={data_type.components} />
                                       </div>
                                     ))}
                                   </div>
@@ -264,13 +265,13 @@ const TreeNode: React.FC<TreeNodeProps> = ({
                                         key={`entry-${input.label}-${nanoid()}`}
                                         className="d-flex pb-2"
                                       >
-                                        <HasOutput has_output={input} label={input.label} key={`has_input-${input.label}-${nanoid()}`} statement={[]} />
+                                        <HasOutput has_output={input} label={input.label} key={`has_input-${input.label}-${nanoid()}`} components={data_type.components} />
                                       </div>
                                     ))}
                                   </div>
                                 </div>
                               ) : type === 'executes' ? (
-                                data_type.has_part[type] && (
+                                data_type.has_part[type] !== undefined && data_type.has_part[type][0] !== undefined && (
                                   <Executes executes={data_type.has_part[type][0]} key={`executes-${type}-${nanoid()}`} />
                                 )
                               ) : (type === 'evaluates' || type === 'evaluates_for') ? (
@@ -312,7 +313,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
                   )
                 })
               }
-              {details.data_type[0].is_implemented_by && details.data_type[0].is_implemented_by.map((implement: any) => {
+              {details.data_type[0] && details.data_type[0].is_implemented_by && details.data_type[0].is_implemented_by.map((implement: any) => {
                 return <IsImplementedBy data={implement} key={`is_implemented_by-${level}-${nanoid()}`} />
               })}
             </div>

@@ -35,13 +35,13 @@ const Label = ({
         textLabel = statement.label
         concepts = statement.concepts
     }
-    const renderIdentifiersList = (identifiers: string[], item: any = []) => {
+    const renderIdentifiersList = (identifiers: any, item: any = []) => {
         if (typeof identifiers === 'string')
             identifiers = [identifiers]
         return (
             <>
                 {Object.values(identifiers).length > 0 && identifiers[0] && <div className="mt-2">See also</div>}
-                {Object.values(identifiers).map((id, index) => (
+                {Object.values(identifiers).map((id: any, index) => (
                     <div key={index} className="mb-1 py-0 px-3">
                         <a
                             href={id}
@@ -56,7 +56,7 @@ const Label = ({
                                 }
                             }}
                         >
-                            {id}
+                            {helper.cleanString(id)}
                         </a>
                     </div>
                 ))}
@@ -127,7 +127,7 @@ const Label = ({
                                     </span>
                                 }
                             >
-                                {renderIdentifiersList([item.orcid])}
+                                {/* {renderIdentifiersList(item.orcid)} */}
                             </CustomPopover>
                         ))}
                     </div>
@@ -159,7 +159,7 @@ const Label = ({
                                         </span>
                                     }
                                 >
-                                    {renderIdentifiersList([item.see_also], item)}
+                                    {renderIdentifiersList(item.see_also, item)}
                                 </CustomPopover>
                             ))
                         )}

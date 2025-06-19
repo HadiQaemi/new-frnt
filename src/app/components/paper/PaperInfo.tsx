@@ -74,7 +74,7 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
                 }
               }}
             >
-              {id}
+              {helper.cleanString(id)}
             </a>
           </div>
         ))}

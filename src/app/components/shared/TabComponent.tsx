@@ -30,7 +30,7 @@ const TabComponent: React.FC<TabComponentProps> = ({
     const [activeTab, setActiveTab] = useState<TabId>('articles');
     const [isLoading, setIsLoading] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
-    const [searchType, setSearchType] = useState('');
+    const [searchType, setSearchType] = useState('keyword');
 
     const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -61,13 +61,14 @@ const TabComponent: React.FC<TabComponentProps> = ({
         }
 
         if (searchType) {
-            params.append('type', searchType);
+            params.append('search_type', searchType);
         } else {
-            params.append('type', 'keyword');
+            params.append('search_type', 'keyword');
         }
 
         selectedResearchFields.forEach(field => {
-            params.append('research_fields[]', field.id);
+
+            params.append('research_fields[]', field.research_field_id);
         });
 
         return params.toString();
@@ -88,58 +89,59 @@ const TabComponent: React.FC<TabComponentProps> = ({
         }
     }, [activeTab, selectedResearchFields]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            setIsLoading(true);
-            try {
-                const queryParams = buildQueryParams();
-                let url = ''
-                if (activeTab == 'articles')
-                    url = `${REBORN_API_URL}/articles/get_latest_articles?${queryParams}`
-                else if (activeTab == 'statements')
-                    url = `${REBORN_API_URL}/articles/get_latest_statements/?${queryParams}`
-                else if (activeTab == 'authors')
-                    url = `${REBORN_API_URL}/articles/get_latest_authors/?${queryParams}`
-                else if (activeTab == 'journals')
-                    url = `${REBORN_API_URL}/articles/get_journals/?${queryParams}`
+    const fetchData = async () => {
+        setIsLoading(true);
+        try {
+            const queryParams = buildQueryParams();
+            let url = ''
+            if (activeTab == 'articles')
+                url = `${REBORN_API_URL}/articles/get_latest_articles?${queryParams}`
+            else if (activeTab == 'statements')
+                url = `${REBORN_API_URL}/articles/get_latest_statements/?${queryParams}`
+            else if (activeTab == 'authors')
+                url = `${REBORN_API_URL}/articles/get_latest_authors/?${queryParams}`
+            else if (activeTab == 'journals')
+                url = `${REBORN_API_URL}/articles/get_journals/?${queryParams}`
 
-                const response = await fetch(url);
-                if (!response.ok) throw new Error('Network response was not ok');
-                const data = await response.json();
-                setTabContents(prev => ({
-                    ...prev,
-                    [activeTab]: data.items
-                }));
-                setPagination(prev => ({
-                    ...prev,
-                    totalPages: Math.ceil(data.total / pagination.itemsPerPage),
-                    totalItems: data.total
-                }));
-                if (activeTab !== 'statements' && activeTab !== 'articles') {
-                    let tempTab = `${activeTab}`
-                    if (activeTab === 'keywords') {
-                        tempTab = 'concepts'
-                    }
-
-                    const storedData = localStorage.getItem(tempTab);
-                    let existingData = []
-                    if (storedData) {
-                        existingData = JSON.parse(storedData);
-                    }
-                    data.items?.forEach((concept: { id: string | number; name: any; }) => {
-                        const temp_concept = existingData.find((_concept: { id: string; }) => _concept.id === concept.id)
-                        if (typeof temp_concept === 'undefined') {
-                            existingData[existingData.length] = concept;
-                        }
-                    });
-                    localStorage.setItem(tempTab, JSON.stringify(existingData));
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data = await response.json();
+            setTabContents(prev => ({
+                ...prev,
+                [activeTab]: data.items
+            }));
+            setPagination(prev => ({
+                ...prev,
+                totalPages: Math.ceil(data.total / pagination.itemsPerPage),
+                totalItems: data.total
+            }));
+            if (activeTab !== 'statements' && activeTab !== 'articles') {
+                let tempTab = `${activeTab}`
+                if (activeTab === 'keywords') {
+                    tempTab = 'concepts'
                 }
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            } finally {
-                setIsLoading(false);
+
+                const storedData = localStorage.getItem(tempTab);
+                let existingData = []
+                if (storedData) {
+                    existingData = JSON.parse(storedData);
+                }
+                data.items?.forEach((concept: { id: string | number; name: any; }) => {
+                    const temp_concept = existingData.find((_concept: { id: string; }) => _concept.id === concept.id)
+                    if (typeof temp_concept === 'undefined') {
+                        existingData[existingData.length] = concept;
+                    }
+                });
+                localStorage.setItem(tempTab, JSON.stringify(existingData));
             }
-        };
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
         if (!(activeTab === 'statements' || activeTab === 'articles') || !searchTerm.length) {
             fetchData();
         }
@@ -155,20 +157,24 @@ const TabComponent: React.FC<TabComponentProps> = ({
         setIsLoading(true);
         try {
             const queryParams = buildQueryParams();
-            const response = await fetch(`${REBORN_API_URL}/semantic_search_${activeTab}?${queryParams}`);
-            if (!response.ok) throw new Error('Network response was not ok');
-            const data = await response.json();
+            if (searchType === 'keyword') {
+                fetchData();
+            } else {
+                const response = await fetch(`${REBORN_API_URL}/articles/get_latest_${activeTab}?${queryParams}`);
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
 
-            setTabContents(prev => ({
-                ...prev,
-                [activeTab]: data.items
-            }));
+                setTabContents(prev => ({
+                    ...prev,
+                    [activeTab]: data.items
+                }));
 
-            setPagination(prev => ({
-                ...prev,
-                totalPages: Math.ceil(data.total / pagination.itemsPerPage),
-                totalItems: data.total
-            }));
+                setPagination(prev => ({
+                    ...prev,
+                    totalPages: Math.ceil(data.total / pagination.itemsPerPage),
+                    totalItems: data.total
+                }));
+            }
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {

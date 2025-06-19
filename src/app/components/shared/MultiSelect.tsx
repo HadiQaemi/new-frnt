@@ -1,11 +1,12 @@
 export interface ResearchField {
-    id: number;
-    name: string;
+    research_field_id: number;
+    label: string;
 }
 
 import React, { useState, useEffect, useRef } from 'react';
 import { XCircle, Search } from 'lucide-react';
 import { REBORN_API_URL } from '@/app/lib/config/constants';
+import { nanoid } from 'nanoid';
 
 interface MultiSelectProps {
     selectedFields: ResearchField[];
@@ -70,16 +71,16 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
     }, [searchQuery]);
 
     const toggleField = (field: ResearchField) => {
-        const isSelected = selectedFields.some((f) => f.id === field.id);
+        const isSelected = selectedFields.some((f) => f.research_field_id === field.research_field_id);
         if (isSelected) {
-            onChange(selectedFields.filter((f) => f.id !== field.id));
+            onChange(selectedFields.filter((f) => f.research_field_id !== field.research_field_id));
         } else {
             onChange([...selectedFields, field]);
         }
     };
 
     const removeField = (fieldId: number) => {
-        onChange(selectedFields.filter((field) => field.id !== fieldId));
+        onChange(selectedFields.filter((field) => field.research_field_id !== fieldId));
     };
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -105,15 +106,15 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
                 <div className="flex flex-wrap gap-2">
                     {selectedFields.map((field) => (
                         <span
-                            key={field.id}
+                            key={field.research_field_id}
                             className="inline-flex items-center px-2 py-1 text-red-500 bg-gray-50 rounded"
                         >
-                            {field.name}
+                            {field.label}
                             <XCircle
                                 className="ml-1 h-4 w-4 cursor-pointer hover:text-blue-600"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    removeField(field.id);
+                                    removeField(field.research_field_id);
                                 }}
                             />
                         </span>
@@ -151,14 +152,14 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
                         )}
                         {!loading && !error && fields.slice(0, 10).map((field) => (
                             <div
-                                key={field.id}
-                                className={`p-2 cursor-pointer hover:bg-gray-100 ${selectedFields.some((f) => f.id === field.id)
+                                key={`${nanoid()}`}
+                                className={`p-2 cursor-pointer hover:bg-gray-100 ${selectedFields.some((f) => f.research_field_id === field.research_field_id)
                                     ? 'bg-blue-50'
                                     : ''
                                     }`}
                                 onClick={() => toggleField(field)}
                             >
-                                {field.name}
+                                {field.label}
                             </div>
                         ))}
                         {!loading && !error && fields.length > 10 && (

@@ -287,10 +287,10 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
             if (storedData) {
                 existingAuthors = JSON.parse(storedData);
             }
-            authors?.forEach((concept: { id: string | number; name: any; }) => {
-                const temp_concept = existingAuthors.find((_concept: { id: string; }) => _concept.id === concept.id)
-                if (typeof temp_concept === 'undefined') {
-                    existingAuthors[existingAuthors.length] = concept;
+            authors.items.forEach((author: { author_id: string | number; name: any; }) => {
+                const temp_author = existingAuthors.find((_author: { author_id: string; }) => _author.author_id === author.author_id)
+                if (typeof temp_author === 'undefined') {
+                    existingAuthors[existingAuthors.length] = author;
                 }
             });
             localStorage.setItem('authors', JSON.stringify(existingAuthors));
