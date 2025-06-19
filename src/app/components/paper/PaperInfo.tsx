@@ -135,7 +135,6 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
               <Calendar className="me-1 inline underline" />
               {paper.date_published}
             </span>
-            {JSON.stringify(research_field)}
             {research_field && (
               <CustomPopover
                 id={`popover-${research_field['label']}`}
