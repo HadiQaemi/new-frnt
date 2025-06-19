@@ -135,30 +135,33 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
               <Calendar className="me-1 inline underline" />
               {paper.date_published}
             </span>
-            <CustomPopover
-              id={`popover-${research_field['label']}`}
-              subTitle="Show content for "
-              title={research_field['label']}
-              show={activePopover === research_field['label']}
-              onToggle={(show) => handlePopoverToggle(research_field['label'], show)}
-              onSelect={() => onResearchFieldSelect(research_field)}
-              icon={Menu}
-              trigger={
-                <span
-                  className="badge cursor-pointer overlay-trigger me-2 mb-2 underline text-sm"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handlePopoverToggle(research_field.label, activePopover !== research_field.label)
-                  }}
-                >
-                  <Scan className="me-1 inline text-gray-500 w-[1.7rem] h-[1.7rem]" />
-                  <GraduationCap className="inline -ml-[25px] w-[0.9rem] text-xs" />
-                  <span className='ml-3'>{research_field['label']}</span>
-                </span>
-              }
-            >
-              {renderIdentifiersList(research_field.relatedIdentifier)}
-            </CustomPopover>
+            {JSON.stringify(research_field)}
+            {research_field && (
+              <CustomPopover
+                id={`popover-${research_field['label']}`}
+                subTitle="Show content for "
+                title={research_field['label']}
+                show={activePopover === research_field['label']}
+                onToggle={(show) => handlePopoverToggle(research_field['label'], show)}
+                onSelect={() => onResearchFieldSelect(research_field)}
+                icon={Menu}
+                trigger={
+                  <span
+                    className="badge cursor-pointer overlay-trigger me-2 mb-2 underline text-sm"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handlePopoverToggle(research_field.label, activePopover !== research_field.label)
+                    }}
+                  >
+                    <Scan className="me-1 inline text-gray-500 w-[1.7rem] h-[1.7rem]" />
+                    <GraduationCap className="inline -ml-[25px] w-[0.9rem] text-xs" />
+                    <span className='ml-3'>{research_field['label']}</span>
+                  </span>
+                }
+              >
+                {renderIdentifiersList(research_field.relatedIdentifier)}
+              </CustomPopover>
+            )}
             {paper.authors.map((author: any, index: any) => (
               <CustomPopover
                 key={`author-${index}`}

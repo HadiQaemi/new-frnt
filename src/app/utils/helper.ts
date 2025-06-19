@@ -441,7 +441,7 @@ export const helper = {
                 links = links + (links === '' ? '' : '') + `<span class='text-black pt-2 block' target="_blank">${identifiers['object_of_interests'][0]['label'][0]} (<a href=${temp} class='underline' target="_blank">${temp}</a>)</span>`
             }
 
-            if (identifiers['label'] !== undefined) {
+            if (identifiers['label'][0] !== undefined) {
                 if (identifiers['exact_match'] !== undefined) {
                     if (identifiers['exact_match'][0]) {
                         text = text + (text === '' ? '' : ' in ') + `<a href=${identifiers['exact_match'][0]} class='underline' target="_blank">${identifiers['label'][0]}</a>`
