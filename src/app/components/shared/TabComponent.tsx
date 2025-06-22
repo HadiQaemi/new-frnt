@@ -95,7 +95,7 @@ const TabComponent: React.FC<TabComponentProps> = ({
             const queryParams = buildQueryParams();
             let url = ''
             if (activeTab == 'articles')
-                url = `${REBORN_API_URL}/articles/get_latest_articles?${queryParams}`
+                url = `${REBORN_API_URL}/articles/get_latest_articles/?${queryParams}`
             else if (activeTab == 'statements')
                 url = `${REBORN_API_URL}/articles/get_latest_statements/?${queryParams}`
             else if (activeTab == 'authors')
@@ -126,11 +126,25 @@ const TabComponent: React.FC<TabComponentProps> = ({
                 if (storedData) {
                     existingData = JSON.parse(storedData);
                 }
-                data.items?.forEach((concept: { id: string | number; name: any; }) => {
-                    const temp_concept = existingData.find((_concept: { id: string; }) => _concept.id === concept.id)
-                    if (typeof temp_concept === 'undefined') {
-                        existingData[existingData.length] = concept;
+                data.items?.forEach((item: any) => {
+                    if (activeTab === 'journals') {
+                        const temp_journal = existingData.find((_journal: any) => _journal.id === item.journal_id)
+                        if (typeof temp_journal === 'undefined') {
+                            existingData[existingData.length] = {
+                                id: item.journal_id,
+                                name: item.name,
+                            };
+                        }
+                    } else if (activeTab === 'authors') {
+                        const temp_author = existingData.find((_author: any) => _author.id === item.author_id)
+                        if (typeof temp_author === 'undefined') {
+                            existingData[existingData.length] = {
+                                id: item.author_id,
+                                name: item.name,
+                            };
+                        }
                     }
+
                 });
                 localStorage.setItem(tempTab, JSON.stringify(existingData));
             }
@@ -332,7 +346,7 @@ const TabComponent: React.FC<TabComponentProps> = ({
                                         <span className="font-inter font-[500]"><Dot className="me-1 inline font-bold" /></span>
                                         <span className="font-inter font-[400] text-sm">{item.article}</span>
                                         <span className="font-inter font-[500]"><Dot className="me-1 inline font-bold" /></span>
-                                        <span className="font-inter font-[400] text-sm">{item.academic_publication}</span>
+                                        <span className="font-inter font-[400] text-sm">{item.scientific_venue}</span>
                                     </div>
                                 </span>
                             ) : (
@@ -349,7 +363,7 @@ const TabComponent: React.FC<TabComponentProps> = ({
                                             <span className="font-inter font-[500]"><Dot className="me-1 inline font-bold" /></span>
                                             <span className="font-inter font-[400] text-sm">{item.date_published}</span>
                                             <span className="font-inter font-[500]"><Dot className="me-1 inline font-bold" /></span>
-                                            <span className="font-inter font-[400] text-sm">{item.academic_publication.label}</span>
+                                            <span className="font-inter font-[400] text-sm">{item.scientific_venue.label}</span>
                                         </div>
                                     </span>
                                 ) : (
@@ -366,14 +380,14 @@ const TabComponent: React.FC<TabComponentProps> = ({
                                                 <span className="font-inter font-[500]"><Dot className="me-1 inline font-bold" /></span>
                                                 <span className="font-inter font-[400] text-sm">{item.date}</span>
                                                 <span className="font-inter font-[500]"><Dot className="me-1 inline font-bold" /></span>
-                                                <span className="font-inter font-[400] text-sm">{item.academic_publication}</span>
+                                                <span className="font-inter font-[400] text-sm">{item.scientific_venue}</span>
                                             </div>
                                         </span>
                                     ) : (
                                         activeTab === 'authors' ? (
                                             <span key={`authors-${index}`}>
                                                 <Link
-                                                    href={`/statements?start_year=2015&end_year=2025&authors=${item.id}&page=1&per_page=10`}
+                                                    href={`/statements?start_year=2015&end_year=2025&authors=${item.author_id}&page=1&per_page=10`}
                                                     className="text-[#000] cursor-pointer hover:text-[#555]"
                                                 >
                                                     <h4 className="font-inter font-[700] inline">{item.name}</h4>
@@ -389,7 +403,7 @@ const TabComponent: React.FC<TabComponentProps> = ({
                                             activeTab === 'journals' ? (
                                                 <span key={`journals-${index}`}>
                                                     <Link
-                                                        href={`/statements?start_year=2015&end_year=2025&journals=${item.id}&page=1&per_page=10`}
+                                                        href={`/statements?start_year=2015&end_year=2025&scientific_venues=${item.journal_id}&page=1&per_page=10`}
                                                         className="text-[#000] cursor-pointer hover:text-[#555]"
                                                     >
                                                         <h4 className="font-inter font-[700] inline">{item.name}</h4>

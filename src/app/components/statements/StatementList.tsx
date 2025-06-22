@@ -11,6 +11,7 @@ import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, X } from 'lucide-rea
 import { useQueryData } from '@/app/hooks/useQueryData';
 import { useRouter, useSearchParams } from 'next/navigation'
 import { REBORN_API_URL } from '@/app/lib/config/constants';
+import { nanoid } from 'nanoid';
 
 interface Statement {
     _id: string;
@@ -41,7 +42,7 @@ interface TimeRange {
 interface QueryParams {
     timeRange?: TimeRange;
     authors?: string[];
-    journals?: string[];
+    scientific_venues?: string[];
     concepts?: string[];
 }
 
@@ -51,7 +52,7 @@ export default function ListStatements({ data, statements, statementId = null, i
     const [currentPage, setCurrentPage] = useState(1);
     const [isSidebarOpen, setIsSidebarOpen] = useState(isOpenSideSearch);
     const [queryData, setQueryData] = useState();
-    const [article, setArticle] = useState(data.article);
+    const [articles, setArticles] = useState(Array.isArray(data) ? data : [data]);
     const [isLoading, setIsLoading] = useState(false);
     const [statementDetails, setStatementDetails] = useState<any>(null);
     const [filterParams, setFilterParams] = useState<QueryParams>({
@@ -60,10 +61,16 @@ export default function ListStatements({ data, statements, statementId = null, i
             end: 2025
         },
         authors: [],
-        journals: [],
+        scientific_venues: [],
         concepts: []
     });
-    const { data: filteredStatements, isLoading: isQueryLoading, error } = useQueryData(filterParams);
+    // const { data: filteredStatements, isLoading: isQueryLoading, error } = useQueryData(filterParams);
+    // useEffect(() => {
+    //     if (filteredStatements) {
+    //         console.log(filteredStatements)
+    //         setArticles([filteredStatements.results]);
+    //     }
+    // }, [filteredStatements]);
 
     const handleFilter = (formData: QueryParams) => {
         setFilterParams(formData);
@@ -206,16 +213,16 @@ export default function ListStatements({ data, statements, statementId = null, i
         (item: any) => {
             if (!sideSearchFormRef.current) return;
             const formatMap = {
-                concept: { id: item._id, name: item.label },
+                concept: { id: item.concept_id, name: item.label },
                 author: { id: item.id, name: item.label },
-                journal: { id: item._id, name: item.label },
-                field: { id: item["@id"], name: item.label }
+                journal: { id: item.id, name: item.label },
+                field: { id: item.id, name: item.label }
             };
 
             const setterMap = {
                 concept: 'setSelectedConcepts',
                 author: 'setSelectedAuthors',
-                journal: 'setSelectedJournals',
+                journal: 'setSelectedScientificVenues',
                 field: 'setSelectedResearchFields'
             };
 
@@ -325,7 +332,7 @@ export default function ListStatements({ data, statements, statementId = null, i
             <div className={`transition-all duration-300 ease-in-out overflow-x-auto ${isSidebarOpen ? 'col-span-1 md:col-span-9' : 'max-w-23/24'}`}>
                 <Card className="bg-white shadow-lg">
                     <CardContent className="p-6">
-                        {Object.values(statements).length === 0 ? (
+                        {articles.length === 0 ? (
                             <p className="text-gray-500 text-center">No results found</p>
                         ) : (
                             <>
@@ -366,39 +373,45 @@ export default function ListStatements({ data, statements, statementId = null, i
                                         )
                                     )} */}
                                     <div className="space-y-4">
-                                        <div className="border rounded p-0">
-                                            <PaperInfo
-                                                paper={article}
-                                                onAuthorSelect={handleSelect('author')}
-                                                onJournalSelect={handleSelect('journal')}
-                                                onResearchFieldSelect={handleSelect('field')} />
-                                            {statements.map((statement: any, index: any) => {
-                                                return (
-                                                    <div key={index} ref={(el: HTMLDivElement | null): void => { headerRefs.current[index] = el; }}>
-                                                        <div
-                                                            key={`list-${index}`}
-                                                            ref={(el: HTMLDivElement | null) => {
-                                                                if (statement['statement_id'] === statementId) {
-                                                                    statementRefs.current[statement['statement_id']] = el;
-                                                                }
-                                                            }}
-                                                        >
-                                                            <JsonTreeViewer
-                                                                handleTreeViewerClick={() => handleTreeViewerClick(statement.statement_id)}
-                                                                parentOpen={statement.statement_id === statementId && statement.data_type.length > 0}
-                                                                onAuthorSelect={handleSelect('author')}
-                                                                onConceptSelect={handleSelect('concept')}
-                                                                jsonData={statement}
-                                                                article={article}
-                                                                single={true}
-                                                                statement={statement}
-                                                                statementDetails={statement.statement_id === openStatementId ? statementDetails : null}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
+                                        {articles.map((item: any, index: any) => {
+                                            const article = item.article
+                                            return (
+                                                <div className="border rounded p-0" key={`article-${nanoid()}`}>
+                                                    <PaperInfo
+                                                        paper={article}
+                                                        key={`article-info-${nanoid()}`}
+                                                        onAuthorSelect={handleSelect('author')}
+                                                        onJournalSelect={handleSelect('journal')}
+                                                        onResearchFieldSelect={handleSelect('field')} />
+                                                    {item.statements && item.statements.map((statement: any, index: any) => {
+                                                        return (
+                                                            <div key={index} ref={(el: HTMLDivElement | null): void => { headerRefs.current[index] = el; }}>
+                                                                <div
+                                                                    key={`list-${index}`}
+                                                                    ref={(el: HTMLDivElement | null) => {
+                                                                        if (statement['statement_id'] === statementId) {
+                                                                            statementRefs.current[statement['statement_id']] = el;
+                                                                        }
+                                                                    }}
+                                                                >
+                                                                    <JsonTreeViewer
+                                                                        handleTreeViewerClick={() => handleTreeViewerClick(statement.statement_id)}
+                                                                        parentOpen={statement.statement_id === statementId && statement.data_type.length > 0}
+                                                                        onAuthorSelect={handleSelect('author')}
+                                                                        onConceptSelect={handleSelect('concept')}
+                                                                        jsonData={statement}
+                                                                        article={article}
+                                                                        single={true}
+                                                                        statement={statement}
+                                                                        statementDetails={statement.statement_id === openStatementId ? statementDetails : null}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            )
+                                        })}
                                     </div>
                                 </div>
                             </>

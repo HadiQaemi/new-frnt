@@ -1,4 +1,5 @@
 export interface ORKGResponse {
+    results: unknown;
     content: Statement[];
     totalElements: number;
     totalPages: number;

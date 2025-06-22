@@ -127,7 +127,7 @@ const Label = ({
                                     </span>
                                 }
                             >
-                                {/* {renderIdentifiersList(item.orcid)} */}
+                                {item.orcid && renderIdentifiersList(item.orcid)}
                             </CustomPopover>
                         ))}
                     </div>

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import ErrorState from '@/app/components/shared/Loading/ErrorState';
 import LoadingState from '@/app/components/shared/Loading/LoadingState';
 import StatementList from '@/app/components/statements/StatementList';
-import { useFilter, useStatements } from '@/app/lib/api/statements';
+import { useFilter, useStatements, useStatementsData } from '@/app/lib/api/statements';
 import { helper } from '@/app/utils/helper';
 
 interface QueryParams {
@@ -11,7 +11,7 @@ interface QueryParams {
   endYear: string | null;
   title: string | null;
   authors: string[];
-  journals: string[];
+  scientific_venues: string[];
   research_fields: string[];
   concepts: string[];
 }
@@ -22,10 +22,13 @@ export default function StatementsPage() {
     endYear: null,
     title: null,
     authors: [],
-    journals: [],
+    scientific_venues: [],
     research_fields: [],
     concepts: []
   });
+
+  const [isInitialized, setIsInitialized] = useState(false);
+
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     setQueryParams({
@@ -33,10 +36,11 @@ export default function StatementsPage() {
       endYear: searchParams.get('end_year'),
       title: searchParams.get('title'),
       authors: helper.getArrayFromURL('authors'),
-      journals: helper.getArrayFromURL('journals'),
+      scientific_venues: helper.getArrayFromURL('scientific_venues'),
       research_fields: helper.getArrayFromURL('research_fields'),
       concepts: helper.getArrayFromURL('concepts')
     });
+    setIsInitialized(true);
   }, []);
 
   const hasFilters = Boolean(
@@ -44,7 +48,7 @@ export default function StatementsPage() {
     queryParams.startYear ||
     queryParams.endYear ||
     queryParams.concepts?.length ||
-    queryParams.journals?.length ||
+    queryParams.scientific_venues?.length ||
     queryParams.research_fields?.length ||
     queryParams.authors?.length
   );
@@ -53,22 +57,52 @@ export default function StatementsPage() {
     data,
     isLoading,
     isError
-  } = hasFilters
-      ? useFilter({
-        page: 1,
-        per_page: 10,
-        startYear: queryParams.startYear,
-        endYear: queryParams.endYear,
-        title: queryParams.title,
-        concepts: queryParams.concepts,
-        journals: queryParams.journals,
-        research_fields: queryParams.research_fields,
-        authors: queryParams.authors,
-      })
-      : useStatements({
-        currentPage: 1,
-        pageSize: 10,
-      });
+  } = useStatementsData({
+    hasFilters,
+    filterParams: {
+      page: 1,
+      per_page: 10,
+      startYear: queryParams.startYear,
+      endYear: queryParams.endYear,
+      title: queryParams.title,
+      concepts: queryParams.concepts,
+      scientific_venues: queryParams.scientific_venues,
+      research_fields: queryParams.research_fields,
+      authors: queryParams.authors,
+    },
+    defaultParams: {
+      currentPage: 1,
+      pageSize: 10,
+    }
+  });
+  // const {
+  //   data,
+  //   isLoading,
+  //   isError
+  // } = hasFilters
+  //     ? useFilter({
+  //       page: 1,
+  //       per_page: 10,
+  //       startYear: queryParams.startYear,
+  //       endYear: queryParams.endYear,
+  //       title: queryParams.title,
+  //       concepts: queryParams.concepts,
+  //       scientific_venues: queryParams.scientific_venues,
+  //       research_fields: queryParams.research_fields,
+  //       authors: queryParams.authors,
+  //     })
+  //     : useStatements({
+  //       currentPage: 1,
+  //       pageSize: 10,
+  //     });
+
+  if (!isInitialized) {
+    return (
+      <main className="w-full mx-auto p-4 bg-[#e9ebf2] pb-[50px] min-h-[calc(100vh-18.9rem)]">
+        <LoadingState />
+      </main>
+    );
+  }
 
   return (
     <main className="w-full mx-auto p-4 bg-[#e9ebf2] pb-[50px] min-h-[calc(100vh-18.9rem)]">
@@ -79,7 +113,7 @@ export default function StatementsPage() {
       ) : !data ? (
         <div className="text-center py-8 text-gray-600">No statements found</div>
       ) : (
-        <StatementList data={data.content} statements={undefined} />
+        <StatementList data={data?.results} statements={undefined} />
       )}
     </main>
   );

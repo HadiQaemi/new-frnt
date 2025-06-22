@@ -9,7 +9,7 @@ interface TimeRange {
 interface QueryParams {
   timeRange?: TimeRange;
   authors?: string[];
-  journals?: string[];
+  scientific_venues?: string[];
   concepts?: string[];
 }
 
@@ -19,7 +19,7 @@ const defaultParams: QueryParams = {
     end: 2025
   },
   authors: [],
-  journals: [],
+  scientific_venues: [],
   concepts: []
 };
 
@@ -27,7 +27,7 @@ const hasValues = (params?: QueryParams): any => {
   if (!params) return false;
 
   const hasAuthors = (params.authors?.length ?? 0) > 0;
-  const hasJournals = (params.journals?.length ?? 0) > 0;
+  const hasJournals = (params.scientific_venues?.length ?? 0) > 0;
   const hasConcepts = (params.concepts?.length ?? 0) > 0;
   const hasCustomTimeRange = params.timeRange && (
     params.timeRange.start !== defaultParams.timeRange?.start ||
@@ -43,7 +43,7 @@ export const useQueryData = (queryParams?: QueryParams) => {
   return useQuery({
     queryKey: ['filtered-statements', queryParams],
     queryFn: async () => {
-      const response = await fetch(`${REBORN_API_URL}/filter-statement`, {
+      const response = await fetch(`${REBORN_API_URL}/articles/advanced_search/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

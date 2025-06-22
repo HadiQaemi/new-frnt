@@ -47,8 +47,8 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
             try {
                 setLoading(true);
                 const url = searchQuery
-                    ? `${REBORN_API_URL}/articles/get_research_fields?label=${encodeURIComponent(searchQuery)}`
-                    : `${REBORN_API_URL}/articles/get_research_fields?limit=2`;
+                    ? `${REBORN_API_URL}/articles/get_research_fields/?label=${encodeURIComponent(searchQuery)}`
+                    : `${REBORN_API_URL}/articles/get_research_fields/?limit=2`;
 
                 const response = await fetch(url);
                 if (!response.ok) {

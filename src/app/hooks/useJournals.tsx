@@ -6,7 +6,7 @@ export const useJournals = (searchTerm: string) => {
     queryKey: ['journal', searchTerm],
     queryFn: async () => {
       if (!searchTerm || searchTerm.length < 1) return [];
-      const response = await fetch(`${REBORN_API_URL}/get-journals?name=${searchTerm}`);
+      const response = await fetch(`${REBORN_API_URL}/auto-complete/get_academic_publishers_by_name/?search=${searchTerm}`);
       if (!response.ok) throw new Error('Failed to fetch research fields');
       return response.json();
     },

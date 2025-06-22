@@ -13,7 +13,7 @@ interface Author {
 
 interface ResearchField {
   label: string
-  identifier: string[]
+  related_identifier: string[]
 }
 
 interface Journal {
@@ -101,7 +101,7 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
         })
       );
   };
-  const venue = paper.academic_publication ? paper.academic_publication : paper.journal ? paper.journal : paper.conference
+  const venue = paper.scientific_venue ? paper.scientific_venue : paper.journal ? paper.journal : paper.conference
   let research_field = null
   if (paper.research_fields !== undefined) {
     research_field = paper.research_fields
@@ -158,7 +158,7 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
                   </span>
                 }
               >
-                {renderIdentifiersList(research_field.relatedIdentifier)}
+                {renderIdentifiersList(research_field.related_identifier)}
               </CustomPopover>
             )}
             {paper.authors.map((author: any, index: any) => (
@@ -185,8 +185,8 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
                 }
               >
                 {renderIdentifiersList(
-                  author['@id'] && !author['@id'].startsWith('#')
-                    ? [author['@id']]
+                  author.orcid && !author.orcid.startsWith('#')
+                    ? [author.orcid]
                     : []
                 )}
               </CustomPopover>
@@ -221,7 +221,7 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
                 </span>
               }
             >
-              {renderIdentifiersList([venue.academic_publication_id])}
+              {renderIdentifiersList([venue.identifier])}
             </CustomPopover>
             <div className='text-black inline text-sm'>
               <BookText className="mx-1 inline text-gray-500" />

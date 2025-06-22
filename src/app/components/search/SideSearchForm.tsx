@@ -6,6 +6,7 @@ import { useAuthors } from '@/app/hooks/useAuthors';
 import { useConcepts } from '@/app/hooks/useConcepts';
 import { helper } from '@/app/utils/helper';
 import { useRouter } from 'next/navigation';
+import { nanoid } from 'nanoid';
 
 interface Item {
     id: string;
@@ -23,7 +24,7 @@ interface SideSearchFormProps {
 }
 
 interface FilterData {
-    title: string;
+    title: string | undefined;
     timeRange: {
         start: number;
         end: number;
@@ -31,7 +32,7 @@ interface FilterData {
     page: number;
     per_page: number;
     authors: string[];
-    journals: string[];
+    scientific_venues: string[];
     research_fields: string[];
     concepts: string[];
 }
@@ -40,7 +41,7 @@ interface SideSearchFormRef {
     setSelectedConcepts: (concepts: Item[]) => void;
     setSelectedResearchFields: (fields: Item[]) => void;
     setSelectedAuthors: (authors: Item[]) => void;
-    setSelectedJournals: (journals: Item[]) => void;
+    setSelectedScientificVenues: (journals: Item[]) => void;
     handleSubmit: (e: React.FormEvent) => void;
 }
 
@@ -50,14 +51,15 @@ interface AutocompleteFieldProps {
     inputRef: React.RefObject<HTMLInputElement>;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     suggestions: Item[];
-    selected: Item[];
+    // selected: Item[];
+    selected: any;
     onRemove: (id: string) => void;
     type: 'author' | 'journal' | 'research_field' | 'concept';
     placeholder: string;
 }
 
 interface SuggestionBoxProps {
-    suggestions: Item[];
+    suggestions: any;
     onSelect: (item: Item) => void;
     searchTerm: string;
     type: string;
@@ -68,7 +70,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
     const [timeRange, setTimeRange] = useState<[number, number]>([2015, 2025]);
     const [titleSearch, setTitleSearch] = useState('');
     const [authorSearch, setAuthorSearch] = useState('');
-    const [journalSearch, setJournalSearch] = useState('');
+    const [scientificVenues, setScientificVenues] = useState('');
     const [researchFieldSearch, setResearchFieldSearch] = useState('');
     const [conceptSearch, setConceptSearch] = useState('');
 
@@ -78,7 +80,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
     const [conceptSuggestions, setConceptSuggestions] = useState<Item[]>([]);
 
     const [selectedAuthors, setSelectedAuthors] = useState<Item[]>([]);
-    const [selectedJournals, setSelectedJournals] = useState<Item[]>([]);
+    const [selectedScientificVenues, setSelectedScientificVenues] = useState<Item[]>([]);
     const [selectedResearchFields, setSelectedResearchFields] = useState<Item[]>([]);
     const [selectedConcepts, setSelectedConcepts] = useState<Item[]>([]);
 
@@ -114,10 +116,10 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                 ref={afterRender}
                 className="absolute w-full bg-white border rounded-md shadow-lg z-50 mt-1"
             >
-                {suggestions.length > 0 ? (
-                    suggestions.map(item => (
+                {suggestions.items ? (
+                    suggestions.items.map((item: any) => (
                         <div
-                            key={item.id}
+                            key={`${item.id}-${nanoid()}`}
                             className="p-2 hover:bg-gray-100 cursor-pointer transition-colors"
                             onClick={() => handleSelect(item)}
                         >
@@ -160,11 +162,11 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                     searchTerm={value}
                     inputRef={inputRef}
                     type={type}
-                    onSelect={(item) => {
-                        if (!selected.some(s => s.id === item.id)) {
+                    onSelect={(item: any) => {
+                        if (!selected.some((s: any) => s.id === item.id)) {
                             const setters = {
                                 author: setSelectedAuthors,
-                                journal: setSelectedJournals,
+                                journal: setSelectedScientificVenues,
                                 research_field: setSelectedResearchFields,
                                 concept: setSelectedConcepts
                             };
@@ -175,7 +177,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                                     setAuthorSuggestions([]);
                                 },
                                 journal: () => {
-                                    setJournalSearch('');
+                                    setScientificVenues('');
                                     setJournalSuggestions([]);
                                 },
                                 research_field: () => {
@@ -195,8 +197,8 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                 />
             </div>
             <div className="mt-2 space-y-2">
-                {selected.map(item => (
-                    <div key={`authors${item.id}`} className="flex items-center">
+                {selected.map((item: any) => (
+                    <div key={`authors-${item.id}`} className="flex items-center">
                         <span className="flex items-center justify-between w-full px-3 py-2 border rounded-md bg-[#eee]">
                             <span>{item.name}</span>
                             <button
@@ -221,10 +223,10 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
             if (storedData) {
                 existingFields = JSON.parse(storedData);
             }
-            researchFields?.forEach((concept: { id: string | number; name: any; }) => {
-                const temp_concept = existingFields.find((_concept: { id: string; }) => _concept.id === concept.id)
-                if (typeof temp_concept === 'undefined') {
-                    existingFields[existingFields.length] = concept;
+            researchFields.items.forEach((researchField: { id: string | number; name: any; }) => {
+                const temp_researchField = existingFields.find((_researchField: { id: string; }) => _researchField.id === researchField.id)
+                if (typeof temp_researchField === 'undefined') {
+                    existingFields[existingFields.length] = researchField;
                 }
             });
             localStorage.setItem('fields', JSON.stringify(existingFields));
@@ -235,7 +237,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
         setResearchFieldSearch(e.target.value);
     };
 
-    const { data: journals, isLoading: isLoadingJournals } = useJournals(journalSearch);
+    const { data: journals, isLoading: isLoadingJournals } = useJournals(scientificVenues);
     useEffect(() => {
         if (journals) {
             const storedData = localStorage.getItem('journals');
@@ -243,10 +245,10 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
             if (storedData) {
                 existingJournals = JSON.parse(storedData);
             }
-            journals?.forEach((concept: { id: string | number; name: any; }) => {
-                const temp_concept = existingJournals.find((_concept: { id: string; }) => _concept.id === concept.id)
-                if (typeof temp_concept === 'undefined') {
-                    existingJournals[existingJournals.length] = concept;
+            journals.items.forEach((journal: { id: string | number; name: any; }) => {
+                const temp_journal = existingJournals.find((_journal: { id: string; }) => _journal.id === journal.id)
+                if (typeof temp_journal === 'undefined') {
+                    existingJournals[existingJournals.length] = journal;
                 }
             });
             localStorage.setItem('journals', JSON.stringify(existingJournals));
@@ -254,7 +256,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
         }
     }, [journals]);
     const handleJournalsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setJournalSearch(e.target.value);
+        setScientificVenues(e.target.value);
     };
 
     const { data: concepts, isLoading: isLoadingConcepts } = useConcepts(conceptSearch);
@@ -265,7 +267,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
             if (storedData) {
                 existingConcepts = JSON.parse(storedData);
             }
-            concepts?.forEach((concept: { id: string | number; name: any; }) => {
+            concepts.items.forEach((concept: { id: string | number; name: any; }) => {
                 const temp_concept = existingConcepts.find((_concept: { id: string; }) => _concept.id === concept.id)
                 if (typeof temp_concept === 'undefined') {
                     existingConcepts[existingConcepts.length] = concept;
@@ -319,7 +321,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
             }
 
             const authorIds = helper.getArrayFromURL('authors');
-            const journalIds = helper.getArrayFromURL('journals');
+            const scientificVenueIds = helper.getArrayFromURL('scientific_venues');
             const fieldIds = helper.getArrayFromURL('research_fields');
             const conceptIds = helper.getArrayFromURL('concepts');
 
@@ -331,12 +333,12 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                 setSelectedConcepts(conceptsWithNames);
             }
 
-            if (journalIds.length > 0) {
-                const journalsWithNames = journalIds.map(id => ({
+            if (scientificVenueIds.length > 0) {
+                const journalsWithNames = scientificVenueIds.map(id => ({
                     id,
                     name: getItemNameById(id, 'journals') || id
                 })).filter(item => item.name);
-                setSelectedJournals(journalsWithNames);
+                setSelectedScientificVenues(journalsWithNames);
             }
 
             if (fieldIds.length > 0) {
@@ -361,7 +363,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
     const removeItem = (id: string, type: 'author' | 'journal' | 'research_field' | 'concept') => {
         const setters = {
             author: setSelectedAuthors,
-            journal: setSelectedJournals,
+            journal: setSelectedScientificVenues,
             research_field: setSelectedResearchFields,
             concept: setSelectedConcepts
         };
@@ -372,11 +374,11 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
         setTimeRange([2015, 2025]);
         setTitleSearch('');
         setAuthorSearch('');
-        setJournalSearch('');
+        setScientificVenues('');
         setResearchFieldSearch('');
         setConceptSearch('');
         setSelectedAuthors([]);
-        setSelectedJournals([]);
+        setSelectedScientificVenues([]);
         setSelectedResearchFields([]);
         setSelectedConcepts([]);
         if (window.location.pathname.includes('/statements')) {
@@ -386,7 +388,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                 page: currentPage,
                 per_page: pageSize,
                 authors: [],
-                journals: [],
+                scientific_venues: [],
                 research_fields: [],
                 concepts: []
             });
@@ -400,7 +402,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         const filterData = {
-            title: titleSearch,
+            title: titleSearch || undefined,
             timeRange: {
                 start: timeRange[0],
                 end: timeRange[1]
@@ -408,7 +410,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
             page: currentPage,
             per_page: pageSize,
             authors: selectedAuthors.map(author => author.id),
-            journals: selectedJournals.map(journal => journal.id),
+            scientific_venues: selectedScientificVenues.map(journal => journal.id),
             research_fields: selectedResearchFields.map(field => field.id),
             concepts: selectedConcepts.map(concept => concept.id)
         };
@@ -418,7 +420,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
             start_year: timeRange[0],
             end_year: timeRange[1],
             authors: selectedAuthors.map(author => author.id),
-            journals: selectedJournals.map(journal => journal.id),
+            scientific_venues: selectedScientificVenues.map(journal => journal.id),
             research_fields: selectedResearchFields.map(field => field.id),
             concepts: selectedConcepts.map(concept => concept.id),
             page: currentPage,
@@ -437,7 +439,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
         setSelectedConcepts,
         setSelectedResearchFields,
         setSelectedAuthors,
-        setSelectedJournals,
+        setSelectedScientificVenues,
         handleSubmit
     }));
 
@@ -471,8 +473,9 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
         });
 
         const newUrl = `${'/statements'}${searchParams.toString() ? '?' + searchParams.toString() : ''}`;
-        router.push(newUrl);
-        router.refresh();
+        window.location.href = newUrl;
+        // router.push(newUrl);
+        // router.refresh();
     };
 
     return (
@@ -565,11 +568,11 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
 
                     <AutocompleteField
                         label="Journals or Conferences"
-                        value={journalSearch}
+                        value={scientificVenues}
                         inputRef={journalsRef}
                         onChange={handleJournalsChange}
                         suggestions={journals || []}
-                        selected={selectedJournals}
+                        selected={selectedScientificVenues}
                         onRemove={(id) => removeItem(id, 'journal')}
                         type="journal"
                         placeholder="Search Journals or Conferences..."

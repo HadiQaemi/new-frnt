@@ -162,14 +162,13 @@ const CartComponent: React.FC = () => {
                     statementFolder?.file(`${statementName}_Metadata.txt`, statement_metadata);
                     let has_part_index = 0
                     for (const data_type of statement.content) {
-                        console.log(data_type)
                         for (const is_implemented_by of data_type.is_implemented_by) {
                             let source_code = "";
-                            const source_code_type = getFileInfoFromUrl(is_implemented_by);
-                            if (source_code_type.fileType.length < 3) {
+                            const source_code_file = helper.isFileURL(is_implemented_by);
+                            if (source_code_file.fileType === "sourceCode") {
                                 const response = await fetch(is_implemented_by);
                                 source_code = await response.text();
-                                statementFolder?.file(`${statementName}_Implementation_1.${source_code_type.fileType}`, source_code);
+                                statementFolder?.file(`${statementName}_Implementation_1.${source_code_file.extension}`, source_code);
                             }
                         }
                         const HasPartName = `${statementName}_${++has_part_index}`;
@@ -206,7 +205,6 @@ const CartComponent: React.FC = () => {
                                     }
                                     if (source_url) {
                                         const file_type = getFileInfoFromUrl(source_url);
-                                        console.log(source_url)
                                         if (file_type.fileType === 'txt' || file_type.fileType === 'csv') {
                                             await downloadAndAddToZip(source_url, HasPartFolder, `${HasPartName}_Input_Data${name}_${has_input_index + 1}.${file_type.fileType}`)
                                         }

@@ -14,8 +14,9 @@ import { debounce } from 'lodash';
 import AddToCartButton from '../cart/AddToCartButton';
 import { getTypeFromStorage } from './utils/storage';
 import { TreeNodeProps, TypeInfo } from './types';
-import { REBORN_URL } from '@/app/lib/config/constants';
+import { REBORN_API_URL, REBORN_URL } from '@/app/lib/config/constants';
 import { nanoid } from 'nanoid';
+import { useRouter } from 'next/navigation'
 
 const saveTypeToStorage = (nodeKey: string, typeInfo: TypeInfo): void => {
   try {
@@ -52,6 +53,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
   const [details, setDetails] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
   useEffect(() => {
     if (statementDetails) {
       setDetails(statementDetails)
@@ -104,16 +106,25 @@ const TreeNode: React.FC<TreeNodeProps> = ({
     };
   }, [data]);
 
-  const toggleNode = () => {
-    handleTreeViewerClick()
-    setIsOpen(!isOpen)
-    // console.log(statementDetails)
-    // if (window.location.pathname.includes('/statement/')) {
-    //   setIsOpen(!isOpen)
-    //   handleTreeViewerClick()
-    // } else {
-    //   setIsOpen(!isOpen)
-    // }
+  const toggleNode = async () => {
+    // handleTreeViewerClick()
+    try {
+      const response = await fetch(`${REBORN_API_URL}/articles/get_statement/?id=${statement.statement_id}`);
+      if (!response.ok) {
+        throw new Error(`Error fetching statement: ${response.status}`);
+      }
+      const data = await response.json();
+      setDetails(data);
+    } catch (error) {
+      console.error("Error fetching statement details:", error);
+    } finally {
+      setIsLoading(false);
+    }
+    if (window.location.pathname.includes('/statement/')) {
+      router.push(`/statement/${statement.statement_id}`);
+    } else {
+      setIsOpen(!isOpen)
+    }
   };
 
   const hasChildren = data && typeof data === 'object';
@@ -181,7 +192,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
                           >
                             <ExternalLink className="h-3 w-3 text-gray-400 hover:text-gray-600 cursor-pointer" />
                           </Link>
-                          <CopyIcon onClick={() => copyToClipboard(`${REBORN_URL}/statement/${statement?._id?.$oid ? statement?._id?.$oid : statement?._id}`)} className="h-3 !mt-[10px] w-3 text-gray-400 hover:text-gray-600 cursor-pointer" />
+                          <CopyIcon onClick={() => copyToClipboard(`${REBORN_URL}/statement/${statement.statement_id ? statement.statement_id : statement?._id}`)} className="h-3 !mt-[10px] w-3 text-gray-400 hover:text-gray-600 cursor-pointer" />
                         </div>
                       </span>
                     )}

@@ -24,6 +24,8 @@ const JsonSourceCode: FC<JsonSourceCodeProps> = ({
         return <div className="animate-pulse">Loading source code...</div>;
     }
     const copyToClipboard = () => {
+        if (Array.isArray(highlightCode))
+            highlightCode = highlightCode.join('\n')
         const rawText = highlightCode ?
             highlightCode.replace(/<[^>]+>/g, '') :
             sourceCode;
