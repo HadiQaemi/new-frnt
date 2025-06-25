@@ -75,7 +75,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
     const [conceptSearch, setConceptSearch] = useState('');
 
     const [authorSuggestions, setAuthorSuggestions] = useState<Item[]>([]);
-    const [journalSuggestions, setJournalSuggestions] = useState<Item[]>([]);
+    const [scientificVenuesSuggestions, setScientificVenuesSuggestions] = useState<Item[]>([]);
     const [researchFieldSuggestions, setResearchFieldSuggestions] = useState<Item[]>([]);
     const [conceptSuggestions, setConceptSuggestions] = useState<Item[]>([]);
 
@@ -178,7 +178,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                                 },
                                 journal: () => {
                                     setScientificVenues('');
-                                    setJournalSuggestions([]);
+                                    setScientificVenuesSuggestions([]);
                                 },
                                 research_field: () => {
                                     setResearchFieldSearch('');
@@ -252,7 +252,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                 }
             });
             localStorage.setItem('journals', JSON.stringify(existingJournals));
-            setJournalSuggestions(journals);
+            setScientificVenuesSuggestions(journals);
         }
     }, [journals]);
     const handleJournalsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -394,8 +394,18 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
             });
             router.push(`/statements`);
         } else {
+            handleFilter({
+                title: '',
+                timeRange: { start: 2015, end: 2025 },
+                page: currentPage,
+                per_page: pageSize,
+                authors: [],
+                scientific_venues: [],
+                research_fields: [],
+                concepts: []
+            });
             router.push('/statements');
-            router.refresh();
+            // router.refresh();
         }
     };
 
@@ -426,13 +436,14 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
             page: currentPage,
             per_page: pageSize
         };
-
-        if (window.location.pathname.includes('/statements')) {
-            updateURLParams(urlParams);
-            handleFilter(filterData);
-        } else {
-            updateURLParams(urlParams);
-        }
+        updateURLParams(urlParams);
+        handleFilter(filterData);
+        // if (window.location.pathname.includes('/statements')) {
+        //     updateURLParams(urlParams);
+        //     handleFilter(filterData);
+        // } else {
+        //     updateURLParams(urlParams);
+        // }
     };
 
     useImperativeHandle(ref, () => ({

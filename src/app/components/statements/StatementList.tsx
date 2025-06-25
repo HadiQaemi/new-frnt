@@ -214,9 +214,9 @@ export default function ListStatements({ data, statements, statementId = null, i
             if (!sideSearchFormRef.current) return;
             const formatMap = {
                 concept: { id: item.concept_id, name: item.label },
-                author: { id: item.id, name: item.label },
+                author: { id: item.id ? item.id : item.author_id, name: item.label },
                 journal: { id: item.id, name: item.label },
-                field: { id: item.id, name: item.label }
+                field: { id: item.research_field_id ? item.research_field_id : item.id, name: item.label }
             };
 
             const setterMap = {
@@ -329,7 +329,7 @@ export default function ListStatements({ data, statements, statementId = null, i
                 </div>
             </div>
 
-            <div className={`transition-all duration-300 ease-in-out overflow-x-auto ${isSidebarOpen ? 'col-span-1 md:col-span-9' : 'max-w-23/24'}`}>
+            <div className={`transition-all duration-300 ease-in-out overflow-x-auto ${isSidebarOpen ? 'col-span-1 md:col-span-9' : 'max-w-23/24 w-[100%]'}`}>
                 <Card className="bg-white shadow-lg">
                     <CardContent className="p-6">
                         {articles.length === 0 ? (

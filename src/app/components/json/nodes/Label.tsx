@@ -34,6 +34,18 @@ const Label = ({
     if (statement) {
         textLabel = statement.label
         concepts = statement.concepts
+        const storedConcepts = JSON.parse(localStorage.getItem('concepts') || '[]');
+        const updatedAuthors = [...storedConcepts];
+        concepts.forEach((concept: any) => {
+            const concept_id = concept.concept_id ? concept.concept_id : concept.id;
+            if (!storedConcepts.some((u: any) => u.id === concept_id)) {
+                updatedAuthors.push({
+                    id: concept_id,
+                    name: concept.label
+                });
+                localStorage.setItem('concepts', JSON.stringify(updatedAuthors));
+            }
+        });
     }
     const renderIdentifiersList = (identifiers: any, item: any = []) => {
         if (typeof identifiers === 'string')

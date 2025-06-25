@@ -1,8 +1,7 @@
-import { Menu, BookOpenText, Calendar, User, ExternalLink, Link2, CopyIcon, BookText, Scan, GraduationCap, GraduationCapIcon, LucideGraduationCap } from 'lucide-react'
+import { Menu, BookOpenText, Calendar, User, CopyIcon, BookText, Scan, GraduationCap } from 'lucide-react'
 import CustomPopover from '../shared/CustomPopover'
 import { usePopoverManager } from '@/app/hooks/usePopoverManager'
 import TruncatedAbstract from './TruncatedAbstract'
-import Link from 'next/link'
 import { useToast } from '@/components/ui/use-toast'
 import { helper } from '@/app/utils/helper'
 
@@ -53,7 +52,6 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
   onAuthorSelect
 }) => {
   const { activePopover, containerRef, handlePopoverToggle } = usePopoverManager()
-
   const renderIdentifiersList = (identifiers: string[]) => {
     if (typeof identifiers !== 'object')
       identifiers = [identifiers]
@@ -107,6 +105,44 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
     research_field = paper.research_fields
     if (Array.isArray(paper.research_fields))
       research_field = paper.research_fields[0]
+  }
+
+  const storedVenues = JSON.parse(localStorage.getItem('journals') || '[]');
+  const updatedVenues = [...storedVenues];
+  if (!storedVenues.some((u: any) => u.id === venue.id)) {
+    updatedVenues.push({
+      id: venue.id,
+      name: venue.label
+    });
+    localStorage.setItem('journals', JSON.stringify(updatedVenues))
+  }
+
+  if (research_field) {
+    const storedResearchFields = JSON.parse(localStorage.getItem('fields') || '[]');
+    const updatedResearchFields = [...storedResearchFields];
+    const research_field_id = research_field.research_field_id ? research_field.research_field_id : research_field.id;
+    if (!storedResearchFields.some((u: any) => u.id === research_field_id)) {
+      updatedResearchFields.push({
+        id: research_field_id,
+        name: research_field.label
+      });
+      localStorage.setItem('fields', JSON.stringify(updatedResearchFields))
+    }
+  }
+
+  if (paper?.authors) {
+    const storedAuthors = JSON.parse(localStorage.getItem('authors') || '[]');
+    const updatedAuthors = [...storedAuthors];
+    paper.authors.forEach((author: any) => {
+      const author_id = author.author_id ? author.author_id : author.id;
+      if (!storedAuthors.some((u: any) => u.id === author_id)) {
+        updatedAuthors.push({
+          id: author_id,
+          name: author.label
+        });
+        localStorage.setItem('authors', JSON.stringify(updatedAuthors));
+      }
+    });
   }
   return (
     <div>
@@ -200,29 +236,31 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
 
         <div className="grid grid-cols-12">
           <div className="col-span-12 sm:col-span-6">
-            <CustomPopover
-              id={`popover-${venue.label}`}
-              subTitle="Show content for "
-              title={venue.label}
-              show={activePopover === venue.label}
-              onToggle={(show) => handlePopoverToggle(venue.label, show)}
-              icon={BookOpenText}
-              onSelect={() => onJournalSelect({ ...venue })}
-              trigger={
-                <span
-                  className="badge cursor-pointer overlay-trigger underline mr-2 text-sm"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handlePopoverToggle(venue.label, activePopover !== venue.label)
-                  }}
-                >
-                  <BookOpenText className="me-1 inline text-gray-500" />
-                  {venue.label}
-                </span>
-              }
-            >
-              {renderIdentifiersList([venue.identifier])}
-            </CustomPopover>
+            {venue.label && (
+              <CustomPopover
+                id={`popover-${venue.label}`}
+                subTitle="Show content for "
+                title={venue.label}
+                show={activePopover === venue.label}
+                onToggle={(show) => handlePopoverToggle(venue.label, show)}
+                icon={BookOpenText}
+                onSelect={() => onJournalSelect({ ...venue })}
+                trigger={
+                  <span
+                    className="badge cursor-pointer overlay-trigger underline mr-2 text-sm"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handlePopoverToggle(venue.label, activePopover !== venue.label)
+                    }}
+                  >
+                    <BookOpenText className="me-1 inline text-gray-500" />
+                    {venue.label}
+                  </span>
+                }
+              >
+                {renderIdentifiersList([venue.identifier])}
+              </CustomPopover>
+            )}
             <div className='text-black inline text-sm'>
               <BookText className="mx-1 inline text-gray-500" />
               {paper.publisher}
