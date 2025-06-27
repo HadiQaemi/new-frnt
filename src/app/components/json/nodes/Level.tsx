@@ -64,7 +64,7 @@ const Level: React.FC<LevelProps> = ({ level, targets, components }) => {
                                         ) + `</span>`
                                     }} />
                                 </CustomPopover>
-                                : (item['label'])
+                                : `${item['label']}${Object.entries(targets).length !== (index + 1) ? ', ' : ''}`
                         ))}
                     </div>
                 ) : (

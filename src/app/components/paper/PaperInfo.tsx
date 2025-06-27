@@ -4,6 +4,7 @@ import { usePopoverManager } from '@/app/hooks/usePopoverManager'
 import TruncatedAbstract from './TruncatedAbstract'
 import { useToast } from '@/components/ui/use-toast'
 import { helper } from '@/app/utils/helper'
+import { useEffect } from 'react'
 
 interface Author {
   label: string
@@ -107,43 +108,49 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
       research_field = paper.research_fields[0]
   }
 
-  const storedVenues = JSON.parse(localStorage.getItem('journals') || '[]');
-  const updatedVenues = [...storedVenues];
-  if (!storedVenues.some((u: any) => u.id === venue.id)) {
-    updatedVenues.push({
-      id: venue.id,
-      name: venue.label
-    });
-    localStorage.setItem('journals', JSON.stringify(updatedVenues))
-  }
-
-  if (research_field) {
-    const storedResearchFields = JSON.parse(localStorage.getItem('fields') || '[]');
-    const updatedResearchFields = [...storedResearchFields];
-    const research_field_id = research_field.research_field_id ? research_field.research_field_id : research_field.id;
-    if (!storedResearchFields.some((u: any) => u.id === research_field_id)) {
-      updatedResearchFields.push({
-        id: research_field_id,
-        name: research_field.label
-      });
-      localStorage.setItem('fields', JSON.stringify(updatedResearchFields))
-    }
-  }
-
-  if (paper?.authors) {
-    const storedAuthors = JSON.parse(localStorage.getItem('authors') || '[]');
-    const updatedAuthors = [...storedAuthors];
-    paper.authors.forEach((author: any) => {
-      const author_id = author.author_id ? author.author_id : author.id;
-      if (!storedAuthors.some((u: any) => u.id === author_id)) {
-        updatedAuthors.push({
-          id: author_id,
-          name: author.label
+  useEffect(() => {
+    const localJournals = localStorage.getItem('journals') || '[]'
+    if (localJournals.length) {
+      const storedVenues = JSON.parse(localJournals);
+      const updatedVenues = [...storedVenues];
+      if (!storedVenues.some((u: any) => u.id === venue.id)) {
+        updatedVenues.push({
+          id: venue.id,
+          name: venue.label
         });
-        localStorage.setItem('authors', JSON.stringify(updatedAuthors));
+        localStorage.setItem('journals', JSON.stringify(updatedVenues))
       }
-    });
-  }
+    }
+
+    if (research_field) {
+      const storedResearchFields = JSON.parse(localStorage.getItem('fields') || '[]');
+      const updatedResearchFields = [...storedResearchFields];
+      const research_field_id = research_field.research_field_id ? research_field.research_field_id : research_field.id;
+      if (!storedResearchFields.some((u: any) => u.id === research_field_id)) {
+        updatedResearchFields.push({
+          id: research_field_id,
+          name: research_field.label
+        });
+        localStorage.setItem('fields', JSON.stringify(updatedResearchFields))
+      }
+    }
+
+    if (paper?.authors) {
+      const storedAuthors = JSON.parse(localStorage.getItem('authors') || '[]');
+      const updatedAuthors = [...storedAuthors];
+      paper.authors.forEach((author: any) => {
+        const author_id = author.author_id ? author.author_id : author.id;
+        if (!storedAuthors.some((u: any) => u.id === author_id)) {
+          updatedAuthors.push({
+            id: author_id,
+            name: author.label
+          });
+          localStorage.setItem('authors', JSON.stringify(updatedAuthors));
+        }
+      });
+    }
+  }, [])
+
   return (
     <div>
       <div className="grid grid-cols-1 bg-[#e7e5e6] p-1.5">

@@ -11,6 +11,7 @@ import CustomPopover from '../../shared/CustomPopover';
 import URLOrText from '../../shared/URLOrText';
 import { styles } from '@/app/utils/styles';
 import { Tag } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 const Label = ({
     tooltip,
@@ -27,25 +28,32 @@ const Label = ({
     level
 }: LabelProps) => {
     const { activePopover, containerRef, handlePopoverToggle } = usePopoverManager();
-
+    const [concepts, setConcepts] = useState([]);
+    const [textLabel, setTextLabel] = useState([]);
     // let support = [];
-    let concepts = [];
-    let textLabel = '';
+
+    useEffect(() => {
+        setTextLabel(statement.label)
+        setConcepts(statement.concepts)
+        const localConcepts = localStorage.getItem('concepts') || '[]'
+        if (localConcepts.length) {
+            const storedConcepts = JSON.parse(localStorage.getItem('concepts') || '[]');
+            const updatedAuthors = [...storedConcepts];
+            concepts.forEach((concept: any) => {
+                const concept_id = concept.concept_id ? concept.concept_id : concept.id;
+                if (!storedConcepts.some((u: any) => u.id === concept_id)) {
+                    updatedAuthors.push({
+                        id: concept_id,
+                        name: concept.label
+                    });
+                    localStorage.setItem('concepts', JSON.stringify(updatedAuthors));
+                }
+            });
+        }
+    }, [statement]);
+
     if (statement) {
-        textLabel = statement.label
-        concepts = statement.concepts
-        const storedConcepts = JSON.parse(localStorage.getItem('concepts') || '[]');
-        const updatedAuthors = [...storedConcepts];
-        concepts.forEach((concept: any) => {
-            const concept_id = concept.concept_id ? concept.concept_id : concept.id;
-            if (!storedConcepts.some((u: any) => u.id === concept_id)) {
-                updatedAuthors.push({
-                    id: concept_id,
-                    name: concept.label
-                });
-                localStorage.setItem('concepts', JSON.stringify(updatedAuthors));
-            }
-        });
+
     }
     const renderIdentifiersList = (identifiers: any, item: any = []) => {
         if (typeof identifiers === 'string')
