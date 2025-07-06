@@ -29,7 +29,9 @@ input[type="radio"] { display: none; }
 #section2-python:checked ~ .section2 #section2-python-tab,
 #section2-r:checked ~ .section2 #section2-r-tab,
 #section3-python:checked ~ .section3 #section3-python-tab,
-#section3-r:checked ~ .section3 #section3-r-tab { 
+#section3-r:checked ~ .section3 #section3-r-tab,
+#section4-python:checked ~ .section4 #section4-python-tab,
+#section4-r:checked ~ .section4 #section4-r-tab { 
     @apply bg-gray-200 text-gray-900;
 }
 #section1-python:checked ~ .section1 #section1-python-content,
@@ -37,7 +39,9 @@ input[type="radio"] { display: none; }
 #section2-python:checked ~ .section2 #section2-python-content,
 #section2-r:checked ~ .section2 #section2-r-content,
 #section3-python:checked ~ .section3 #section3-python-content,
-#section3-r:checked ~ .section3 #section3-r-content {
+#section3-r:checked ~ .section3 #section3-r-content,
+#section4-python:checked ~ .section4 #section4-python-content,
+#section4-r:checked ~ .section4 #section4-r-content {
     display: block;
 }
 
