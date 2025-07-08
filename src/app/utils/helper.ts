@@ -353,7 +353,10 @@ export const helper = {
         requires?: any
     ): string => {
         if (seeAlso && !requires) {
-            return `${prefix}: <a target="_blank" class="underline" href="${seeAlso}">${label}</a>`;
+            if (seeAlso[0] && !requires) {
+                return `${prefix}: <a target="_blank" class="underline" href="${seeAlso}">${label}</a>`;
+            }
+            return `${prefix}: ${label}`;
         }
         return `${prefix}: ${label}`;
     },
