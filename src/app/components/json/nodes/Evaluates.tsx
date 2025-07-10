@@ -37,7 +37,7 @@ const Evaluates: React.FC<EvaluatesProps> = ({ evaluates_for, evaluates }) => {
 
     return (
         <div className="w-full">
-            <div className="p-2 border-t border-r border-b border-amber-500 border-l-[10px] border-l-amber-500 my-1 relative">
+            <div className="p-2 pt-4 border-t border-r border-b border-amber-500 border-l-[10px] border-l-amber-500 my-1 relative">
                 <span className={`bg-amber-500 absolute -top-[12px] text-[12px] -left-[10px] p-[2px] text-white pl-4 pr-2`}>
                     Setup
                 </span>

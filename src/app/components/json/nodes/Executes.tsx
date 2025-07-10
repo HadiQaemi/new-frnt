@@ -67,12 +67,12 @@ const Executes: React.FC<ExecutesProps> = ({ executes, styles }) => {
     );
 
     return (
-        <div className="w-full pt-4">
+        <div className="w-full">
             <div className="border-t border-r border-b border-red-700 border-l-[10px] border-l-red-700 my-1 relative">
                 <span className={`bg-red-700 absolute -top-[12px] text-[12px] -left-[10px] p-[2px] text-white pl-4 pr-2`}>
                     Procedure
                 </span>
-                <div className="p-2">
+                <div className="p-2 pt-4">
                     <URLOrText content={text} />
                     {is_implemented_by && (
                         <JsonSourceCode

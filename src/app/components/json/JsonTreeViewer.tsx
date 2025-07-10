@@ -240,18 +240,22 @@ const TreeNode: React.FC<TreeNodeProps> = ({
                 }) => {
                   let evaluates = true
                   let level_targets = true
+                  let turn = 1
                   return (
-                    <div key={`data-type-${data_type.type.name}-${nanoid()}`} className="d-flex p-2 border-t border-r border-b border-[#5b9bd5] border-l-[10px] border-l-[#5b9bd5] my-1 mb-4">
+                    <div key={`data-type-${data_type.type.name}-${nanoid()}`} className="d-flex p-2 border-t border-r border-b border-[#5b9bd5] border-l-[10px] border-l-[#5b9bd5] my-1">
                       <span className={`bg-[#5b9bd5] relative -top-[18px] -left-[18px] p-1 text-[12px] text-white pl-4`}>
                         {helper.capitalizeFirstLetter(helper.cleanFirstLetter(data_type.type.name))}
                       </span>
                       <div>
-                        {data_type.type.properties?.map((type) => {
+                        {data_type.type.properties?.map((type, index) => {
+                          if (data_type.has_part[type].length) {
+                            turn += 1
+                          }
                           return (
                             <div key={`property-${type}-${nanoid()}`}>
                               {type === 'has_input' ? (
-                                <div className="mx-0 pt-4" key={`has_input-all-${nanoid()}`}>
-                                  <div key={`has_input-parent-${nanoid()}`} className="p-2 border-t border-r border-b border-[#00b050] border-l-[10px] border-l-[#00b050] my-1 relative scrollbar-custom sm:overflow-visible overflow-auto">
+                                <div className={`mx-0 ${turn > 1 ? 'pt-4' : ``}`} key={`has_input-all-${nanoid()}`}>
+                                  <div key={`has_input-parent-${nanoid()}`} className="p-2 pt-4 border-t border-r border-b border-[#00b050] border-l-[10px] border-l-[#00b050] my-1 relative scrollbar-custom sm:overflow-visible overflow-auto">
                                     <span className={`bg-[#00b050] absolute -top-[12px] text-[12px] -left-[10px] p-[2px] text-white pl-4 pr-2`}>
                                       Input data
                                     </span>
@@ -266,7 +270,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
                                   </div>
                                 </div>
                               ) : type === 'has_output' ? (
-                                <div className="mx-0 pt-4" key={`has_output-all-${nanoid()}`}>
+                                <div className={`mx-0 ${turn > 1 ? 'pt-4' : ``}`} key={`has_output-all-${nanoid()}`}>
                                   <div key={`has_output-parent-${nanoid()}`} className="p-2 border-t border-r border-b border-[#00b050] border-l-[10px] border-l-[#00b050] my-1 relative scrollbar-custom sm:overflow-visible overflow-auto">
                                     <span className={`bg-[#00b050] absolute -top-[12px] text-[12px] -left-[10px] p-[2px] text-white pl-4 pr-2`}>
                                       Output data
@@ -283,14 +287,18 @@ const TreeNode: React.FC<TreeNodeProps> = ({
                                 </div>
                               ) : type === 'executes' ? (
                                 data_type.has_part[type] !== undefined && data_type.has_part[type][0] !== undefined && (
-                                  <Executes executes={data_type.has_part[type][0]} key={`executes-${type}-${nanoid()}`} />
+                                  <div className={`mx-0 ${turn > 1 ? `` : ``}`} key={`has_output-all-${nanoid()}`}>
+                                    <Executes executes={data_type.has_part[type][0]} key={`executes-${type}-${nanoid()}`} />
+                                  </div>
                                 )
                               ) : (type === 'evaluates' || type === 'evaluates_for') ? (
                                 (() => {
                                   if (evaluates) {
                                     evaluates = false
                                     return (data_type.has_part[type] && (
-                                      <Evaluates evaluates={data_type.has_part['evaluates']} evaluates_for={data_type.has_part['evaluates_for']} key={`evaluates-${type}-${nanoid()}`} />
+                                      <div className={`mx-0 ${turn > 1 ? 'pt-4' : ``}`} key={`has_output-all-${nanoid()}`}>
+                                        <Evaluates evaluates={data_type.has_part['evaluates']} evaluates_for={data_type.has_part['evaluates_for']} key={`evaluates-${type}-${nanoid()}`} />
+                                      </div>
                                     ))
                                   }
                                 })()
@@ -300,7 +308,9 @@ const TreeNode: React.FC<TreeNodeProps> = ({
                                     level_targets = false
                                     return (data_type.has_part[type] && (
                                       // <Evaluates evaluates={data_type.has_part['evaluates']} evaluates_for={data_type.has_part['evaluates_for']} key={`evaluates-${type}`} />
-                                      <Level key={`targets-${type}-${nanoid()}`} level={data_type.has_part['level']} targets={data_type.has_part['targets']} components={statement.components} />
+                                      <div className={`mx-0 ${turn > 1 ? 'pt-4' : ``}`} key={`has_output-all-${nanoid()}`}>
+                                        <Level key={`targets-${type}-${nanoid()}`} level={data_type.has_part['level']} targets={data_type.has_part['targets']} components={statement.components} />
+                                      </div>
                                     ))
                                   }
                                 })()

@@ -139,7 +139,7 @@ const JsonTable: React.FC<JsonTableProps> = ({ data, styles, button, color, Comp
             ref={tableContainerRef}
             className={`w-full ${isFullscreen
                 ? 'fixed inset-0 z-50 bg-white p-4'
-                : ''
+                : 'pt-2'
                 }`}
             style={styles}
         >

@@ -57,7 +57,7 @@ const JsonSourceCode: FC<JsonSourceCodeProps> = ({
             >
                 <Copy />
             </Button>
-            <div className="whitespace-pre-wrap w-full p-2.5 font-mono text-sm">
+            <div className="whitespace-pre-wrap w-full font-mono text-sm">
                 <CodeBlock code={showAllCode ? sourceCode : sourceCode.split('\n').slice(0, 5).join('\n')} />
                 {toggleShowAllCode !== undefined && (
                     <button
