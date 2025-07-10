@@ -248,7 +248,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
                       </span>
                       <div>
                         {data_type.type.properties?.map((type, index) => {
-                          if (data_type.has_part[type].length) {
+                          if (data_type.has_part[type] && data_type.has_part[type].length) {
                             turn += 1
                           }
                           return (
