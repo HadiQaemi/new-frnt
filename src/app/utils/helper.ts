@@ -383,7 +383,7 @@ export const helper = {
 
         } else {
             identifiers = identifiers[0]
-            if (identifiers['type'].find((identifier: string) => identifier === 'Measure')) {
+            if (identifiers['type'].find((identifier: string) => identifier === 'Measure') || identifiers['type'].find((identifier: string) => identifier === 'Property')) {
                 let text = ``
                 let links = ``
                 if (identifiers['label'])
