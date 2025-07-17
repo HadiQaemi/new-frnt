@@ -242,7 +242,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
                   let level_targets = true
                   let turn = 1
                   return (
-                    <div key={`data-type-${data_type.type.name}-${nanoid()}`} className="d-flex p-2 border-t border-r border-b border-[#5b9bd5] border-l-[10px] border-l-[#5b9bd5] my-1">
+                    <div key={`data-type-${data_type.type.name}-${nanoid()}`} className="d-flex p-2 mb-4 border-t border-r border-b border-[#5b9bd5] border-l-[10px] border-l-[#5b9bd5] my-1">
                       <span className={`bg-[#5b9bd5] relative -top-[18px] -left-[18px] p-1 text-[12px] text-white pl-4`}>
                         {helper.capitalizeFirstLetter(helper.cleanFirstLetter(data_type.type.name))}
                       </span>

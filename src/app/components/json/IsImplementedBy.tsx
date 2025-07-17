@@ -68,35 +68,29 @@ const IsImplementedBy: FC<IsImplementedByProps> = ({
     // }
 
     return (
-        <div className="w-full pt-4">
-            <div className="mx-0">
-                <div className="px-0">
-                    <div className="p-2 border-t border-r border-b border-[#c40dfd] border-l-[10px] border-l-[#c40dfd] my-1 relative">
-                        <span className={`bg-[#c40dfd] absolute -top-[12px] text-[12px] -left-[10px] p-[2px] text-white pl-4 pr-2`}>
-                            Implementation
-                        </span>
-                        {stringType.fileType === 'sourceCode' ? (
-                            <JsonSourceCode
-                                highlightCode={highlightCode(sourceCode, executes_is_implemented_by)}
-                                isCodeLoading={isCodeLoading}
-                                sourceCode={sourceCode}
-                                showAllCode={showAllCode}
-                                toggleShowAllCode={toggleShowAllCode}
-                            />
-                        ) : (
-                            <div className="font-bold flex cursor-help">
-                                <span className="inline">Source code: </span>
-                                <span className="inline ml-2">
-                                    <URLOrText
-                                        content={String(is_implemented_by)}
-                                        button=""
-                                    />
-                                </span>
-                            </div>
-                        )}
-                    </div>
+        <div className="p-2 pt-4 border-t border-r border-b border-[#c40dfd] border-l-[10px] border-l-[#c40dfd] my-1 relative">
+            <span className={`bg-[#c40dfd] absolute -top-[12px] text-[12px] -left-[10px] p-[2px] text-white pl-4 pr-2`}>
+                Implementation
+            </span>
+            {stringType.fileType === 'sourceCode' ? (
+                <JsonSourceCode
+                    highlightCode={highlightCode(sourceCode, executes_is_implemented_by)}
+                    isCodeLoading={isCodeLoading}
+                    sourceCode={sourceCode}
+                    showAllCode={showAllCode}
+                    toggleShowAllCode={toggleShowAllCode}
+                />
+            ) : (
+                <div className="font-bold flex cursor-help">
+                    <span className="inline">Source code: </span>
+                    <span className="inline ml-2">
+                        <URLOrText
+                            content={String(is_implemented_by)}
+                            button=""
+                        />
+                    </span>
                 </div>
-            </div>
+            )}
         </div>
     );
 };
