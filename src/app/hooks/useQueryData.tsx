@@ -44,7 +44,7 @@ export const useQueryData = (queryParams?: QueryParams) => {
     queryKey: ['filtered-statements', queryParams],
     queryFn: async () => {
       const response = await fetch(`${REBORN_API_URL}/articles/advanced_search/`, {
-        method: 'POST',
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },

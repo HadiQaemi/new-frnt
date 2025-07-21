@@ -52,7 +52,6 @@ export default function StatementsPage() {
     queryParams.research_fields?.length ||
     queryParams.authors?.length
   );
-
   const {
     data,
     isLoading,
@@ -64,7 +63,7 @@ export default function StatementsPage() {
       per_page: 10,
       startYear: queryParams.startYear,
       endYear: queryParams.endYear,
-      title: queryParams.title,
+      title: queryParams.title || '',
       concepts: queryParams.concepts,
       scientific_venues: queryParams.scientific_venues,
       research_fields: queryParams.research_fields,
@@ -75,26 +74,6 @@ export default function StatementsPage() {
       pageSize: 10,
     }
   });
-  // const {
-  //   data,
-  //   isLoading,
-  //   isError
-  // } = hasFilters
-  //     ? useFilter({
-  //       page: 1,
-  //       per_page: 10,
-  //       startYear: queryParams.startYear,
-  //       endYear: queryParams.endYear,
-  //       title: queryParams.title,
-  //       concepts: queryParams.concepts,
-  //       scientific_venues: queryParams.scientific_venues,
-  //       research_fields: queryParams.research_fields,
-  //       authors: queryParams.authors,
-  //     })
-  //     : useStatements({
-  //       currentPage: 1,
-  //       pageSize: 10,
-  //     });
 
   if (!isInitialized) {
     return (

@@ -125,6 +125,5 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function StatementPage({ params }: Props) {
   const { id } = await params;
-  const initialData = await getStatementServer(id);
-  return <PageClient initialData={initialData} id={id} />;
+  return <PageClient id={id} />;
 }

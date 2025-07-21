@@ -132,7 +132,8 @@ const CartComponent: React.FC = () => {
                 let folderName = 'unknown_author';
                 let year = 'unknownYear';
                 if (article.articleDatePublished) {
-                    const match = article.articleDatePublished.match(/\d{4}/);
+                    const articleDatePublished = article.articleDatePublished.toString()
+                    const match = articleDatePublished.match(/\d{4}/);
                     if (match) year = match[0];
                 }
 

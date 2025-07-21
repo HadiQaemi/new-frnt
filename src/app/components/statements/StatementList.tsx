@@ -64,13 +64,6 @@ export default function ListStatements({ data, statements, statementId = null, i
         scientific_venues: [],
         concepts: []
     });
-    // const { data: filteredStatements, isLoading: isQueryLoading, error } = useQueryData(filterParams);
-    // useEffect(() => {
-    //     if (filteredStatements) {
-    //         console.log(filteredStatements)
-    //         setArticles([filteredStatements.results]);
-    //     }
-    // }, [filteredStatements]);
 
     const handleFilter = (formData: QueryParams) => {
         setFilterParams(formData);
@@ -270,7 +263,7 @@ export default function ListStatements({ data, statements, statementId = null, i
             return true
         }
         try {
-            const response = await fetch(`${REBORN_API_URL}/articles/get_statement/?id=${itemId}`);
+            const response = await fetch(`${REBORN_API_URL}/articles/get_statement_by_id/?id=${itemId}`);
             if (!response.ok) {
                 throw new Error(`Error fetching statement: ${response.status}`);
             }

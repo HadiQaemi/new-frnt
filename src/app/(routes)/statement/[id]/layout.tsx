@@ -1,6 +1,5 @@
 'use client'
 
-import Navbar from "@/app/components/layout/Navbar";
 import { Providers } from "@/app/providers/providers";
 
 const RootLayout = ({

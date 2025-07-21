@@ -109,7 +109,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
   const toggleNode = async () => {
     // handleTreeViewerClick()
     try {
-      const response = await fetch(`${REBORN_API_URL}/articles/get_statement/?id=${statement.statement_id}`);
+      const response = await fetch(`${REBORN_API_URL}/articles/get_statement_by_id/?id=${statement.statement_id}`);
       if (!response.ok) {
         throw new Error(`Error fetching statement: ${response.status}`);
       }

@@ -32,6 +32,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.54.0",
+    "recharts": "^3.1.0",
     "shadcn-ui": "^0.2.3",
     "sharp": "^0.33.5",
     "swr": "^2.2.5",

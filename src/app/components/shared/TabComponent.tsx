@@ -95,11 +95,11 @@ const TabComponent: React.FC<TabComponentProps> = ({
             const queryParams = buildQueryParams();
             let url = ''
             if (activeTab == 'articles')
-                url = `${REBORN_API_URL}/articles/get_latest_articles/?${queryParams}`
+                url = `${REBORN_API_URL}/articles/get_articles/?${queryParams}`
             else if (activeTab == 'statements')
-                url = `${REBORN_API_URL}/articles/get_latest_statements/?${queryParams}`
+                url = `${REBORN_API_URL}/articles/get_statements/?${queryParams}`
             else if (activeTab == 'authors')
-                url = `${REBORN_API_URL}/articles/get_latest_authors/?${queryParams}`
+                url = `${REBORN_API_URL}/articles/get_authors/?${queryParams}`
             else if (activeTab == 'journals')
                 url = `${REBORN_API_URL}/articles/get_journals/?${queryParams}`
 

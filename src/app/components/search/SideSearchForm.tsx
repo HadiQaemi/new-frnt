@@ -486,7 +486,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
         const newUrl = `${'/statements'}${searchParams.toString() ? '?' + searchParams.toString() : ''}`;
         window.location.href = newUrl;
         // router.push(newUrl);
-        // router.refresh();
+        router.refresh();
     };
 
     return (

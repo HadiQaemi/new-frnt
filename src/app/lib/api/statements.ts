@@ -35,12 +35,6 @@ export function useStatementsData(params: {
     defaultParams?: FetchStatementsParams;
 }) {
     const { hasFilters, filterParams, defaultParams = { currentPage: 1, pageSize: 10 } } = params;
-
-    // Always define the same hooks in the same order
-    // const statementsResult = useSWR<ORKGResponse>(
-    //     !hasFilters ? `${REBORN_API_URL}/query-data?currentPage=${defaultParams.currentPage}&pageSize=${defaultParams.pageSize}` : null,
-    //     fetcher
-    // );
     const statementsResult = {
         results: [],
         content: [],
@@ -53,20 +47,29 @@ export function useStatementsData(params: {
     const filterResult = useSWR<ORKGResponse>(
         hasFilters ? [`${REBORN_API_URL}/articles/advanced_search/`, filterParams] : null,
         async ([url, params]) => {
-            const response = await fetch(url, {
-                method: 'POST',
+            const rawParams = {
+                ...filterParams,
+                start: filterParams?.startYear?.toString() ?? '',
+                end: filterParams?.endYear?.toString() ?? '',
+            };
+            const queryParams = new URLSearchParams();
+            Object.entries(rawParams).forEach(([key, value]) => {
+                if (Array.isArray(value)) {
+                    value.forEach(v => {
+                        if (v != null) {
+                            queryParams.append(key, v);
+                        }
+                    });
+                } else if (value != null) {
+                    queryParams.append(key, value.toString());
+                }
+            });
+            const response = await fetch(`${url}?${queryParams.toString()}`, {
+                method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    ...filterParams,
-                    timeRange: {
-                        start: filterParams?.startYear,
-                        end: filterParams?.endYear
-                    }
-                }),
             });
-
             if (!response.ok) {
                 throw new Error(`API error: ${response.status} ${response.statusText}`);
             }
@@ -74,7 +77,6 @@ export function useStatementsData(params: {
             return response.json();
         }
     );
-
     // Return the appropriate result based on which hook was actually used
     return {
         data: hasFilters ? filterResult.data : statementsResult,
@@ -167,7 +169,7 @@ export function getStatements() {
 export function getStatement(id: any) {
     const { data, error, isLoading } = useSWR<any>(
         // `${REBORN_API_URL}/articles/get_statement_by_id/?id=${id}`,
-        `${REBORN_API_URL}/articles/get_article_statement/?id=${id}`,
+        `${REBORN_API_URL}/articles/get_article_statements/?id=${id}`,
         fetcher
     );
 
@@ -180,7 +182,7 @@ export function getStatement(id: any) {
 
 export function getPaper(id: any) {
     const { data, error, isLoading } = useSWR<any>(
-        `${REBORN_API_URL}/articles/get_article/?id=${id}`,
+        `${REBORN_API_URL}/articles/get_article_by_id/?id=${id}`,
         fetcher
     );
 

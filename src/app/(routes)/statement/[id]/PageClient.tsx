@@ -5,12 +5,11 @@ import StatementList from '@/app/components/statements/StatementList';
 import { getStatement } from '@/app/lib/api/statements';
 
 type PaperClientProps = {
-    initialData: any;
     id: string;
 };
 
-export default function PageClient({ initialData, id }: PaperClientProps) {
-    const { data = initialData, isLoading, isError } = getStatement(id);
+export default function PageClient({ id }: PaperClientProps) {
+    const { data, isLoading, isError } = getStatement(id);
     return (
         <main className="w-full mx-auto p-4 bg-[#e9ebf2] pb-[50px] min-h-[calc(100vh-18.9rem)]">
             {isLoading ? (
