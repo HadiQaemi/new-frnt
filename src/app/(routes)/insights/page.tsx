@@ -8,7 +8,7 @@ type Props = {
   }>;
 };
 
-export default async function StatementPage({}: Props) {
+export default async function InsightPage({}: Props) {
   const initialData = await getInsightServer();
   return <PageClient initialData={initialData} />;
 }

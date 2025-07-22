@@ -174,7 +174,7 @@ const TabComponent: React.FC<TabComponentProps> = ({
             if (searchType === 'keyword') {
                 fetchData();
             } else {
-                const response = await fetch(`${REBORN_API_URL}/articles/get_latest_${activeTab}?${queryParams}`);
+                const response = await fetch(`${REBORN_API_URL}/articles/get_${activeTab}?${queryParams}`);
                 if (!response.ok) throw new Error('Network response was not ok');
                 const data = await response.json();
 

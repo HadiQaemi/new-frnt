@@ -22,8 +22,7 @@ interface ChartData {
 }
 
 interface Props {
-  chartData: ChartData;
-  selectionChangeFunction: (isPython: boolean) => void;
+  chartData: ChartData
 }
 
 const renderCustomLabel = ({ name, x, y }: PieLabelRenderProps) => (
@@ -37,6 +36,18 @@ const renderCustomLabel = ({ name, x, y }: PieLabelRenderProps) => (
     {name}
   </text>
 );
+
+const CustomTooltip = ({ active, payload }: any) => {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
+    return (
+      <div className="bg-white p-2 border border-gray-300 rounded">
+        <p>{data.name}: {data.value}%</p>
+      </div>
+    );
+  }
+  return null;
+};
 
 const renderActiveShape = ({
   cx,
@@ -60,22 +71,12 @@ const renderActiveShape = ({
   </g>
 );
 
-export default function LanguagePieChart({
-  chartData,
-  selectionChangeFunction,
-}: Props) {
-  const [activeIndex, setActiveIndex] = useState(1);
+export default function LanguagePieChart({ chartData }: Props) {
 
   const data = Object.values(chartData).map((datapoint) => ({
     name: datapoint.label,
     value: datapoint.count,
   }));
-
-  const changeSelection = (_: any, index: number) => {
-    const selectedItem = data[index];
-    selectionChangeFunction(selectedItem.name === "Python");
-    setActiveIndex(index);
-  };
 
   return (
     <div className="w-full h-[90%]">
@@ -90,9 +91,7 @@ export default function LanguagePieChart({
             fill="#8884d8"
             labelLine={false}
             label={renderCustomLabel}
-            // activeIndex={activeIndex ?? undefined}
             activeShape={renderActiveShape}
-            onClick={changeSelection}
           >
             {data.map((entry, index) => (
               <Cell
@@ -101,7 +100,7 @@ export default function LanguagePieChart({
               />
             ))}
           </Pie>
-          <Tooltip />
+          <Tooltip content={<CustomTooltip />} />
         </PieChart>
       </ResponsiveContainer>
     </div>

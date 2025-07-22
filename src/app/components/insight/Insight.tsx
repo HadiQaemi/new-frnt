@@ -38,12 +38,10 @@ export default function Insight({ data, statistics, programming_languages, num_p
     return (
         <>
             <div className="text-center mt-4 mb-8">
-                <h1 className="text-4xl font-bold mb-2">Insight</h1>
-                <h3 className="text-lg text-gray-600">Insight to the data in the reborn database</h3>
+                <h1 className="text-4xl font-bold mb-2">Insights</h1>
             </div>
             <div className="container mx-auto px-4 mb-6">
                 <div className="my-4">
-                    <h3 className="text-2xl font-semibold mb-4">General statistics:</h3>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {Object.entries(statistics).map(([label, value]: [any, any], index) => (
                             <div
@@ -60,36 +58,29 @@ export default function Insight({ data, statistics, programming_languages, num_p
                 </div>
 
                 <div className="my-6">
-                    <h3 className="text-2xl font-semibold mb-4">Code package statistics:</h3>
-                    <div className="bg-white border border-[#e9ebf2] rounded p-4 grid md:grid-cols-3 gap-4">
-                        <div className="h-[400px]">
-                            <div className="text-2xl mb-3">Language of the packages:</div>
-                            <LanguagePieChart
-                                chartData={programming_languages}
-                                selectionChangeFunction={setPythonSelected}
-                            />
+                    <div className="bg-white border border-[#e9ebf2] rounded grid md:grid-cols-3 gap-4 p-4">
+                        <div className="flex items-center justify-center h-[400px]">
+                            <div className="text-2xl mb-3">Languages:</div>
+                            <LanguagePieChart chartData={programming_languages} />
                         </div>
-                        <div className="h-[400px] col-span-2">
-                            <div className="text-2xl mb-3">
-                                Top {pythonSelected ? "Python" : "R"} packages:
+
+                        <div className="col-span-2 grid grid-rows-2 gap-4">
+                            <div>
+                                <div className="text-2xl mb-3">Top R packages:</div>
+                                <InsightBarChart
+                                    chartData={num_packages["R"]}
+                                    color={"#f2afb2"}
+                                    fillColor={"#bab8e1"}
+                                />
                             </div>
-                            <InsightBarChart
-                                chartData={
-                                    pythonSelected
-                                        ? num_packages["Python"]
-                                        : num_packages["R"]
-                                }
-                                color={
-                                    pythonSelected
-                                        ? "#68cbb0"
-                                        : "#f2afb2"
-                                }
-                                fillColor={
-                                    pythonSelected
-                                        ? "#70ebce"
-                                        : "#bab8e1"
-                                }
-                            />
+                            <div>
+                                <div className="text-2xl mb-3">Top Python packages:</div>
+                                <InsightBarChart
+                                    chartData={num_packages["Python"]}
+                                    color={"#68cbb0"}
+                                    fillColor={"#70ebce"}
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -97,14 +88,12 @@ export default function Insight({ data, statistics, programming_languages, num_p
                 <div className="my-6">
                     <div className="bg-white rounded border border-[#e9ebf2] p-4">
                         <div className="text-2xl mb-3">
-                            reborn{" "}
                             <a
                                 className="text-blue-600 hover:underline"
                                 href="https://reborn.orkg.org/pages/help"
                             >
-                                data types
-                            </a>{" "}
-                            usage:
+                                Data types
+                            </a>
                         </div>
                         <div className="h-[400px]">
                             <InsightBarChart chartData={data_types} color={'#68cbb0'} fillColor={'#68cbb0'} />
