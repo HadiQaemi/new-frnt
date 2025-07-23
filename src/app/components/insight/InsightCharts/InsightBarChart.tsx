@@ -24,10 +24,10 @@ interface InsightBarChartProps {
 }
 
 export default function InsightBarChart({ chartData, color, fillColor }: InsightBarChartProps) {
-    const data = Object.values(chartData).map((datapoint) => ({
+    const data = chartData ? Object.values(chartData).map((datapoint) => ({
         name: datapoint.label,
         usage: datapoint.count,
-    }));
+    })) : [];
 
     return (
         <div className="w-full h-[90%]">

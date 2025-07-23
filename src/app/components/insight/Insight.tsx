@@ -58,15 +58,15 @@ export default function Insight({ data, statistics, programming_languages, num_p
                 </div>
 
                 <div className="my-6">
-                    <div className="bg-white border border-[#e9ebf2] rounded grid md:grid-cols-3 gap-4 p-4">
-                        <div className="flex items-center justify-center h-[400px]">
-                            <div className="text-2xl mb-3">Languages:</div>
+                    <div className="bg-white border border-[#e9ebf2] rounded grid gap-4 p-4">
+                        <div className="justify-center h-[250px] mb-5">
+                            <div className="text-2xl mb-3 text-center">Languages</div>
                             <LanguagePieChart chartData={programming_languages} />
                         </div>
 
-                        <div className="col-span-2 grid grid-rows-2 gap-4">
+                        <div className="grid grid-rows-2 gap-4 h-[500px]">
                             <div>
-                                <div className="text-2xl mb-3">Top R packages:</div>
+                                <div className="text-2xl mb-3 text-center">R packages</div>
                                 <InsightBarChart
                                     chartData={num_packages["R"]}
                                     color={"#f2afb2"}
@@ -74,7 +74,7 @@ export default function Insight({ data, statistics, programming_languages, num_p
                                 />
                             </div>
                             <div>
-                                <div className="text-2xl mb-3">Top Python packages:</div>
+                                <div className="text-2xl mb-3 text-center">Python packages</div>
                                 <InsightBarChart
                                     chartData={num_packages["Python"]}
                                     color={"#68cbb0"}
@@ -86,14 +86,9 @@ export default function Insight({ data, statistics, programming_languages, num_p
                 </div>
 
                 <div className="my-6">
-                    <div className="bg-white rounded border border-[#e9ebf2] p-4">
+                    <div className="bg-white text-center rounded border border-[#e9ebf2] p-4">
                         <div className="text-2xl mb-3">
-                            <a
-                                className="text-blue-600 hover:underline"
-                                href="https://reborn.orkg.org/pages/help"
-                            >
-                                Data types
-                            </a>
+                            Data types
                         </div>
                         <div className="h-[400px]">
                             <InsightBarChart chartData={data_types} color={'#68cbb0'} fillColor={'#68cbb0'} />
