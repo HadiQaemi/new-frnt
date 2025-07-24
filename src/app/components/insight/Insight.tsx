@@ -7,6 +7,8 @@ import { Wordcloud } from '@visx/wordcloud';
 import { scaleLog, scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import WordCloudChart from "./InsightCharts/WordCloudChart";
+import PieChart from "./InsightCharts/PieChart";
+import BarChart from "./InsightCharts/BarChart";
 
 interface InsightProps {
     data: any;
@@ -18,33 +20,7 @@ interface InsightProps {
     concepts: any;
 }
 
-type WordData = {
-    text: string;
-    value: number;
-};
-
-export default function Insight({ components, concepts, statistics, programming_languages, num_packages, data_types }: InsightProps) {
-    const words: WordData[] = [
-        { text: 'Next.js', value: 1000 },
-        { text: 'React', value: 800 },
-        { text: 'TypeScript', value: 600 },
-        { text: 'Visx', value: 400 },
-        { text: 'WordCloud', value: 300 },
-        { text: 'Frontend', value: 200 },
-        { text: 'JavaScript', value: 150 },
-        { text: 'D3', value: 100 },
-        { text: 'WebDev', value: 80 },
-        { text: 'Visualization', value: 60 },
-    ];
-    const width = 700;
-    const height = 400;
-    const fontScale = scaleLog()
-        .domain([Math.min(...words.map(w => w.value)), Math.max(...words.map(w => w.value))])
-        .range([12, 60]);
-    const colorScale = scaleOrdinal(schemeCategory10);
-    const [selectedWord, setSelectedWord] = useState<any>(null);
-    const stableRandom = useMemo(() => Math.random(), []);
-    const seededRandom = () => stableRandom;
+export default function Insight({ concepts, components, statistics, programming_languages, num_packages, data_types }: InsightProps) {
     return (
         <>
             <div className="text-center mt-4 mb-8">
@@ -69,27 +45,19 @@ export default function Insight({ components, concepts, statistics, programming_
 
                 <div className="my-6">
                     <div className="bg-white border border-[#e9ebf2] rounded grid gap-4 p-4">
-                        <div className="justify-center h-[250px] mb-5">
+                        <div className="justify-center items-center mx-auto my-0 h-[450px] mb-5">
                             <div className="text-2xl mb-3 text-center">Languages</div>
-                            <LanguagePieChart chartData={programming_languages} />
+                            <PieChart width={400} height={400} data={programming_languages} />
                         </div>
 
-                        <div className="grid grid-rows-2 gap-4 h-[500px]">
+                        <div className="grid grid-rows-2 gap-4 h-[700px]">
                             <div>
                                 <div className="text-2xl mb-3 text-center">R packages</div>
-                                <InsightBarChart
-                                    chartData={num_packages["R"]}
-                                    color={"#f2afb2"}
-                                    fillColor={"#bab8e1"}
-                                />
+                                <BarChart chartData={num_packages["R"]} color="#ff7f0e" hover="#cb640a" />
                             </div>
                             <div>
                                 <div className="text-2xl mb-3 text-center">Python packages</div>
-                                <InsightBarChart
-                                    chartData={num_packages["Python"]}
-                                    color={"#68cbb0"}
-                                    fillColor={"#70ebce"}
-                                />
+                                <BarChart chartData={num_packages["Python"]} color="#1f77b4" hover="#0e4871" />
                             </div>
                         </div>
                     </div>
@@ -101,11 +69,22 @@ export default function Insight({ components, concepts, statistics, programming_
                             Data types
                         </div>
                         <div className="h-[400px]">
-                            <InsightBarChart chartData={data_types} color={'#68cbb0'} fillColor={'#68cbb0'} />
+                            <BarChart chartData={data_types} />
                         </div>
                     </div>
                 </div>
-                <WordCloudChart words={concepts} />
+                <div className="my-6">
+                    <div className="text-2xl mb-3 text-center">
+                        Concepts
+                    </div>
+                    <WordCloudChart words={concepts} />
+                </div>
+                <div className="my-6">
+                    <div className="text-2xl mb-3 text-center">
+                        Components
+                    </div>
+                    <WordCloudChart words={components} />
+                </div>
             </div>
         </>
     );

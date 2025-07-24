@@ -30,7 +30,7 @@ export default function WordCloudChart({ words }: WordCloudChartProps) {
 
 
     return (
-        <div className="relative flex flex-col items-center justify-center w-full h-[500px]">
+        <div className="relative flex flex-col items-center justify-center w-full h-[400px]">
             {selectedWord && (
                 <div className="absolute top-0 z-10 bg-white border rounded-md shadow-lg p-4 max-w-[50%]">
                     <div className="flex justify-between items-center mb-2">
@@ -42,9 +42,6 @@ export default function WordCloudChart({ words }: WordCloudChartProps) {
                             ✕
                         </button>
                     </div>
-                    {selectedWord.label && (
-                        <p><strong>label:</strong> {selectedWord.label}</p>
-                    )}
                     {selectedWord.definition && (
                         <p><strong>definition:</strong> {selectedWord.definition}</p>
                     )}
