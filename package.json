@@ -18,8 +18,10 @@
     "@socialgouv/matomo-next": "^1.9.2",
     "@tanstack/react-query": "^5.62.7",
     "@types/prismjs": "^1.26.5",
+    "@visx/wordcloud": "^3.12.0",
     "axios": "^1.8.4",
     "cmdk": "^1.0.0",
+    "d3": "^7.9.0",
     "file-saver": "^2.0.5",
     "framer-motion": "^11.13.5",
     "jszip": "^3.10.1",
@@ -42,6 +44,7 @@
     "zustand": "^5.0.3"
   },
   "devDependencies": {
+    "@types/d3-scale-chromatic": "^3.1.0",
     "@types/file-saver": "^2.0.7",
     "@types/lodash": "^4.17.13",
     "@types/node": "^20.17.9",

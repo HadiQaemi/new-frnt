@@ -1,28 +1,12 @@
-import React, { useState } from "react";
+'use client';
+
+import React, { useMemo, useState } from "react";
 import LanguagePieChart from "./InsightCharts/LanguagePieChart";
 import InsightBarChart from "./InsightCharts/InsightBarChart";
-
-interface ChartDataItem {
-    name: string;
-    count: number;
-}
-
-interface ChartData {
-    [key: string]: ChartDataItem[];
-}
-
-interface DataFile {
-    message: {
-        articles: string;
-        statements: string;
-        journals: string;
-        authors: string;
-        language_usage: ChartDataItem[];
-        python_packages: ChartDataItem[];
-        r_packages: ChartDataItem[];
-        data_type_usage: ChartDataItem[];
-    };
-}
+import { Wordcloud } from '@visx/wordcloud';
+import { scaleLog, scaleOrdinal } from 'd3-scale';
+import { schemeCategory10 } from 'd3-scale-chromatic';
+import WordCloudChart from "./InsightCharts/WordCloudChart";
 
 interface InsightProps {
     data: any;
@@ -30,11 +14,37 @@ interface InsightProps {
     programming_languages: any;
     num_packages: any;
     data_types: any;
+    components: any;
+    concepts: any;
 }
 
-export default function Insight({ data, statistics, programming_languages, num_packages, data_types }: InsightProps) {
-    const [pythonSelected, setPythonSelected] = useState<boolean>(false);
+type WordData = {
+    text: string;
+    value: number;
+};
 
+export default function Insight({ components, concepts, statistics, programming_languages, num_packages, data_types }: InsightProps) {
+    const words: WordData[] = [
+        { text: 'Next.js', value: 1000 },
+        { text: 'React', value: 800 },
+        { text: 'TypeScript', value: 600 },
+        { text: 'Visx', value: 400 },
+        { text: 'WordCloud', value: 300 },
+        { text: 'Frontend', value: 200 },
+        { text: 'JavaScript', value: 150 },
+        { text: 'D3', value: 100 },
+        { text: 'WebDev', value: 80 },
+        { text: 'Visualization', value: 60 },
+    ];
+    const width = 700;
+    const height = 400;
+    const fontScale = scaleLog()
+        .domain([Math.min(...words.map(w => w.value)), Math.max(...words.map(w => w.value))])
+        .range([12, 60]);
+    const colorScale = scaleOrdinal(schemeCategory10);
+    const [selectedWord, setSelectedWord] = useState<any>(null);
+    const stableRandom = useMemo(() => Math.random(), []);
+    const seededRandom = () => stableRandom;
     return (
         <>
             <div className="text-center mt-4 mb-8">
@@ -95,6 +105,7 @@ export default function Insight({ data, statistics, programming_languages, num_p
                         </div>
                     </div>
                 </div>
+                <WordCloudChart words={concepts} />
             </div>
         </>
     );
