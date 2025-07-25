@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     template: 'ORKG reborn: %s',
     default: 'ORKG reborn'
   },
-  description: 'ORKG reborn is a digital library for reborn articles where scientific knowledge is born reusable.',
+  description: 'ORKG reborn is a digital library of machine-readable scientific knowledge.',
   openGraph: {
     type: 'website',
     siteName: 'ORKG reborn',

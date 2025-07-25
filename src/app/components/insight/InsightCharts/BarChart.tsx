@@ -19,9 +19,14 @@ interface BarChartProps {
     height?: number;
 }
 
-const margin = { top: 20, right: 20, bottom: 40, left: 50 };
+const margin = { top: 20, right: 30, bottom: 30, left: 60 };
 
-export default function BarChart({ chartData, color = '#68cbb0', hover = '#38ad8d', height = 300 }: BarChartProps) {
+export default function BarChart({
+    chartData,
+    color = '#68cbb0',
+    hover = '#38ad8d',
+    height = 320,
+}: BarChartProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [width, setWidth] = useState(0);
     const [hoverIndex, setHoverIndex] = useState<number | null>(null);
@@ -51,7 +56,7 @@ export default function BarChart({ chartData, color = '#68cbb0', hover = '#38ad8
     });
 
     const yScale = scaleLinear<number>({
-        domain: [0, Math.max(...chartData.map(d => d.count))],
+        domain: [0, Math.max(...chartData.map(d => d.count)) * 1.1], // 10% headroom
         range: [yMax, 0],
         nice: true,
     });
@@ -59,14 +64,15 @@ export default function BarChart({ chartData, color = '#68cbb0', hover = '#38ad8
     return (
         <div ref={containerRef} style={{ width: '100%' }}>
             {width > 0 && (
-                <svg width={width} height={height}>
+                <svg width={width} height={height} role="img" aria-label="Bar chart">
                     <Group top={margin.top} left={margin.left}>
-                        {/* Dashed grid lines */}
+                        {/* Grid */}
                         <GridRows
                             scale={yScale}
                             width={xMax}
-                            stroke="#ccc"
+                            stroke="#e0e0e0"
                             strokeDasharray="4,4"
+                            pointerEvents="none"
                         />
 
                         {/* Bars */}
@@ -84,17 +90,17 @@ export default function BarChart({ chartData, color = '#68cbb0', hover = '#38ad8
                                         width={barWidth}
                                         height={barHeight}
                                         fill={hoverIndex === i ? hover : color}
+                                        rx={4}
                                         onMouseEnter={() => setHoverIndex(i)}
                                         onMouseLeave={() => setHoverIndex(null)}
-                                        rx={4}
                                     />
-                                    {/* Show value on hover */}
                                     {hoverIndex === i && (
                                         <text
                                             x={barX + barWidth / 2}
-                                            y={barY - 8}
+                                            y={barY - 10}
                                             textAnchor="middle"
                                             fontSize={12}
+                                            fontWeight={600}
                                             fill="#333"
                                             style={{ pointerEvents: 'none' }}
                                         >
@@ -105,28 +111,36 @@ export default function BarChart({ chartData, color = '#68cbb0', hover = '#38ad8
                             );
                         })}
 
-                        {/* Axes */}
                         <AxisBottom
                             top={yMax}
                             scale={xScale}
                             tickLabelProps={() => ({
                                 fontSize: 12,
                                 textAnchor: 'middle',
-                                fill: '#333',
-                                style: {
-                                    textDecoration: 'none',
-                                },
+                                fill: '#555',
                             })}
                         />
+                        {/* <AxisBottom
+                            top={yMax}
+                            scale={xScale}
+                            tickLabelProps={() => ({
+                                fontSize: 14,
+                                fill: '#555',
+                                textAnchor: 'end',
+                                angle: -45,
+                                dy: '-0.5em',
+                                dx: '-0.5em',
+                            })}
+                        /> */}
                         <AxisLeft
                             scale={yScale}
                             tickLabelProps={() => ({
-                                fontSize: 12,
-                                fill: '#333',
-                                style: {
-                                    textDecoration: 'none',
-                                },
+                                fontSize: 14,
+                                fill: '#555',
+                                dx: '-1.5em',
                             })}
+                            tickStroke="#aaa"
+                            stroke="#aaa"
                         />
                     </Group>
                 </svg>

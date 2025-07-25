@@ -13,8 +13,8 @@ export default function PageClient({ initialData }: PaperClientProps) {
     const components = initialData.items.components
     const concepts = initialData.items.concepts
     return (
-        <main className="w-full mx-auto p-4 pb-[50px] min-h-[calc(100vh-18.9rem)]">
+        <div className="px-[10%]">
             <Insight components={components} concepts={concepts} data={initialData} statistics={statistics} programming_languages={pl} num_packages={num_packages} data_types={data_types} />
-        </main>
+        </div>
     );
 }

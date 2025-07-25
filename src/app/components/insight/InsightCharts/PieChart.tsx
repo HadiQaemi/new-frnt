@@ -54,7 +54,7 @@ const PieChart: React.FC<PieChartProps> = ({ width, height, data }) => {
                                         x={centroidX}
                                         y={centroidY}
                                         dy=".33em"
-                                        fontSize={12}
+                                        fontSize={18}
                                         fill="#fff"
                                         textAnchor="middle"
                                         pointerEvents="none"

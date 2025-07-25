@@ -10,7 +10,7 @@ const Footer = () => {
         orkg: {
             logo: true,
             title: 'ORKG',
-            description: 'ORKG reborn is a digital library for reborn articles where scientific knowledge is born reusable.',
+            description: 'ORKG reborn is a digital library of machine-readable scientific knowledge.',
         },
         about: {
             title: 'About',
