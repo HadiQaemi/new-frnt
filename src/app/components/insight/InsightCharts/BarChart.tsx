@@ -19,7 +19,7 @@ interface BarChartProps {
     height?: number;
 }
 
-const margin = { top: 20, right: 30, bottom: 30, left: 60 };
+const margin = { top: 20, right: 30, bottom: 70, left: 80 };
 
 export default function BarChart({
     chartData,
@@ -111,7 +111,7 @@ export default function BarChart({
                             );
                         })}
 
-                        <AxisBottom
+                        {/* <AxisBottom
                             top={yMax}
                             scale={xScale}
                             tickLabelProps={() => ({
@@ -119,19 +119,19 @@ export default function BarChart({
                                 textAnchor: 'middle',
                                 fill: '#555',
                             })}
-                        />
-                        {/* <AxisBottom
+                        /> */}
+                        <AxisBottom
                             top={yMax}
                             scale={xScale}
                             tickLabelProps={() => ({
-                                fontSize: 14,
+                                fontSize: 13,
                                 fill: '#555',
                                 textAnchor: 'end',
-                                angle: -45,
+                                angle: -25,
                                 dy: '-0.5em',
                                 dx: '-0.5em',
                             })}
-                        /> */}
+                        />
                         <AxisLeft
                             scale={yScale}
                             tickLabelProps={() => ({

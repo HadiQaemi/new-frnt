@@ -1,9 +1,12 @@
 'use client';
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import WordCloudChart from "./InsightCharts/WordCloudChart";
 import PieChart from "./InsightCharts/PieChart";
 import BarChart from "./InsightCharts/BarChart";
+import DualLineChart from "./InsightCharts/DualLineChart";
+import MultiSelect, { ResearchField } from "../shared/MultiSelect";
+import { REBORN_API_URL } from "@/app/lib/config/constants";
 
 interface InsightProps {
     data: any;
@@ -11,11 +14,52 @@ interface InsightProps {
     programming_languages: any;
     num_packages: any;
     data_types: any;
-    components: any;
-    concepts: any;
+    all_components: any;
+    all_concepts: any;
+    articles_statements_per_month: any;
 }
 
-export default function Insight({ concepts, components, statistics, programming_languages, num_packages, data_types }: InsightProps) {
+
+export default function Insight({ all_concepts, all_components, statistics, programming_languages, num_packages, data_types, articles_statements_per_month }: InsightProps) {
+    const [components, setComponents] = useState(all_components);
+    const [concepts, setConcepts] = useState(all_concepts);
+    const [selectedResearchFieldsConcepts, setSelectedResearchFieldsConcepts] = useState<ResearchField[]>([]);
+    const [selectedResearchFieldsComponents, setSelectedResearchFieldsComponents] = useState<ResearchField[]>([]);
+    const buildQueryParams = (query: any[]) => {
+        const ids = query.map(item => item.research_field_id);
+        const queryParams = ids.map(id => `research_fields=${id}`).join('&');
+        return queryParams;
+    };
+    const fetchData = async (servie: string, query: any[]) => {
+        try {
+            const queryParams = buildQueryParams(query);
+            let url = `${REBORN_API_URL}/insight/${servie}/?${queryParams}`;
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data = await response.json();
+            return data
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        } finally {
+            console.log(false);
+        }
+    };
+    useEffect(() => {
+        if (selectedResearchFieldsComponents.length) {
+            fetchData("get_research_components", selectedResearchFieldsComponents).then((data) => {
+                setComponents(data.items)
+            });
+        } else {
+            setComponents(all_components)
+        }
+        if (selectedResearchFieldsConcepts.length) {
+            fetchData("get_research_concepts", selectedResearchFieldsConcepts).then((data) => {
+                setConcepts(data.items)
+            });
+        } else {
+            setConcepts(all_concepts)
+        }
+    }, [selectedResearchFieldsComponents, selectedResearchFieldsConcepts]);
     return (
         <div className="max-w-6xl mx-auto p-5">
             <div className="text-center mt-4 mb-8">
@@ -36,7 +80,16 @@ export default function Insight({ concepts, components, statistics, programming_
                     ))}
                 </div>
             </div>
-
+            <div className="my-6">
+                <div className="p-2 mb-4 border-t border-r border-b border-[#0041a8] border-l-[10px] border-l-[#0041a8] my-1 h-[350px]">
+                    <span className={`bg-[#0041a8] relative -top-[18px] -left-[18px] p-1 text-[12px] text-white pl-4`}>
+                        Monthly Articles and Statements
+                    </span>
+                    <div>
+                        <DualLineChart data={articles_statements_per_month} />
+                    </div>
+                </div>
+            </div>
             <div className="my-6">
                 <div className="p-2 mb-4 border-t border-r border-b border-[#e86161] border-l-[10px] border-l-[#e86161] my-1">
                     <span className={`bg-[#e86161] relative -top-[18px] -left-[18px] p-1 text-[12px] text-white pl-4`}>
@@ -80,6 +133,11 @@ export default function Insight({ concepts, components, statistics, programming_
                     <span className={`bg-[#9467bd] relative -top-[18px] -left-[18px] p-1 text-[12px] text-white pl-4`}>
                         Concepts
                     </span>
+                    <MultiSelect
+                        selectedFields={selectedResearchFieldsConcepts}
+                        onChange={setSelectedResearchFieldsConcepts}
+                        placeholder="Select research fields..."
+                    />
                     <WordCloudChart words={concepts} />
                 </div>
             </div>
@@ -88,6 +146,11 @@ export default function Insight({ concepts, components, statistics, programming_
                     <span className={`bg-[#8c564b] relative -top-[18px] -left-[18px] p-1 text-[12px] text-white pl-4`}>
                         Components
                     </span>
+                    <MultiSelect
+                        selectedFields={selectedResearchFieldsComponents}
+                        onChange={setSelectedResearchFieldsComponents}
+                        placeholder="Select research fields..."
+                    />
                     <WordCloudChart words={components} />
                 </div>
             </div>
