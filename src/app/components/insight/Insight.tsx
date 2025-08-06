@@ -33,7 +33,7 @@ export default function Insight(
     const [concepts, setConcepts] = useState(concepts_with_usage);
     const [components, setComponents] = useState(components_with_usage);
     const [programmingLanguages, setProgrammingLanguages] = useState(programming_languages_with_usage);
-    const [packages, setPackages] = useState(packages_with_usage);
+    const [packages, setPackages] = useState(packages_with_usage || {});
     const [dataTypes, setDataTypes] = useState(data_types_with_usage);
     const [articlesStatementsPerMonth, setArticlesStatementsPerMonth] = useState(articles_statements_per_month);
     const [statistics, setStatistics] = useState(all_statistics);
@@ -127,7 +127,7 @@ export default function Insight(
                         <div className="grid justify-center items-center mx-auto my-0 h-[450px] mb-5">
                             {programmingLanguages && (<ResponsivePieChart data={programmingLanguages} />)}
                         </div>
-                        {packages["R"] &&
+                        {packages?.["R"] &&
                             <div className="p-2 mb-4 border-t border-r border-b border-[#ff7f0e] border-l-[10px] border-l-[#ff7f0e] my-1 h-[350px]">
                                 <span className={`bg-[#ff7f0e] relative -top-[18px] -left-[18px] p-1 text-[12px] text-white pl-4`}>
                                     R packages
@@ -137,7 +137,7 @@ export default function Insight(
                                 </div>
                             </div>
                         }
-                        {packages["Python"] &&
+                        {packages?.["Python"] &&
                             <div className="p-2 mb-4 border-t border-r border-b border-[#1f77b4] border-l-[10px] border-l-[#1f77b4] my-1 h-[350px]">
                                 <span className={`bg-[#1f77b4] relative -top-[18px] -left-[18px] p-1 text-[12px] text-white pl-4`}>
                                     Python packages
