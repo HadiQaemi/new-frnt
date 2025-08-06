@@ -28,6 +28,13 @@ export default function BarChart({
     height = 320,
 }: BarChartProps) {
     const containerRef = useRef<HTMLDivElement>(null);
+    const [tooltip, setTooltip] = useState<{
+        label: string;
+        count: number;
+        x: number;
+        y: number;
+    } | null>(null);
+
     const [width, setWidth] = useState(0);
     const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 
@@ -66,7 +73,6 @@ export default function BarChart({
             {width > 0 && (
                 <svg width={width} height={height} role="img" aria-label="Bar chart">
                     <Group top={margin.top} left={margin.left}>
-                        {/* Grid */}
                         <GridRows
                             scale={yScale}
                             width={xMax}
@@ -75,7 +81,6 @@ export default function BarChart({
                             pointerEvents="none"
                         />
 
-                        {/* Bars */}
                         {chartData.map((d, i) => {
                             const barWidth = xScale.bandwidth();
                             const barHeight = yMax - (yScale(d.count) ?? 0);
@@ -91,10 +96,24 @@ export default function BarChart({
                                         height={barHeight}
                                         fill={hoverIndex === i ? hover : color}
                                         rx={4}
-                                        onMouseEnter={() => setHoverIndex(i)}
-                                        onMouseLeave={() => setHoverIndex(null)}
+                                        onMouseEnter={(e) => {
+                                            setHoverIndex(i);
+                                            if (width < 640) {
+                                                const svgRect = (e.target as SVGElement).getBoundingClientRect();
+                                                setTooltip({
+                                                    label: d.label,
+                                                    count: d.count,
+                                                    x: svgRect.left + svgRect.width / 2,
+                                                    y: svgRect.top,
+                                                });
+                                            }
+                                        }}
+                                        onMouseLeave={() => {
+                                            setHoverIndex(null);
+                                            setTooltip(null);
+                                        }}
                                     />
-                                    {hoverIndex === i && (
+                                    {hoverIndex === i && width >= 640 && (
                                         <text
                                             x={barX + barWidth / 2}
                                             y={barY - 10}
@@ -105,6 +124,19 @@ export default function BarChart({
                                             style={{ pointerEvents: 'none' }}
                                         >
                                             {d.count}
+                                        </text>
+                                    )}
+                                    {hoverIndex === i && width < 640 && (
+                                        <text
+                                            x={barX + barWidth / 2}
+                                            y={barY - 10}
+                                            textAnchor="middle"
+                                            fontSize={12}
+                                            fontWeight={600}
+                                            fill="#333"
+                                            style={{ pointerEvents: 'none' }}
+                                        >
+                                            {d.label}: {d.count}
                                         </text>
                                     )}
                                 </Group>
@@ -123,14 +155,35 @@ export default function BarChart({
                         <AxisBottom
                             top={yMax}
                             scale={xScale}
-                            tickLabelProps={() => ({
-                                fontSize: 13,
-                                fill: '#555',
-                                textAnchor: 'end',
-                                angle: -25,
-                                dy: '-0.5em',
-                                dx: '-0.5em',
-                            })}
+                            tickFormat={(label) =>
+                                width < 640 && label.length > 8 ? `${label.slice(0, 8)}…` : label
+                            }
+                            tickValues={
+                                width < 640
+                                    ? chartData.map((_, i) =>
+                                        i % 2 === 0 ? chartData[i].label : ''
+                                    ).filter(Boolean)
+                                    : undefined
+                            }
+                            tickLabelProps={() =>
+                                width < 640
+                                    ? {
+                                        fontSize: 10,
+                                        fill: '#555',
+                                        textAnchor: 'end',
+                                        angle: -45,
+                                        dx: '-0.5em',
+                                        dy: '0.25em',
+                                    }
+                                    : {
+                                        fontSize: 13,
+                                        fill: '#555',
+                                        textAnchor: 'end',
+                                        angle: -25,
+                                        dx: '-0.5em',
+                                        dy: '-0.5em',
+                                    }
+                            }
                         />
                         <AxisLeft
                             scale={yScale}

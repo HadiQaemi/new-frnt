@@ -26,8 +26,8 @@ const margin = { top: 20, right: 30, bottom: 60, left: 60 };
 export default function DualLineChart({
     data,
     height = 300,
-    articleColor = '#0070f3',
-    statementColor = '#e91e63',
+    articleColor = '#8dbcf3',
+    statementColor = '#efa5be',
 }: DualLineChartProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [width, setWidth] = useState(0);
@@ -111,20 +111,8 @@ export default function DualLineChart({
         range: [yMax, 0],
         nice: true,
     });
-    // const yScale = scaleLinear<number>({
-    //     domain: [
-    //         0,
-    //         Math.max(
-    //             ...cumulativeData.map(d =>
-    //                 Math.max(d.article_count, d.statement_count, d.cumulative_article, d.cumulative_statement)
-    //             )
-    //         ) * 1.2,
-    //     ],
-    //     range: [yMax, 0],
-    //     nice: true,
-    // });
     return (
-        <div className="flex items-start">
+        <div className="flex flex-col-reverse md:flex-row items-start">
             <div ref={containerRef} className="w-full flex-1">
                 {width > 0 && (
                     <svg width={width} height={height}>
@@ -319,8 +307,7 @@ export default function DualLineChart({
                 )}
             </div>
 
-            <div className="ml-4 min-w-[180px]">
-                <strong>Display:</strong>
+            <div className="mb-4 md:mb-0 md:ml-4 min-w-[180px]">
                 <div className="mt-2">
                     {[
                         { key: 'article', label: 'Article Count', color: articleColor },
