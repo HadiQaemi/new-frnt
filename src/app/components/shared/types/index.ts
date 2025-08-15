@@ -8,4 +8,6 @@ export interface URLOrTextProps {
     button?: string | null;
     styles?: any;
     color?: string;
+    type?: string;
+    source?: string;
 }

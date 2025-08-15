@@ -16,6 +16,7 @@ const HasInput: FC<HasInputData> = ({ has_input, label, components }) => {
     const has_expressions = has_input['has_expressions'];
     const has_parts = has_input['has_parts'];
     const source_url = has_input['source_url'];
+    const source = has_input['source'];
     const comment = has_input['comment'];
     const has_characteristic = has_input['has_characteristic'];
     let character = '';
@@ -50,6 +51,8 @@ const HasInput: FC<HasInputData> = ({ has_input, label, components }) => {
                     button={label ? '' : 'Input data'}
                     color="#00b050"
                     content={source_url}
+                    type="source_url"
+                    source={source}
                 />
             )}
 
