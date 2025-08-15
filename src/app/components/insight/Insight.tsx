@@ -7,6 +7,7 @@ import DualLineChart from "./InsightCharts/DualLineChart";
 import MultiSelect, { ResearchField } from "../shared/MultiSelect";
 import { REBORN_API_URL } from "@/app/lib/config/constants";
 import ResponsivePieChart from "./InsightCharts/ResponsivePieChart";
+import TreemapChart from "./InsightCharts/TreemapChart";
 
 interface InsightProps {
     data: any;
@@ -111,7 +112,7 @@ export default function Insight(
                     <div className="my-6">
                         <div className="p-2 mb-4 border-t border-r border-b border-[#0041a8] border-l-[10px] border-l-[#0041a8] my-1 min-h-[350px]">
                             <span className={`bg-[#0041a8] relative -top-[18px] -left-[18px] p-1 text-[12px] text-white pl-4`}>
-                                Monthly Articles and Statements
+                                Trends
                             </span>
                             <div>
                                 <DualLineChart data={articlesStatementsPerMonth} />
@@ -172,6 +173,16 @@ export default function Insight(
                         </div>
                     </div>
                 }
+                {concepts &&
+                    <div className="my-6">
+                        <div className="p-2 mb-4 border-t border-r border-b border-[#9467bd] border-l-[10px] border-l-[#9467bd] my-1">
+                            <span className={`bg-[#9467bd] relative -top-[18px] -left-[18px] p-1 text-[12px] text-white pl-4`}>
+                                Concepts
+                            </span>
+                            <TreemapChart words={concepts} width={900} height={600} />
+                        </div>
+                    </div>
+                }
                 {components &&
                     <div className="my-6">
                         <div className="p-2 mb-4 border-t border-r border-b border-[#8c564b] border-l-[10px] border-l-[#8c564b] my-1">
@@ -179,6 +190,16 @@ export default function Insight(
                                 Components
                             </span>
                             <WordCloudChart words={components} />
+                        </div>
+                    </div>
+                }
+                {components &&
+                    <div className="my-6">
+                        <div className="p-2 mb-4 border-t border-r border-b border-[#8c564b] border-l-[10px] border-l-[#8c564b] my-1">
+                            <span className={`bg-[#8c564b] relative -top-[18px] -left-[18px] p-1 text-[12px] text-white pl-4`}>
+                                Components
+                            </span>
+                            <TreemapChart words={components} width={900} height={600} />
                         </div>
                     </div>
                 }
