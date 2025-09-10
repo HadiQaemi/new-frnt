@@ -52,7 +52,8 @@ export default function Insight(
             const response = await fetch(url);
             if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
-            return data
+            if (!data || typeof data !== "object" || !data.items) return null;
+            return data as { items: any };
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {
@@ -62,13 +63,17 @@ export default function Insight(
     useEffect(() => {
         if (selectedResearchFieldsConcepts.length) {
             fetchData(selectedResearchFieldsConcepts).then((data) => {
-                setConcepts(data.items.concepts_with_usage)
-                setComponents(data.items.components_with_usage)
-                setProgrammingLanguages(data.items.programming_languages_with_usage)
-                setPackages(data.items.packages_with_usage)
-                setDataTypes(data.items.data_types_with_usage)
-                setArticlesStatementsPerMonth(data.items.articles_statements_per_month)
-                setStatistics(data.items.statistics)
+                if (!data || !data.items) {
+                    return;
+                }
+                const { items } = data;
+                setConcepts(items.concepts_with_usage)
+                setComponents(items.components_with_usage)
+                setProgrammingLanguages(items.programming_languages_with_usage)
+                setPackages(items.packages_with_usage)
+                setDataTypes(items.data_types_with_usage)
+                setArticlesStatementsPerMonth(items.articles_statements_per_month)
+                setStatistics(items.statistics)
             });
         } else {
             setConcepts(concepts_with_usage)
