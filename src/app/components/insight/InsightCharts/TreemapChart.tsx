@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Treemap } from '@visx/hierarchy';
 import { hierarchy } from 'd3-hierarchy';
 import { treemapSquarify } from 'd3-hierarchy';
@@ -31,17 +31,64 @@ interface TreemapChartProps {
     words: WordData[];
     width?: number;
     height?: number;
+    minHeight?: number;
+    maxHeight?: number;
 }
 
 const colorScale = scaleOrdinal(schemeCategory10);
 
 export default function TreemapChart({
     words,
-    width = 800,
-    height = 500
+    width,
+    height,
+    minHeight = 400,
+    maxHeight = 800
 }: TreemapChartProps) {
     const [hoveredWord, setHoveredWord] = useState<{ word: WordData; x: number; y: number } | null>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [dimensions, setDimensions] = useState({ width: width || 800, height: height || 500 });
 
+    // Handle responsive sizing
+    useEffect(() => {
+        const updateDimensions = () => {
+            if (containerRef.current) {
+                const containerWidth = containerRef.current.offsetWidth;
+                const aspectRatio = 1.6; // 16:10 aspect ratio
+
+                let newWidth = width || containerWidth;
+                let newHeight = height || Math.max(minHeight, Math.min(maxHeight, newWidth / aspectRatio));
+
+                // Ensure minimum dimensions for readability
+                if (newWidth < 300) {
+                    newWidth = 300;
+                    newHeight = Math.max(minHeight, 300 / aspectRatio);
+                }
+
+                setDimensions({ width: newWidth, height: newHeight });
+            }
+        };
+
+        updateDimensions();
+
+        const handleResize = () => {
+            updateDimensions();
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        // Use ResizeObserver for more accurate container size detection
+        const resizeObserver = new ResizeObserver(updateDimensions);
+        if (containerRef.current) {
+            resizeObserver.observe(containerRef.current);
+        }
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            resizeObserver.disconnect();
+        };
+    }, [width, height, minHeight, maxHeight]);
+
+    // Transform word data into hierarchical structure for treemap
     const hierarchicalData: TreemapNode = useMemo(() => {
         return {
             name: 'Root',
@@ -53,12 +100,14 @@ export default function TreemapChart({
         };
     }, [words]);
 
+    // Helper function to wrap text into multiple lines (responsive)
     const wrapText = (text: string, maxWidth: number, fontSize: number) => {
         const words = text.split(' ');
         const lines = [];
         let currentLine = '';
 
-        const charWidth = fontSize * 0.6;
+        // Responsive character width estimation
+        const charWidth = fontSize * (dimensions.width < 600 ? 0.7 : 0.6);
         const maxCharsPerLine = Math.floor(maxWidth / charWidth);
 
         for (const word of words) {
@@ -70,6 +119,7 @@ export default function TreemapChart({
                     lines.push(currentLine);
                     currentLine = word;
                 } else {
+                    // Word is too long, break it
                     lines.push(word.substring(0, maxCharsPerLine));
                     currentLine = word.substring(maxCharsPerLine);
                 }
@@ -81,6 +131,7 @@ export default function TreemapChart({
         return lines;
     };
 
+    // Helper function to format word information
     const formatWordInfo = (word: WordData) => {
         let info = '';
 
@@ -90,19 +141,19 @@ export default function TreemapChart({
         }
 
         if (word.properties && word.properties.length > 0) {
-            info += `${word.properties.map((p: any) => p.label).join(', ')}`;
+            info += ` Properties: ${word.properties.map((p: any) => p.label).join(', ')}.`;
         }
 
-        // if (word.operations && word.operations.length > 0) {
-        //     info += ` Operations: ${word.operations.map((o: any) => o.label).join(', ')}.`;
-        // }
+        if (word.operations && word.operations.length > 0) {
+            info += ` Operations: ${word.operations.map((o: any) => o.label).join(', ')}.`;
+        }
 
         if (word.object_of_interests && word.object_of_interests.length > 0) {
-            info += ` of ${word.object_of_interests.map((o: any) => o.label).join(', ')}`;
+            info += ` Object of Interest: ${word.object_of_interests.map((o: any) => o.label).join(', ')}.`;
         }
 
         if (word.units && word.units.length > 0) {
-            info += ` [${word.units.map((u: any) => u.label).join(', ')}]`;
+            info += ` Units: ${word.units.map((u: any) => u.label).join(', ')}.`;
         }
 
         return info.trim();
@@ -116,54 +167,61 @@ export default function TreemapChart({
     );
 
     return (
-        <div className="relative flex flex-col items-center justify-center w-full">
+        <div ref={containerRef} className="relative flex flex-col items-center justify-center w-full">
             {/* Hover tooltip */}
             {hoveredWord && (
                 <div
-                    className="absolute z-10 bg-black bg-opacity-90 text-white p-3 rounded-md shadow-lg max-w-xs pointer-events-none"
+                    className="absolute z-10 bg-black bg-opacity-90 text-white p-3 rounded-md shadow-lg pointer-events-none"
                     style={{
                         left: hoveredWord.x + 15,
                         top: hoveredWord.y - 10,
-                        transform: hoveredWord.x > width - 200 ? 'translateX(-100%) translateX(-15px)' : 'none'
+                        transform: hoveredWord.x > dimensions.width - 250 ? 'translateX(-100%) translateX(-15px)' : 'none',
+                        maxWidth: dimensions.width < 600 ? '250px' : '300px',
+                        fontSize: dimensions.width < 600 ? '12px' : '14px'
                     }}
                 >
                     <div className="font-semibold mb-1">
-                        {hoveredWord.word.label}: {hoveredWord.word.value}
+                        {hoveredWord.word.label} ({hoveredWord.word.value})
                     </div>
                     {hoveredWord.word.definition && (
                         <div className="text-sm mb-2">{hoveredWord.word.definition}</div>
                     )}
                     {hoveredWord.word.properties && hoveredWord.word.properties.length > 0 && (
-                        <>
-                            {hoveredWord.word.properties.map((p: any) => p.label).join(', ')}
-                        </>
+                        <div className="text-xs mb-1">
+                            <strong>Properties:</strong> {hoveredWord.word.properties.map((p: any) => p.label).join(', ')}
+                        </div>
                     )}
-                    {/* {hoveredWord.word.operations && hoveredWord.word.operations.length > 0 && (
-                        <>
-                            {hoveredWord.word.operations.map((o: any) => o.label).join(', ')}
-                        </>
-                    )} */}
+                    {hoveredWord.word.operations && hoveredWord.word.operations.length > 0 && (
+                        <div className="text-xs mb-1">
+                            <strong>Operations:</strong> {hoveredWord.word.operations.map((o: any) => o.label).join(', ')}
+                        </div>
+                    )}
                     {hoveredWord.word.object_of_interests && hoveredWord.word.object_of_interests.length > 0 && (
-                        <>
-                            {` of `}{hoveredWord.word.object_of_interests.map((o: any) => o.label).join(', ')}
-                        </>
+                        <div className="text-xs mb-1">
+                            <strong>Objects:</strong> {hoveredWord.word.object_of_interests.map((o: any) => o.label).join(', ')}
+                        </div>
                     )}
                     {hoveredWord.word.units && hoveredWord.word.units.length > 0 && (
-                        <>
-                            [{hoveredWord.word.units.map((u: any) => u.label).join(', ')}]
-                        </>
+                        <div className="text-xs">
+                            <strong>Units:</strong> {hoveredWord.word.units.map((u: any) => u.label).join(', ')}
+                        </div>
                     )}
                 </div>
             )}
 
-            <div className="relative">
-                <svg width={width} height={height}>
+            <div className="relative w-full overflow-hidden">
+                <svg
+                    width="100%"
+                    height={dimensions.height}
+                    viewBox={`0 0 ${dimensions.width} ${dimensions.height}`}
+                    className="max-w-full h-auto"
+                >
                     <Treemap<TreemapNode>
                         root={root}
-                        size={[width, height]}
-                        paddingInner={2}
-                        paddingOuter={4}
-                        paddingTop={20}
+                        size={[dimensions.width, dimensions.height]}
+                        paddingInner={dimensions.width < 600 ? 1 : 2}
+                        paddingOuter={dimensions.width < 600 ? 2 : 4}
+                        paddingTop={dimensions.width < 600 ? 15 : 20}
                         tile={treemapSquarify}
                     >
                         {treemap => (
@@ -174,8 +232,9 @@ export default function TreemapChart({
                                         const nodeWidth = node.x1 - node.x0;
                                         const nodeHeight = node.y1 - node.y0;
 
-                                        // Skip tiny nodes
-                                        if (nodeWidth < 10 || nodeHeight < 10) return null;
+                                        // Skip tiny nodes (responsive thresholds)
+                                        const minNodeSize = dimensions.width < 600 ? 20 : 10;
+                                        if (nodeWidth < minNodeSize || nodeHeight < minNodeSize) return null;
 
                                         const isLeaf = !node.children;
                                         const isRoot = node.depth === 0;
@@ -227,11 +286,12 @@ export default function TreemapChart({
                                                     onMouseLeave={() => setHoveredWord(null)}
                                                 />
 
-                                                {isLeaf && nodeWidth > 40 && nodeHeight > 30 && (
+                                                {/* Main word label at top */}
+                                                {isLeaf && nodeWidth > (dimensions.width < 600 ? 60 : 40) && nodeHeight > (dimensions.width < 600 ? 40 : 30) && (
                                                     <text
                                                         x={node.x0 + nodeWidth / 2}
-                                                        y={node.y0 + 15}
-                                                        fontSize={Math.min(nodeWidth / 6, 14)}
+                                                        y={node.y0 + (dimensions.width < 600 ? 12 : 15)}
+                                                        fontSize={Math.min(nodeWidth / (dimensions.width < 600 ? 8 : 6), dimensions.width < 600 ? 12 : 14)}
                                                         textAnchor="middle"
                                                         dominantBaseline="middle"
                                                         fill="white"
@@ -241,18 +301,20 @@ export default function TreemapChart({
                                                             userSelect: 'none'
                                                         }}
                                                     >
-                                                        {`${node.data?.name} (${node.value})`}
+                                                        {/* {`${node.data?.name} (${node.value})`} */}
+                                                        {`${node.data?.name}`}
                                                     </text>
                                                 )}
 
-                                                {isLeaf && node.data?.data && nodeWidth > 60 && nodeHeight > 50 && (
+                                                {/* Word information at bottom of rectangle */}
+                                                {isLeaf && node.data?.data && nodeWidth > (dimensions.width < 600 ? 80 : 60) && nodeHeight > (dimensions.width < 600 ? 60 : 50) && (
                                                     (() => {
                                                         const wordInfo = formatWordInfo(node.data.data);
                                                         if (!wordInfo) return null;
 
-                                                        const fontSize = Math.min(nodeWidth / 20, nodeHeight / 15, 10);
-                                                        const availableWidth = nodeWidth - 8;
-                                                        const availableHeight = nodeHeight - 35;
+                                                        const fontSize = Math.min(nodeWidth / (dimensions.width < 600 ? 25 : 20), nodeHeight / (dimensions.width < 600 ? 20 : 15), dimensions.width < 600 ? 8 : 10);
+                                                        const availableWidth = nodeWidth - (dimensions.width < 600 ? 6 : 8); // padding
+                                                        const availableHeight = nodeHeight - (dimensions.width < 600 ? 25 : 35); // space for title
                                                         const lineHeight = fontSize * 1.2;
                                                         const maxLines = Math.floor(availableHeight / lineHeight);
 
@@ -266,8 +328,8 @@ export default function TreemapChart({
                                                                 {displayLines.map((line, lineIndex) => (
                                                                     <text
                                                                         key={lineIndex}
-                                                                        x={node.x0 + 4}
-                                                                        y={node.y0 + 30 + (lineIndex * lineHeight)}
+                                                                        x={node.x0 + (dimensions.width < 600 ? 3 : 4)}
+                                                                        y={node.y0 + (dimensions.width < 600 ? 25 : 30) + (lineIndex * lineHeight)}
                                                                         fontSize={fontSize}
                                                                         fill="white"
                                                                         style={{
@@ -275,8 +337,8 @@ export default function TreemapChart({
                                                                             userSelect: 'none'
                                                                         }}
                                                                     >
-                                                                        {line}
-                                                                        {lineIndex === maxLines - 1 && lines.length > maxLines && '...'}
+                                                                        {/* {line}
+                                                                        {lineIndex === maxLines - 1 && lines.length > maxLines && '...'} */}
                                                                     </text>
                                                                 ))}
                                                             </g>
@@ -284,11 +346,12 @@ export default function TreemapChart({
                                                     })()
                                                 )}
 
-                                                {!isLeaf && nodeWidth > 30 && nodeHeight > 20 && (
+                                                {/* Group labels for non-leaf nodes */}
+                                                {!isLeaf && nodeWidth > (dimensions.width < 600 ? 40 : 30) && nodeHeight > (dimensions.width < 600 ? 25 : 20) && (
                                                     <text
                                                         x={node.x0 + nodeWidth / 2}
                                                         y={node.y0 + nodeHeight / 2}
-                                                        fontSize={Math.min(nodeWidth / 10, 16)}
+                                                        fontSize={Math.min(nodeWidth / (dimensions.width < 600 ? 12 : 10), dimensions.width < 600 ? 14 : 16)}
                                                         textAnchor="middle"
                                                         dominantBaseline="middle"
                                                         fill="#333"
@@ -298,7 +361,7 @@ export default function TreemapChart({
                                                             userSelect: 'none'
                                                         }}
                                                     >
-                                                        {node.data?.name}
+                                                        {node.data?.name} {(node.value)}
                                                     </text>
                                                 )}
                                             </g>

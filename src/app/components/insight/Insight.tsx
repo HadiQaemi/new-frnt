@@ -163,7 +163,7 @@ export default function Insight(
                         </div>
                     </div>
                 }
-                {concepts &&
+                {/* {concepts &&
                     <div className="my-6">
                         <div className="p-2 mb-4 border-t border-r border-b border-[#9467bd] border-l-[10px] border-l-[#9467bd] my-1">
                             <span className={`bg-[#9467bd] relative -top-[18px] -left-[18px] p-1 text-[12px] text-white pl-4`}>
@@ -172,7 +172,7 @@ export default function Insight(
                             <WordCloudChart words={concepts} />
                         </div>
                     </div>
-                }
+                } */}
                 {concepts &&
                     <div className="my-6">
                         <div className="p-2 mb-4 border-t border-r border-b border-[#9467bd] border-l-[10px] border-l-[#9467bd] my-1">
@@ -183,7 +183,7 @@ export default function Insight(
                         </div>
                     </div>
                 }
-                {components &&
+                {/* {components &&
                     <div className="my-6">
                         <div className="p-2 mb-4 border-t border-r border-b border-[#8c564b] border-l-[10px] border-l-[#8c564b] my-1">
                             <span className={`bg-[#8c564b] relative -top-[18px] -left-[18px] p-1 text-[12px] text-white pl-4`}>
@@ -192,7 +192,7 @@ export default function Insight(
                             <WordCloudChart words={components} />
                         </div>
                     </div>
-                }
+                } */}
                 {components &&
                     <div className="my-6">
                         <div className="p-2 mb-4 border-t border-r border-b border-[#8c564b] border-l-[10px] border-l-[#8c564b] my-1">

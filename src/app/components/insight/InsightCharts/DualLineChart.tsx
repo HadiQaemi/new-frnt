@@ -308,12 +308,36 @@ export default function DualLineChart({
             </div>
 
             <div className="mb-4 md:mb-0 md:ml-4 min-w-[180px]">
-                <div className="mt-2">
+                Article
+                <div className="mt-2 pl-4">
                     {[
-                        { key: 'article', label: 'Article Count', color: articleColor },
-                        { key: 'statement', label: 'Statement Count', color: statementColor },
-                        { key: 'cumulativeArticle', label: 'Cumulative Article', color: '#0041a8' },
-                        { key: 'cumulativeStatement', label: 'Cumulative Statement', color: '#b0003a' },
+                        { key: 'article', label: 'Count', color: articleColor },
+                        { key: 'cumulativeArticle', label: 'Cumulative', color: '#0041a8' },
+                    ].map(({ key, label, color }) => (
+                        <label key={key} className="flex items-center mb-[6px]">
+                            <input
+                                type="checkbox"
+                                checked={visibleLines[key as keyof typeof visibleLines]}
+                                onChange={() =>
+                                    setVisibleLines(prev => ({
+                                        ...prev,
+                                        [key]: !prev[key as keyof typeof visibleLines],
+                                    }))
+                                }
+                            />
+                            <span
+                                className="w-3 h-3 inline-block ml-2 mr-1.5"
+                                style={{ backgroundColor: color }}
+                            />
+                            {label}
+                        </label>
+                    ))}
+                </div>
+                Statement
+                <div className="mt-2 pl-4">
+                    {[
+                        { key: 'statement', label: 'Count', color: statementColor },
+                        { key: 'cumulativeStatement', label: 'Cumulative', color: '#b0003a' },
                     ].map(({ key, label, color }) => (
                         <label key={key} className="flex items-center mb-[6px]">
                             <input

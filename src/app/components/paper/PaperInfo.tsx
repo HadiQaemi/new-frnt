@@ -7,7 +7,7 @@ import { helper } from '@/app/utils/helper'
 import { useEffect } from 'react'
 
 interface Author {
-  label: string
+  name: string
   identifier: string
 }
 
@@ -58,8 +58,8 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
       identifiers = [identifiers]
     return (
       <>
-        {identifiers.length > 0 && <div className="mt-2">See also</div>}
-        {identifiers.map((id, index) => (
+        {identifiers && <div className="mt-2">See also</div>}
+        {identifiers && identifiers.map((id, index) => (
           <div key={index} className="mb-1 py-0 px-3">
             <a
               href={id}
@@ -113,13 +113,13 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
     if (localJournals.length) {
       const storedVenues = JSON.parse(localJournals);
       const updatedVenues = [...storedVenues];
-      if (!storedVenues.some((u: any) => u.id === venue.id)) {
-        updatedVenues.push({
-          id: venue.id,
-          name: venue.label
-        });
-        localStorage.setItem('journals', JSON.stringify(updatedVenues))
-      }
+      // if (!storedVenues.some((u: any) => u.id === venue.id)) {
+      //   updatedVenues.push({
+      //     id: venue.id,
+      //     name: venue.label
+      //   });
+      //   localStorage.setItem('journals', JSON.stringify(updatedVenues))
+      // }
     }
 
     if (research_field) {
@@ -143,7 +143,7 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
         if (!storedAuthors.some((u: any) => u.id === author_id)) {
           updatedAuthors.push({
             id: author_id,
-            name: author.label
+            name: author.name
           });
           localStorage.setItem('authors', JSON.stringify(updatedAuthors));
         }
@@ -207,11 +207,11 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
             {paper.authors.map((author: any, index: any) => (
               <CustomPopover
                 key={`author-${index}`}
-                id={`popover-${`${author.label}`}-${index}`}
+                id={`popover-${`${author.name}`}-${index}`}
                 subTitle="Show content for "
-                title={`${author.label}`}
-                show={activePopover === `${author.label}`}
-                onToggle={(show) => handlePopoverToggle(`${author.label}`, show)}
+                title={`${author.name}`}
+                show={activePopover === `${author.name}`}
+                onToggle={(show) => handlePopoverToggle(`${author.name}`, show)}
                 onSelect={() => onAuthorSelect(author)}
                 icon={User}
                 trigger={
@@ -219,11 +219,11 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
                     className={`badge cursor-pointer overlay-trigger me-2 mb-2 underline text-sm ${index < 1 ? 'inline md:inline' : 'hidden sm:hidden md:inline'}`}
                     onClick={(e) => {
                       e.stopPropagation()
-                      handlePopoverToggle(`${author.label}`, activePopover !== `${author.label}`)
+                      handlePopoverToggle(`${author.name}`, activePopover !== `${author.name}`)
                     }}
                   >
                     <User className="me-1 inline" />
-                    {`${author.label}`}
+                    {`${author.name}`}
                   </span>
                 }
               >
@@ -243,7 +243,7 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
 
         <div className="grid grid-cols-12">
           <div className="col-span-12 sm:col-span-6">
-            {venue.label && (
+            {venue && (
               <CustomPopover
                 id={`popover-${venue.label}`}
                 subTitle="Show content for "

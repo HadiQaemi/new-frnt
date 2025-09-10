@@ -7,11 +7,14 @@ import JsonTreeViewer from '../json/JsonTreeViewer';
 import PaperInfo from '../paper/PaperInfo';
 import { helper } from '@/app/utils/helper';
 import PaperShortInfo from '../paper/PaperShortInfo';
-import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, X } from 'lucide-react';
+import { BookOpenText, BookText, Calendar, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, CopyIcon, User, X } from 'lucide-react';
 import { useQueryData } from '@/app/hooks/useQueryData';
 import { useRouter, useSearchParams } from 'next/navigation'
 import { REBORN_API_URL } from '@/app/lib/config/constants';
 import { nanoid } from 'nanoid';
+import { useToast } from '@/components/ui/use-toast'
+import CustomPopover from '../shared/CustomPopover';
+import TruncatedAbstract from '../paper/TruncatedAbstract';
 
 interface Statement {
     _id: string;
@@ -48,7 +51,6 @@ interface QueryParams {
 
 export default function ListStatements({ data, statements, statementId = null, isOpenSideSearch = true }: ListStatementsProps) {
     const statementRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
-
     const [currentPage, setCurrentPage] = useState(1);
     const [isSidebarOpen, setIsSidebarOpen] = useState(isOpenSideSearch);
     const [queryData, setQueryData] = useState();
@@ -251,7 +253,26 @@ export default function ListStatements({ data, statements, statementId = null, i
 
         return "opacity-0 transform -translate-y-4";
     };
+    const { toast } = useToast();
+    const copyToClipboard = (rawText: any) => {
+        const formattedText = rawText;
 
+        navigator.clipboard.writeText(formattedText)
+            .then(() =>
+                toast({
+                    title: "Success!",
+                    description: "Address copied to clipboard!",
+                    className: "bg-green-100",
+                })
+            )
+            .catch(() =>
+                toast({
+                    title: "Error!",
+                    description: "Failed to copy",
+                    className: "bg-red-100",
+                })
+            );
+    };
     const searchParams = useSearchParams();
     const conceptParam = searchParams.get('concept');
     const titleParam = searchParams.get('title');
@@ -292,8 +313,8 @@ export default function ListStatements({ data, statements, statementId = null, i
         }
     };
     return (
-        <div className={`relative gap-4 mt-8 ${isSidebarOpen ? 'grid grid-cols-1 md:grid-cols-12' : 'flex'}`}>
-            <div className={`transition-all duration-300 ease-in-out ${isSidebarOpen ? 'col-span-1 md:col-span-3 relative' : 'w-1/24 sticky top-5'}`}>
+        <div className={`grid grid-cols-1 md:grid-cols-4 gap-4`}>
+            {/* <div className={`transition-all duration-300 ease-in-out ${isSidebarOpen ? 'col-span-1 md:col-span-3 relative' : 'w-1/24 sticky top-5'}`}>
                 <button
                     onClick={() => setIsSidebarOpen(!isSidebarOpen)}
                     className={`${isSidebarOpen ? 'hidden' : `sticky ${activeHeader !== null ? 'top-[calc(9rem)]' : 'top-[calc(5rem)]'} -right-2`} flex h-8 w-6 items-center justify-center rounded-r bg-blue-500 text-white shadow-md transition-[top] duration-300 ease-in-out`}
@@ -320,9 +341,10 @@ export default function ListStatements({ data, statements, statementId = null, i
                         />
                     </div>
                 </div>
-            </div>
+            </div> */}
 
-            <div className={`transition-all duration-300 ease-in-out overflow-x-auto ${isSidebarOpen ? 'col-span-1 md:col-span-9' : 'max-w-23/24 w-[100%]'}`}>
+            {/* <div className={`transition-all duration-300 ease-in-out overflow-x-auto ${isSidebarOpen ? 'col-span-1 md:col-span-9' : 'w-14/24'}`}> */}
+            <div className={`md:col-span-3`}>
                 <Card className="bg-white shadow-lg">
                     <CardContent className="p-6">
                         {articles.length === 0 ? (
@@ -330,41 +352,6 @@ export default function ListStatements({ data, statements, statementId = null, i
                         ) : (
                             <>
                                 <div className="relative">
-                                    {/* {activeHeader !== null && isHeaderVisible && (
-                                        statements[Object.keys(statements)[activeHeader]] && (
-                                            <div className={`fixed top-[3.8rem] left-0 right-0 z-10 shadow-md transition-all duration-300 ease-in-out bg-[#fff] ${getTransitionStyles()}`}>
-                                                <div className="m-2 overflow-hidden">
-                                                    <div className="bg-light relative" >
-                                                        <div className="absolute inset-0 bg-blue-50 opacity-0 transition-opacity duration-300"
-                                                            style={{ opacity: isTransitioning ? 0.5 : 0 }} />
-                                                        <div className="relative z-10">
-                                                            <button
-                                                                onClick={handleClose}
-                                                                className="absolute top-0 right-0 rounded-full transition-colors"
-                                                                aria-label="Close sticky header"
-                                                            >
-                                                                <X className="h-5 w-5" />
-                                                            </button>
-                                                            <button
-                                                                onClick={handleShowMore}
-                                                                className="absolute top-[2rem] right-0 rounded-full transition-colors"
-                                                                aria-label="Close sticky header"
-                                                            >
-                                                                {showMore ? (<ChevronUp className="h-5 w-5" />) : (<ChevronDown className="h-5 w-5" />)}
-                                                            </button>
-                                                            <PaperShortInfo
-                                                                onJournalSelect={handleSelect('journal')}
-                                                                onAuthorSelect={handleSelect('author')}
-                                                                onResearchFieldSelect={handleSelect('field')}
-                                                                showMore={showMore}
-                                                                paper={article}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )
-                                    )} */}
                                     <div className="space-y-4">
                                         {articles.map((item: any, index: any) => {
                                             const article = item.article
@@ -411,6 +398,73 @@ export default function ListStatements({ data, statements, statementId = null, i
                         )}
                     </CardContent>
                 </Card>
+            </div>
+            <div className={`md:col-span-1 sticky top-5`}>
+                <div className={`sticky ${activeHeader !== null ? 'top-[calc(9rem)]' : 'top-[calc(5rem)]'} transition-[top] duration-300 ease-in-out ${isSidebarOpen ? '' : ''}`}>
+                    <div className="max-h-[calc(100vh-2rem)] overflow-y-visible">
+                        <Card className="bg-[#f5f5f5] shadow-lg">
+                            <CardContent className="p-6">
+                                <div className="relative">
+                                    <div className="space-y-4">
+                                        <div className="border rounded p-0" key={`article-${nanoid()}`}>
+                                            {data.basises.map((item: any, index: any) => {
+                                                return (
+                                                    <div key={`basis-${nanoid()}`}>
+                                                        <div className="grid grid-cols-1 bg-[#f8f9fa] p-1.5">
+                                                            <div className="flex justify-end inline">
+                                                                <a href={item.id} className={`text-shadow-custom text-blue-500 underline text-sm inline`}>{item.id}</a>
+                                                                <span className={`text-shadow-custom px-1.5 py-1 inline`}>
+                                                                    <CopyIcon
+                                                                        size={16}
+                                                                        onClick={() => copyToClipboard(item.id)}
+                                                                        className="h-4 w-4 text-gray-700 cursor-pointer text-xs"
+                                                                    />
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div className='bg-white p-4'>
+                                                            <div className="grid grid-cols-1">
+                                                                <h6 className="text-black leading-tight mb-2 font-medium">{item.name}</h6>
+                                                            </div>
+
+                                                            <div className="grid grid-cols-12">
+                                                                <div className="col-span-12">
+                                                                    <span className="badge me-2 text-xs">
+                                                                        <Calendar className="me-1 inline underline text-xs" size={16} />
+                                                                        {item.publication_issue.date_published}
+                                                                    </span>
+                                                                    {item.authors.map((author: any, index: any) => (
+                                                                        <span key={`author-${nanoid()}`} className={`badge cursor-pointer overlay-trigger me-2 mb-2 underline text-xs`}>
+                                                                            <User className="me-1 inline" size={16} />
+                                                                            {`${author.name}`}
+                                                                        </span>
+                                                                    ))}
+                                                                </div>
+                                                            </div>
+                                                            <div className='my-4 text-sm'>
+                                                                {item && <TruncatedAbstract text={item.abstract} />}
+                                                            </div>
+                                                            <div className="grid grid-cols-12">
+                                                                <div className="col-span-12">
+                                                                    {item && (
+                                                                        <span className="badge cursor-pointer overlay-trigger underline mr-2 text-xs">
+                                                                            <BookOpenText className="me-1 inline text-gray-500" size={16} />
+                                                                            {item.publication_issue.periodical}, {item.publication_issue.publisher_name}
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div >
+                                                )
+                                            })}
+                                        </div>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+                </div>
             </div>
         </div>
     );

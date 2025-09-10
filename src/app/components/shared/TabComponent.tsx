@@ -366,19 +366,34 @@ const TabComponent: React.FC<TabComponentProps> = ({
                                             <span className="font-inter font-[400] text-sm">{item.author} et al.</span>
                                             <span className="font-inter font-[500]"><Dot className="me-1 inline font-bold" /></span>
                                             <span className="font-inter font-[400] text-sm">{item.date_published}</span>
-                                            {item.scientific_venue.label && (
+                                            {item.publisher && (
                                                 <>
                                                     <span className="font-inter font-[500]"><Dot className="me-1 inline font-bold" /></span>
-                                                    <span className="font-inter font-[400] text-sm">{item.scientific_venue.label}</span>
+                                                    <span className="font-inter font-[400] text-sm">{item.publisher}</span>
                                                 </>
                                             )}
                                         </div>
+                                        <blockquote className="text-xs text-gray-700 italic leading-relaxed font-light bg-gray-100 p-0.5 pl-2 rounded">
+                                            {item.basises[0].name}
+                                            <div className="block my-0.5">
+                                                <span className="font-inter font-[400] text-xs">{item.basises[0].authors[0].family_name} et al.</span>
+                                                <span className="font-inter font-[500]"><Dot className="me-1 inline font-bold" /></span>
+                                                <span className="font-inter font-[400] text-xs">{item.basises[0].publication_issue.date_published}</span>
+                                                {item.basises[0].publication_issue.periodical && (
+                                                    <>
+                                                        <span className="font-inter font-[500]"><Dot className="me-1 inline font-bold" /></span>
+                                                        <span className="font-inter font-[400] text-xs">{item.basises[0].publication_issue.periodical}</span>
+                                                    </>
+                                                )}
+                                            </div>
+                                        </blockquote>
                                     </span>
                                 ) : (
                                     activeTab === 'keywords' ? (
                                         <span key={`keywords-${index}`}>
                                             <Link
-                                                href={`/statements?start_year=2015&end_year=2025&concepts=${item.id}&page=1&per_page=10`}
+                                                // href={`/statements?start_year=2015&end_year=2025&concepts=${item.id}&page=1&per_page=10`}
+                                                href={``}
                                                 className="text-[#e86161] cursor-pointer hover:text-[#555] block"
                                             >
                                                 <h4 className="font-inter font-[500]">{item.name}</h4>
@@ -395,7 +410,8 @@ const TabComponent: React.FC<TabComponentProps> = ({
                                         activeTab === 'authors' ? (
                                             <span key={`authors-${index}`}>
                                                 <Link
-                                                    href={`/statements?start_year=2015&end_year=2025&authors=${item.author_id}&page=1&per_page=10`}
+                                                    // href={`/statements?start_year=2015&end_year=2025&authors=${item.author_id}&page=1&per_page=10`}
+                                                    href={``}
                                                     className="text-[#000] cursor-pointer hover:text-[#555]"
                                                 >
                                                     <h4 className="font-inter font-[700] inline">{item.name}</h4>
@@ -412,7 +428,8 @@ const TabComponent: React.FC<TabComponentProps> = ({
                                                 item.name && (
                                                     <span key={`journals-${index}`}>
                                                         <Link
-                                                            href={`/statements?start_year=2015&end_year=2025&scientific_venues=${item.journal_id}&page=1&per_page=10`}
+                                                            // href={`/statements?start_year=2015&end_year=2025&scientific_venues=${item.journal_id}&page=1&per_page=10`}
+                                                            href={``}
                                                             className="text-[#000] cursor-pointer hover:text-[#555]"
                                                         >
                                                             <h4 className="font-inter font-[700] inline">{item.name}</h4>
@@ -420,6 +437,17 @@ const TabComponent: React.FC<TabComponentProps> = ({
                                                         <span>
                                                             <span className="font-inter font-[500]"><Dot className="me-1 inline font-bold underline text-[10px]" /></span>
                                                             <span className="font-inter font-[400] text-sm">{item.publisher}</span>
+                                                        </span>
+                                                        <span>
+                                                            <span className="font-inter font-[500]"><Dot className="me-1 inline font-bold underline text-[10px]" /></span>
+                                                            <span className="font-inter font-[400] text-sm">
+                                                                <Link
+                                                                    href={item.url}
+                                                                    className="text-[#000] cursor-pointer hover:text-[#555]"
+                                                                >
+                                                                    <h4 className="font-inter font-[700] inline">{item.url}</h4>
+                                                                </Link>
+                                                            </span>
                                                         </span>
                                                     </span>
                                                 )
