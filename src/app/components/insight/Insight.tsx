@@ -19,7 +19,7 @@ interface InsightProps {
     concepts_with_usage: any;
     articles_statements_per_month: any;
 }
-
+export const dynamic = 'force-dynamic'; 
 
 export default function Insight(
     {
