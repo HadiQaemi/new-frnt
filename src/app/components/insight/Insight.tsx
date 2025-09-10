@@ -20,6 +20,7 @@ interface InsightProps {
     articles_statements_per_month: any;
 }
 export const dynamic = 'force-dynamic'; 
+export const revalidate = 0;
 
 export default function Insight(
     {
@@ -49,7 +50,7 @@ export default function Insight(
         try {
             const queryParams = buildQueryParams(query);
             let url = `${REBORN_API_URL}/insight/get_research_insights/?${queryParams}`;
-            const response = await fetch(url);
+            const response = await fetch(url, { cache: 'no-store' });
             if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
             if (!data || typeof data !== "object" || !data.items) return null;
