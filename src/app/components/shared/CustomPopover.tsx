@@ -1,7 +1,7 @@
 import React from 'react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
-import { X, LucideIcon } from 'lucide-react';
+import { X, LucideIcon, University, MousePointer2 } from 'lucide-react';
 
 interface CustomPopoverProps {
   id: string;
@@ -9,6 +9,7 @@ interface CustomPopoverProps {
   subTitle?: string;
   definition?: string;
   children?: React.ReactNode;
+  affiliation?: any;
   trigger: React.ReactElement;
   show?: boolean;
   onToggle: (show: boolean) => void;
@@ -25,6 +26,7 @@ const CustomPopover: React.FC<CustomPopoverProps> = ({
   children,
   trigger,
   show,
+  affiliation,
   onToggle,
   placement = 'bottom',
   icon: Icon,
@@ -59,7 +61,25 @@ const CustomPopover: React.FC<CustomPopoverProps> = ({
             </div>
           )}
           <div className="w-[100%]">
-            {subTitle}
+
+            {affiliation && (
+              <>
+                Affiliation:
+                <span className='inline-block'>
+                  {/* <University size={16} className="text-gray-500 inline me-1" /> */}
+                  <a href={affiliation?.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline text-xs inline mr-1">
+                    {affiliation?.name}
+                  </a>
+                </span>
+                {/* <span className='inline-block'>
+                  <MousePointer2 size={16} className="text-gray-500 inline me-1" />
+                  <a href={affiliation?.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline text-xs">
+                    {affiliation?.url}
+                  </a>
+                </span> */}
+              </>
+            )}
+            {/* {subTitle}
             {subTitle && (
               <button
                 type="button"
@@ -68,7 +88,7 @@ const CustomPopover: React.FC<CustomPopoverProps> = ({
               >
                 <span className="text-red-500 underline">{title}</span>
               </button>
-            )}
+            )} */}
           </div>
           {children}
         </div>

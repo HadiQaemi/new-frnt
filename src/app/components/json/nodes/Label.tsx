@@ -123,7 +123,7 @@ const Label = ({
                         </Tooltip>
                     </TooltipProvider>
 
-                    <div className="cursor-default">
+                    {/* <div className="cursor-default">
                         {statement?.authors?.length > 0 && (<User className="me-1 inline" />)}
                         {statement?.authors?.map((item: any, k: any) => (
                             <CustomPopover
@@ -150,7 +150,7 @@ const Label = ({
                                 {item.orcid && renderIdentifiersList(item.orcid)}
                             </CustomPopover>
                         ))}
-                    </div>
+                    </div> */}
 
                     <div className="cursor-default">
                         {concepts && (
@@ -173,8 +173,8 @@ const Label = ({
                                                 handlePopoverToggle(item.label, activePopover !== item.label);
                                             }}
                                         >
-                                            {k === 0 && (<Tag className="me-1 inline" />)}
-                                            {k > 0 && (<Dot className="inline font-bold" />)}
+                                            {k === 0 && (<Tag className="me-1 inline text-gray-500" />)}
+                                            {k > 0 && (<Dot className="inline font-bold text-gray-500" />)}
                                             {item.label}
                                         </span>
                                     }

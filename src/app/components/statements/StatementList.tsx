@@ -7,7 +7,7 @@ import JsonTreeViewer from '../json/JsonTreeViewer';
 import PaperInfo from '../paper/PaperInfo';
 import { helper } from '@/app/utils/helper';
 import PaperShortInfo from '../paper/PaperShortInfo';
-import { BookOpenText, BookText, Calendar, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, CopyIcon, User, X } from 'lucide-react';
+import { BookOpenText, BookText, Calendar, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, CopyIcon, Dot, MousePointer2, User, X } from 'lucide-react';
 import { useQueryData } from '@/app/hooks/useQueryData';
 import { useRouter, useSearchParams } from 'next/navigation'
 import { REBORN_API_URL } from '@/app/lib/config/constants';
@@ -402,32 +402,53 @@ export default function ListStatements({ data, statements, statementId = null, i
             <div className={`md:col-span-1 sticky top-5`}>
                 <div className={`sticky ${activeHeader !== null ? 'top-[calc(9rem)]' : 'top-[calc(5rem)]'} transition-[top] duration-300 ease-in-out ${isSidebarOpen ? '' : ''}`}>
                     <div className="max-h-[calc(100vh-2rem)] overflow-y-visible">
-                        <Card className="bg-[#f5f5f5] shadow-lg">
-                            <CardContent className="p-6">
+                        <Card className="p-0">
+                            <CardContent className="p-0">
                                 <div className="relative">
-                                    <div className="space-y-4">
+                                    <div>
                                         <div className="border rounded p-0" key={`article-${nanoid()}`}>
                                             {data.basises.map((item: any, index: any) => {
                                                 return (
                                                     <div key={`basis-${nanoid()}`}>
-                                                        <div className="grid grid-cols-1 bg-[#f8f9fa] p-1.5">
-                                                            <div className="flex justify-end inline">
-                                                                <a href={item.id} className={`text-shadow-custom text-blue-500 underline text-sm inline`}>{item.id}</a>
-                                                                <span className={`text-shadow-custom px-1.5 py-1 inline`}>
-                                                                    <CopyIcon
-                                                                        size={16}
-                                                                        onClick={() => copyToClipboard(item.id)}
-                                                                        className="h-4 w-4 text-gray-700 cursor-pointer text-xs"
-                                                                    />
-                                                                </span>
-                                                            </div>
-                                                        </div>
                                                         <div className='bg-white p-4'>
                                                             <div className="grid grid-cols-1">
-                                                                <h6 className="text-black leading-tight mb-2 font-medium">{item.name}</h6>
+                                                                <h6 className="text-black leading-tight mb-2 font-medium">
+                                                                    {item.name}
+                                                                </h6>
+                                                                <h6 className="text-black leading-tight mb-2 font-medium">
+                                                                    <Calendar className="me-1 inline underline text-gray-500" size={16} />
+                                                                    <span className='text-xs mr-2'>{item.publication_issue.date_published}</span>
+                                                                    <User className="me-1 inline text-gray-500" size={16} />
+                                                                    {item.authors.map((author: any, index: any) => (
+                                                                        <span key={`author-${nanoid()}`} className={`badge overlay-trigger text-xs ${(item.authors.length == index + 1) && 'mr-2'}`}>
+                                                                            {`${author.name}`}{(item.authors.length != index + 1) && <Dot size={16} className='inline text-gray-500 mx-0' />} {` `}
+                                                                        </span>
+                                                                    ))}
+                                                                    {item && (
+                                                                        <span className="badge cursor-pointer overlay-trigger underline mr-2 text-xs inline-block">
+                                                                            <BookText className="me-1 inline text-gray-500" size={16} />
+                                                                            <a href={item.publication_issue.periodical_url} target="_blank" rel="noopener noreferrer" className="underline text-xs inline mr-1">
+                                                                                {item.publication_issue.periodical}
+                                                                            </a>
+                                                                            <Dot size={16} className='inline text-gray-500 mx-0' /> 
+                                                                            <a href={item.publication_issue.publisher_url} target="_blank" rel="noopener noreferrer" className="underline text-xs inline mr-1">
+                                                                                {item.publication_issue.publisher_name}
+                                                                            </a>
+                                                                        </span>
+                                                                    )}
+                                                                    <MousePointer2 size={16} className='inline mr-1 text-gray-500 transform scale-x-[-1]' />
+                                                                    <a href={item.id} className={`text-shadow-custom text-blue-500 underline text-xs inline`}>{item.id}</a>
+                                                                    <span className={`text-shadow-custom px-1.5 py-1 inline`}>
+                                                                        <CopyIcon
+                                                                            size={16}
+                                                                            onClick={() => copyToClipboard(item.id)}
+                                                                            className="h-4 w-4 cursor-pointer text-xs inline text-gray-500"
+                                                                        />
+                                                                    </span>
+                                                                </h6>
                                                             </div>
 
-                                                            <div className="grid grid-cols-12">
+                                                            {/* <div className="grid grid-cols-12">
                                                                 <div className="col-span-12">
                                                                     <span className="badge me-2 text-xs">
                                                                         <Calendar className="me-1 inline underline text-xs" size={16} />
@@ -440,11 +461,11 @@ export default function ListStatements({ data, statements, statementId = null, i
                                                                         </span>
                                                                     ))}
                                                                 </div>
-                                                            </div>
+                                                            </div> */}
                                                             <div className='my-4 text-sm'>
                                                                 {item && <TruncatedAbstract text={item.abstract} />}
                                                             </div>
-                                                            <div className="grid grid-cols-12">
+                                                            {/* <div className="grid grid-cols-12">
                                                                 <div className="col-span-12">
                                                                     {item && (
                                                                         <span className="badge cursor-pointer overlay-trigger underline mr-2 text-xs">
@@ -453,7 +474,7 @@ export default function ListStatements({ data, statements, statementId = null, i
                                                                         </span>
                                                                     )}
                                                                 </div>
-                                                            </div>
+                                                            </div> */}
                                                         </div>
                                                     </div >
                                                 )

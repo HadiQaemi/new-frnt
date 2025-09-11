@@ -1,4 +1,4 @@
-import { Menu, BookOpenText, Calendar, User, CopyIcon, BookText, Scan, GraduationCap } from 'lucide-react'
+import { Menu, BookOpenText, Calendar, User, CopyIcon, BookText, Scan, GraduationCap, MousePointer2, Dot } from 'lucide-react'
 import CustomPopover from '../shared/CustomPopover'
 import { usePopoverManager } from '@/app/hooks/usePopoverManager'
 import TruncatedAbstract from './TruncatedAbstract'
@@ -153,7 +153,7 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
 
   return (
     <div>
-      <div className="grid grid-cols-1 bg-[#e7e5e6] p-1.5">
+      {/* <div className="grid grid-cols-1 bg-[#e7e5e6] p-1.5">
         <div className="flex justify-end inline">
           <a href={paper.reborn_doi} className={`text-shadow-custom text-blue-500 underline text-sm ${paper.reborn_doi.length > 0 ? 'inline' : 'hidden'}`}>{paper.reborn_doi}</a>
           <span className={`text-shadow-custom px-1.5 py-1 ${paper.reborn_doi.length > 0 ? 'inline' : 'hidden'}`}>
@@ -166,7 +166,7 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
             {paper.reborn_date}
           </span>
         </div>
-      </div>
+      </div> */}
       <div ref={containerRef} className='bg-[#f8f9fa] p-4'>
         <div className="grid grid-cols-1">
           <h4 className="text-black text-2xl leading-tight mb-2 font-medium">{paper.name}</h4>
@@ -174,10 +174,6 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
 
         <div className="grid grid-cols-12">
           <div className="col-span-12">
-            <span className="badge me-2 text-sm">
-              <Calendar className="me-1 inline underline" />
-              {paper.date_published}
-            </span>
             {research_field && (
               <CustomPopover
                 id={`popover-${research_field['label']}`}
@@ -196,7 +192,7 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
                     }}
                   >
                     <Scan className="me-1 inline text-gray-500 w-[1.7rem] h-[1.7rem]" />
-                    <GraduationCap className="inline -ml-[25px] w-[0.9rem] text-xs" />
+                    <GraduationCap className="inline -ml-[25px] text-gray-500 w-[0.9rem] text-xs" />
                     <span className='ml-3'>{research_field['label']}</span>
                   </span>
                 }
@@ -204,12 +200,18 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
                 {renderIdentifiersList(research_field.related_identifier)}
               </CustomPopover>
             )}
+            <span className="badge me-2 text-sm">
+              <Calendar className="me-1 inline underline text-gray-500" />
+              {paper.date_published}
+            </span>
+            <User className="me-1 inline text-gray-500" />
             {paper.authors.map((author: any, index: any) => (
               <CustomPopover
                 key={`author-${index}`}
                 id={`popover-${`${author.name}`}-${index}`}
                 subTitle="Show content for "
                 title={`${author.name}`}
+                affiliation={author.affiliation}
                 show={activePopover === `${author.name}`}
                 onToggle={(show) => handlePopoverToggle(`${author.name}`, show)}
                 onSelect={() => onAuthorSelect(author)}
@@ -222,8 +224,8 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
                       handlePopoverToggle(`${author.name}`, activePopover !== `${author.name}`)
                     }}
                   >
-                    <User className="me-1 inline" />
                     {`${author.name}`}
+                    {(paper.authors.length != (index + 1)) && <Dot className='inline text-gray-500' />}
                   </span>
                 }
               >
@@ -234,6 +236,16 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
                 )}
               </CustomPopover>
             ))}
+
+            <BookText className="mx-1 inline text-gray-500" />
+            {paper.publisher}
+            <span className='inline-block'>
+              <MousePointer2 className='inline mr-1 text-gray-500 transform scale-x-[-1]' />
+              <a href={paper.dois} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline text-sm">
+                {paper.dois}
+              </a>
+            </span>
+            <CopyIcon onClick={() => copyToClipboard(paper.dois)} className="inline ml-2 h-4 w-4 text-gray-700 hover:text-gray-900 cursor-pointer" />
           </div>
         </div>
 
@@ -269,14 +281,10 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
               </CustomPopover>
             )}
             <div className='text-black inline text-sm'>
-              <BookText className="mx-1 inline text-gray-500" />
-              {paper.publisher}
+
             </div>
             <div className='my-1'>
-              <a href={paper.dois} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline text-sm">
-                {paper.dois}
-              </a>
-              <CopyIcon onClick={() => copyToClipboard(paper.dois)} className="inline ml-2 h-4 w-4 text-gray-700 hover:text-gray-900 cursor-pointer" />
+
             </div>
           </div>
         </div>
