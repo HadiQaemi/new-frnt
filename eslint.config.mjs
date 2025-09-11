@@ -11,15 +11,20 @@ const compat = new FlatCompat({
 
 const config = [
   {
-    ignores: [".next/*", "node_modules/*"]
+    ignores: [".next/*", "node_modules/*", ".next/**/*"]
   },
   ...compat.extends("next/core-web-vitals"),
   {
-    files: ["**/*.ts", "**/*.tsx"],
+    files: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"],
     languageOptions: {
       parserOptions: {
-        project: "./tsconfig.json"
+        project: "./tsconfig.json",
+        ecmaVersion: "latest",
+        sourceType: "module"
       }
+    },
+    rules: {
+      // Add any custom rules here if needed
     }
   }
 ];
