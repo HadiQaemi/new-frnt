@@ -86,7 +86,7 @@ export default function Insight(
         } catch (error) {
             console.error('Error fetching data:', error);
             setError(error instanceof Error ? error.message : 'Unknown error occurred');
-            return null;
+            return { items: [] };
         } finally {
             setIsLoading(false);
         }
