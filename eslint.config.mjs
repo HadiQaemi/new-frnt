@@ -1,9 +1,10 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
+import { fixupConfigRules } from "@eslint/compat";
 import { FlatCompat } from "@eslint/eslintrc";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __dirname = path.dirname(__filename);
 
 const compat = new FlatCompat({
   baseDirectory: __dirname,
@@ -11,20 +12,23 @@ const compat = new FlatCompat({
 
 const config = [
   {
-    ignores: [".next/*", "node_modules/*", ".next/**/*"]
+    ignores: [
+      ".next/**/*",
+      "node_modules/**/*",
+      "out/**/*",
+      ".next/*",
+      "build/**/*"
+    ]
   },
-  ...compat.extends("next/core-web-vitals"),
+  ...fixupConfigRules(compat.extends("next/core-web-vitals")),
   {
     files: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"],
     languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
       parserOptions: {
-        project: "./tsconfig.json",
-        ecmaVersion: "latest",
-        sourceType: "module"
+        project: "./tsconfig.json"
       }
-    },
-    rules: {
-      // Add any custom rules here if needed
     }
   }
 ];
