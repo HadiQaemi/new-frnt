@@ -372,24 +372,24 @@ const TabComponent: React.FC<TabComponentProps> = ({
                                                     <Dot className="me-1 inline font-bold" />
                                                 </span>
                                                 <span className="font-inter font-[400] text-sm">{item.date_published}</span>
-                                                {item.publisher && (
+                                                {/* {item.publisher && (
                                                     <>
                                                         <span className="font-inter font-[500]">
                                                             <Dot className="me-1 inline font-bold" />
                                                         </span>
                                                         <span className="font-inter font-[400] text-sm">{item.publisher}</span>
                                                     </>
-                                                )}
+                                                )} */}
                                             </div>
                                             <div className="col-span-4" key={`has_input-all-${nanoid()}`}>
                                                 <div
                                                     key={`${nanoid()}`}
-                                                    className="h-full border-t border-r border-b border-[#c2c7c4] border-l-[10px] border-l-[#c2c7c4] relative scrollbar-custom sm:overflow-visible overflow-auto"
+                                                    className="h-full relative"
                                                 >
-                                                    <span className="bg-[#c2c7c4] absolute -top-[12px] text-[12px] -left-[10px] p-[2px] text-white pl-4 pr-2">
+                                                    <div className="bg-[#00b0505e] p-1.5 text-gray-700 font-[700] text-sm">
                                                         Article
-                                                    </span>
-                                                    <div key={`${nanoid()}`} className="d-flex p-2">
+                                                    </div>
+                                                    <div key={`${nanoid()}`} className="border border-gray-100 border-t-0 d-flex p-2">
                                                         <div className="block my-0.5">
                                                             <span className="font-inter font-[400] text-xs">
                                                                 {item.basises[0].authors[0].family_name} et al. (
@@ -397,7 +397,7 @@ const TabComponent: React.FC<TabComponentProps> = ({
                                                                 {item.basises[0].name}.
                                                                 {item.basises[0].publication_issue.periodical && (
                                                                     <> {item.basises[0].publication_issue.periodical}</>
-                                                                )}
+                                                                )}.
                                                             </span>
                                                         </div>
                                                     </div>

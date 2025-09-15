@@ -61,34 +61,19 @@ const CustomPopover: React.FC<CustomPopoverProps> = ({
             </div>
           )}
           <div className="w-[100%]">
-
             {affiliation && (
-              <>
-                Affiliation:
-                <span className='inline-block'>
-                  {/* <University size={16} className="text-gray-500 inline me-1" /> */}
-                  <a href={affiliation?.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline text-xs inline mr-1">
-                    {affiliation?.name}
-                  </a>
-                </span>
-                {/* <span className='inline-block'>
-                  <MousePointer2 size={16} className="text-gray-500 inline me-1" />
-                  <a href={affiliation?.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline text-xs">
-                    {affiliation?.url}
-                  </a>
-                </span> */}
-              </>
+              <span className="flex items-center">
+                <University className="mr-2 h-4 w-4" />
+                <a
+                  href={affiliation?.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 break-all text-sm"
+                >
+                  {affiliation?.name}
+                </a>
+              </span>
             )}
-            {/* {subTitle}
-            {subTitle && (
-              <button
-                type="button"
-                onClick={onSelect}
-                className="text-gray-700 bg-transparent border-none p-0 cursor-pointer hover:opacity-80"
-              >
-                <span className="text-red-500 underline">{title}</span>
-              </button>
-            )} */}
           </div>
           {children}
         </div>

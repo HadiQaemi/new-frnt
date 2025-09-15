@@ -5,6 +5,8 @@ import TruncatedAbstract from './TruncatedAbstract'
 import { useToast } from '@/components/ui/use-toast'
 import { helper } from '@/app/utils/helper'
 import { useEffect } from 'react'
+import Image from 'next/image';
+import ORCID from '../../../assets/images/ORCID_iD.svg';
 
 interface Author {
   name: string
@@ -65,7 +67,7 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
               href={id}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 break-all text-[16px] block"
+              className="text-blue-600 break-all text-sm flex items-center"
               onClick={(e) => {
                 if (e.target instanceof Element && e.target.closest('.overlay-trigger')) {
                   e.stopPropagation()
@@ -73,7 +75,18 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
                 }
               }}
             >
-              {helper.cleanString(id)}
+              {id.includes("https://orcid.org/") && (
+                <Image
+                  src={ORCID}
+                  alt="ORCID Logo"
+                  width={24}
+                  height={24}
+                  className="object-contain mr-2"
+                />
+              )}
+              <span>
+                {helper.cleanString(id).replace('https://orcid.org/', '')}
+              </span>
             </a>
           </div>
         ))}
@@ -113,13 +126,6 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
     if (localJournals.length) {
       const storedVenues = JSON.parse(localJournals);
       const updatedVenues = [...storedVenues];
-      // if (!storedVenues.some((u: any) => u.id === venue.id)) {
-      //   updatedVenues.push({
-      //     id: venue.id,
-      //     name: venue.label
-      //   });
-      //   localStorage.setItem('journals', JSON.stringify(updatedVenues))
-      // }
     }
 
     if (research_field) {
@@ -153,20 +159,6 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
 
   return (
     <div>
-      {/* <div className="grid grid-cols-1 bg-[#e7e5e6] p-1.5">
-        <div className="flex justify-end inline">
-          <a href={paper.reborn_doi} className={`text-shadow-custom text-blue-500 underline text-sm ${paper.reborn_doi.length > 0 ? 'inline' : 'hidden'}`}>{paper.reborn_doi}</a>
-          <span className={`text-shadow-custom px-1.5 py-1 ${paper.reborn_doi.length > 0 ? 'inline' : 'hidden'}`}>
-            <CopyIcon
-              onClick={() => copyToClipboard(paper.reborn_doi)}
-              className="h-4 w-4 text-gray-700 hover:text-gray-900 cursor-pointer text-sm"
-            />
-          </span>
-          <span className={`text-shadow-custom pl-1 h-4 leading-4 mt-1 text-sm ${paper.reborn_doi.length > 0 ? 'border-l border-[#555]' : ''}`}>
-            {paper.reborn_date}
-          </span>
-        </div>
-      </div> */}
       <div ref={containerRef} className='bg-[#f8f9fa] p-4'>
         <div className="grid grid-cols-1">
           <h4 className="text-black text-2xl leading-tight mb-2 font-medium">{paper.name}</h4>
@@ -174,32 +166,11 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
 
         <div className="grid grid-cols-12">
           <div className="col-span-12">
-            {research_field && (
-              <CustomPopover
-                id={`popover-${research_field['label']}`}
-                subTitle="Show content for "
-                title={research_field['label']}
-                show={activePopover === research_field['label']}
-                onToggle={(show) => handlePopoverToggle(research_field['label'], show)}
-                onSelect={() => onResearchFieldSelect(research_field)}
-                icon={Menu}
-                trigger={
-                  <span
-                    className="badge cursor-pointer overlay-trigger me-2 mb-2 underline text-sm"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      handlePopoverToggle(research_field.label, activePopover !== research_field.label)
-                    }}
-                  >
-                    <Scan className="me-1 inline text-gray-500 w-[1.7rem] h-[1.7rem]" />
-                    <GraduationCap className="inline -ml-[25px] text-gray-500 w-[0.9rem] text-xs" />
-                    <span className='ml-3'>{research_field['label']}</span>
-                  </span>
-                }
-              >
-                {renderIdentifiersList(research_field.related_identifier)}
-              </CustomPopover>
-            )}
+            <span className="badge overlay-trigger me-2 mb-2 text-sm">
+              <Scan className="me-1 inline text-gray-500 w-[1.7rem] h-[1.7rem]" />
+              <GraduationCap className="inline -ml-[25px] text-gray-500 w-[0.9rem] text-xs" />
+              <span className='ml-3'>{research_field['label']}</span>
+            </span>
             <span className="badge me-2 text-sm">
               <Calendar className="me-1 inline underline text-gray-500" />
               {paper.date_published}
@@ -218,7 +189,7 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
                 icon={User}
                 trigger={
                   <span
-                    className={`badge cursor-pointer overlay-trigger me-2 mb-2 underline text-sm ${index < 1 ? 'inline md:inline' : 'hidden sm:hidden md:inline'}`}
+                    className={`badge cursor-pointer overlay-trigger mb-2 underline text-sm ${index < 1 ? 'inline md:inline' : 'hidden sm:hidden md:inline'}`}
                     onClick={(e) => {
                       e.stopPropagation()
                       handlePopoverToggle(`${author.name}`, activePopover !== `${author.name}`)
@@ -236,16 +207,17 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
                 )}
               </CustomPopover>
             ))}
-
-            <BookText className="mx-1 inline text-gray-500" />
-            {paper.publisher}
-            <span className='inline-block'>
+            <span className='mr-2 text-sm'>
+              <BookText className="mx-1 inline text-gray-500" />
+              {paper.publisher}
+            </span>
+            <span className='inline-block mr-2'>
               <MousePointer2 className='inline mr-1 text-gray-500 transform scale-x-[-1]' />
               <a href={paper.dois} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline text-sm">
                 {paper.dois}
               </a>
             </span>
-            <CopyIcon onClick={() => copyToClipboard(paper.dois)} className="inline ml-2 h-4 w-4 text-gray-700 hover:text-gray-900 cursor-pointer" />
+            <CopyIcon onClick={() => copyToClipboard(paper.dois)} className="inline h-4 w-4 text-gray-700 hover:text-gray-900 cursor-pointer" />
           </div>
         </div>
 

@@ -345,8 +345,8 @@ export default function ListStatements({ data, statements, statementId = null, i
 
             {/* <div className={`transition-all duration-300 ease-in-out overflow-x-auto ${isSidebarOpen ? 'col-span-1 md:col-span-9' : 'w-14/24'}`}> */}
             <div className={`md:col-span-3`}>
-                <Card className="bg-white shadow-lg">
-                    <CardContent className="p-6">
+                <Card>
+                    <CardContent className="p-0">
                         {articles.length === 0 ? (
                             <p className="text-gray-500 text-center">No results found</p>
                         ) : (
@@ -356,7 +356,7 @@ export default function ListStatements({ data, statements, statementId = null, i
                                         {articles.map((item: any, index: any) => {
                                             const article = item.article
                                             return (
-                                                <div className="border rounded p-0" key={`article-${nanoid()}`}>
+                                                <div className="border rounded bg-white p-0" key={`article-${nanoid()}`}>
                                                     <PaperInfo
                                                         paper={article}
                                                         key={`article-info-${nanoid()}`}
@@ -407,10 +407,13 @@ export default function ListStatements({ data, statements, statementId = null, i
                                 <div className="relative">
                                     <div>
                                         <div className="border rounded p-0" key={`article-${nanoid()}`}>
+                                            <div className="bg-[#00b0505e] p-2 text-gray-700 font-[700] text-sm">
+                                                Article
+                                            </div>
                                             {data.basises.map((item: any, index: any) => {
                                                 return (
                                                     <div key={`basis-${nanoid()}`}>
-                                                        <div className='bg-white p-4'>
+                                                        <div className='bg-white p-4 pt-2'>
                                                             <div className="grid grid-cols-1">
                                                                 <h6 className="text-black leading-tight mb-2 font-medium">
                                                                     {item.name}
@@ -430,7 +433,7 @@ export default function ListStatements({ data, statements, statementId = null, i
                                                                             <a href={item.publication_issue.periodical_url} target="_blank" rel="noopener noreferrer" className="underline text-xs inline mr-1">
                                                                                 {item.publication_issue.periodical}
                                                                             </a>
-                                                                            <Dot size={16} className='inline text-gray-500 mx-0' /> 
+                                                                            <Dot size={16} className='inline text-gray-500 mx-0' />
                                                                             <a href={item.publication_issue.publisher_url} target="_blank" rel="noopener noreferrer" className="underline text-xs inline mr-1">
                                                                                 {item.publication_issue.publisher_name}
                                                                             </a>
