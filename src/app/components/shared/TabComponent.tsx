@@ -387,7 +387,7 @@ const TabComponent: React.FC<TabComponentProps> = ({
                                                     className="h-full relative"
                                                 >
                                                     <div className="bg-[#00b0505e] p-1.5 text-gray-700 font-[700] text-sm">
-                                                        Article
+                                                        {item.basises[0].publication_issue.type}
                                                     </div>
                                                     <div key={`${nanoid()}`} className="border border-gray-100 border-t-0 d-flex p-2">
                                                         <div className="block my-0.5">

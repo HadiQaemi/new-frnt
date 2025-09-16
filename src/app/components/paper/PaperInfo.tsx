@@ -175,49 +175,53 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
               <Calendar className="me-1 inline underline text-gray-500" />
               {paper.date_published}
             </span>
-            <User className="me-1 inline text-gray-500" />
-            {paper.authors.map((author: any, index: any) => (
-              <CustomPopover
-                key={`author-${index}`}
-                id={`popover-${`${author.name}`}-${index}`}
-                subTitle="Show content for "
-                title={`${author.name}`}
-                affiliation={author.affiliation}
-                show={activePopover === `${author.name}`}
-                onToggle={(show) => handlePopoverToggle(`${author.name}`, show)}
-                onSelect={() => onAuthorSelect(author)}
-                icon={User}
-                trigger={
-                  <span
-                    className={`badge cursor-pointer overlay-trigger mb-2 underline text-sm ${index < 1 ? 'inline md:inline' : 'hidden sm:hidden md:inline'}`}
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      handlePopoverToggle(`${author.name}`, activePopover !== `${author.name}`)
-                    }}
-                  >
-                    {`${author.name}`}
-                    {(paper.authors.length != (index + 1)) && <Dot className='inline text-gray-500' />}
-                  </span>
-                }
-              >
-                {renderIdentifiersList(
-                  author.orcid && !author.orcid.startsWith('#')
-                    ? [author.orcid]
-                    : []
-                )}
-              </CustomPopover>
-            ))}
             <span className='mr-2 text-sm'>
+              <User className="me-1 inline text-gray-500" />
+              {paper.authors.map((author: any, index: any) => (
+                <CustomPopover
+                  key={`author-${index}`}
+                  id={`popover-${`${author.name}`}-${index}`}
+                  subTitle="Show content for "
+                  title={`${author.name}`}
+                  affiliation={author.affiliation}
+                  show={activePopover === `${author.name}`}
+                  onToggle={(show) => handlePopoverToggle(`${author.name}`, show)}
+                  onSelect={() => onAuthorSelect(author)}
+                  icon={User}
+                  trigger={
+                    <span
+                      className={`badge cursor-pointer overlay-trigger mb-2 underline text-sm ${index < 1 ? 'inline md:inline' : 'hidden sm:hidden md:inline'}`}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handlePopoverToggle(`${author.name}`, activePopover !== `${author.name}`)
+                      }}
+                    >
+                      {`${author.name}`}
+                      {(paper.authors.length != (index + 1)) && <Dot className='inline text-gray-500' />}
+                    </span>
+                  }
+                >
+                  {renderIdentifiersList(
+                    author.orcid && !author.orcid.startsWith('#')
+                      ? [author.orcid]
+                      : []
+                  )}
+                </CustomPopover>
+              ))}
+            </span>
+            {/* <span className='mr-2 text-sm'>
               <BookText className="mx-1 inline text-gray-500" />
               {paper.publisher}
-            </span>
-            <span className='inline-block mr-2'>
-              <MousePointer2 className='inline mr-1 text-gray-500 transform scale-x-[-1]' />
-              <a href={paper.dois} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline text-sm">
-                {paper.dois}
-              </a>
-            </span>
-            <CopyIcon onClick={() => copyToClipboard(paper.dois)} className="inline h-4 w-4 text-gray-700 hover:text-gray-900 cursor-pointer" />
+            </span> */}
+            {paper.dois && (
+              <span className='inline-block'>
+                <MousePointer2 className='inline mr-1 text-gray-500 transform scale-x-[-1]' />
+                <a href={paper.dois} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline text-sm mr-2">
+                  {paper.dois}
+                </a>
+                <CopyIcon onClick={() => copyToClipboard(paper.dois)} className="inline h-4 w-4 text-gray-700 hover:text-gray-900 cursor-pointer" />
+              </span>
+            )}
           </div>
         </div>
 

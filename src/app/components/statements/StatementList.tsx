@@ -408,7 +408,7 @@ export default function ListStatements({ data, statements, statementId = null, i
                                     <div>
                                         <div className="border rounded p-0" key={`article-${nanoid()}`}>
                                             <div className="bg-[#00b0505e] p-2 text-gray-700 font-[700] text-sm">
-                                                Article
+                                                {data.basises[0].publication_issue.type}
                                             </div>
                                             {data.basises.map((item: any, index: any) => {
                                                 return (
@@ -433,21 +433,27 @@ export default function ListStatements({ data, statements, statementId = null, i
                                                                             <a href={item.publication_issue.periodical_url} target="_blank" rel="noopener noreferrer" className="underline text-xs inline mr-1">
                                                                                 {item.publication_issue.periodical}
                                                                             </a>
-                                                                            <Dot size={16} className='inline text-gray-500 mx-0' />
+                                                                            {item.publication_issue.periodical_url && item.publication_issue.publisher_name && (
+                                                                                <Dot size={16} className='inline text-gray-500 mx-0' />
+                                                                            )}
                                                                             <a href={item.publication_issue.publisher_url} target="_blank" rel="noopener noreferrer" className="underline text-xs inline mr-1">
                                                                                 {item.publication_issue.publisher_name}
                                                                             </a>
                                                                         </span>
                                                                     )}
-                                                                    <MousePointer2 size={16} className='inline mr-1 text-gray-500 transform scale-x-[-1]' />
-                                                                    <a href={item.id} className={`text-shadow-custom text-blue-500 underline text-xs inline`}>{item.id}</a>
-                                                                    <span className={`text-shadow-custom px-1.5 py-1 inline`}>
-                                                                        <CopyIcon
-                                                                            size={16}
-                                                                            onClick={() => copyToClipboard(item.id)}
-                                                                            className="h-4 w-4 cursor-pointer text-xs inline text-gray-500"
-                                                                        />
-                                                                    </span>
+                                                                    {helper.validURL(item.id) && (
+                                                                        <>
+                                                                            <MousePointer2 size={16} className='inline mr-1 text-gray-500 transform scale-x-[-1]' />
+                                                                            <a href={item.id} className={`text-shadow-custom text-blue-500 underline text-xs inline`}>{item.id}</a>
+                                                                            <span className={`text-shadow-custom px-1.5 py-1 inline`}>
+                                                                                <CopyIcon
+                                                                                    size={16}
+                                                                                    onClick={() => copyToClipboard(item.id)}
+                                                                                    className="h-4 w-4 cursor-pointer text-xs inline text-gray-500"
+                                                                                />
+                                                                            </span>
+                                                                        </>
+                                                                    )}
                                                                 </h6>
                                                             </div>
 
