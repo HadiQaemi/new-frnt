@@ -270,8 +270,18 @@ const URLOrText: React.FC<URLOrTextProps> = ({
                 <div className="flex mb-2 w-full">
                     <div className="flex-grow text-left w-[85%] font-bold">
                         <div className="inline-block" dangerouslySetInnerHTML={{ __html: content.replace(/[\[\]']+/g, '') }} />
+                        {type === "source_url" && (
+                            <div className="inline">
+                                <button
+                                    onClick={openModal}
+                                    className="px-3 py-1 text-gray-700 rounded text-sm"
+                                >
+                                    <Search size={16}/>
+                                </button>
+                            </div>
+                        )}
                     </div>
-                    {type === "source_url" && (
+                    {/* {type === "source_url" && (
                         <div className="w-[15%] flex justify-end">
                             <button
                                 onClick={openModal}
@@ -280,7 +290,7 @@ const URLOrText: React.FC<URLOrTextProps> = ({
                                 <Search />
                             </button>
                         </div>
-                    )}
+                    )} */}
                 </div>
             )}
             {isModalOpen && (

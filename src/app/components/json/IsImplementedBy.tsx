@@ -68,8 +68,8 @@ const IsImplementedBy: FC<IsImplementedByProps> = ({
     // }
 
     return (
-        <div className="p-2 pt-4 border-t border-r border-b border-[#c40dfd] border-l-[10px] border-l-[#c40dfd] my-1 relative">
-            <span className={`bg-[#c40dfd] absolute -top-[12px] text-[12px] -left-[10px] p-[2px] text-white pl-4 pr-2`}>
+        <div className="p-2 pt-4 border-[#c40dfd] border-l-[10px] border-l-[#c40dfd] my-1 relative">
+            <span className={`bg-[#c40dfd] absolute -top-[12px] text-[12px] -left-[10px] p-[2px] text-white pl-4 pr-2 w-[140px]`}>
                 Implementation
             </span>
             {stringType.fileType === 'sourceCode' ? (

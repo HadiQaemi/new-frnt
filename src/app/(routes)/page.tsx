@@ -1,9 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import TabComponent from '../components/shared/TabComponent';
 import MultiSelect, { ResearchField } from '../components/shared/MultiSelect';
+import SideSearchForm from '../components/search/SideSearchForm';
+import { useSearchParams } from 'next/navigation';
 
 export default function HomePage() {
 
@@ -34,6 +36,42 @@ export default function HomePage() {
     setRanking(e.target.value);
   };
 
+  // **********SideSearchForm**********
+  
+  interface TimeRange {
+    start: number;
+    end: number;
+  }
+
+  interface QueryParams {
+    timeRange?: TimeRange;
+    authors?: string[];
+    scientific_venues?: string[];
+    concepts?: string[];
+  }
+  const sideSearchFormRef = useRef<any>(null);
+  const [filterParams, setFilterParams] = useState<QueryParams>({
+    timeRange: {
+      start: 2000,
+      end: 2025
+    },
+    authors: [],
+    scientific_venues: [],
+    concepts: []
+  });
+  const handleFilter = (formData: QueryParams) => {
+    setFilterParams(formData);
+  };
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+  const conceptParam = searchParams.get('concept');
+  const titleParam = searchParams.get('title');
+
+  // **********SideSearchForm**********
+
   const [selectedResearchFields, setSelectedResearchFields] = useState<ResearchField[]>([]);
 
   return (
@@ -50,15 +88,15 @@ export default function HomePage() {
             variants={containerVariants}
           >
             <motion.div variants={itemVariants}>
-              <div className="bg-white mb-4 pt-8">
+              {/* <div className="bg-white mb-4 pt-8">
                 <MultiSelect
                   selectedFields={selectedResearchFields}
                   onChange={setSelectedResearchFields}
                   placeholder="Select research fields..."
                 />
-              </div>
+              </div> */}
               <div className="bg-white mb-4">
-                <select
+                {/* <select
                   value={ranking}
                   onChange={handleRankingChange}
                   className="w-full px-4 py-2 border rounded-lg shadow-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -66,7 +104,17 @@ export default function HomePage() {
                   <option value="a-z">A-Z</option>
                   <option value="z-a">Z-A</option>
                   <option value="newest">Newest</option>
-                </select>
+                </select> */}
+                <SideSearchForm
+                  ref={sideSearchFormRef}
+                  handleFilter={handleFilter}
+                  currentPage={currentPage}
+                  pageSize={pageSize}
+                  isSubmitting={isSubmitting}
+                  submitError={submitError}
+                  conceptParam={conceptParam}
+                  titleParam={titleParam}
+                />
               </div>
             </motion.div>
 

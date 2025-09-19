@@ -23,6 +23,9 @@ interface SideSearchFormProps {
     handleFilter: (data: FilterData) => void;
 }
 
+type ResourceType = 'articles' | 'statements';
+type SearchType = 'keyword' | 'hybrid' | 'semantic';
+
 interface FilterData {
     title: string | undefined;
     timeRange: {
@@ -35,6 +38,8 @@ interface FilterData {
     scientific_venues: string[];
     research_fields: string[];
     concepts: string[];
+    resource_type: ResourceType;
+    search_type: SearchType;
 }
 
 interface SideSearchFormRef {
@@ -69,6 +74,10 @@ interface SuggestionBoxProps {
 const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(({ currentPage, pageSize, submitError, isSubmitting, handleFilter, conceptParam, titleParam }, ref) => {
     const [timeRange, setTimeRange] = useState<[number, number]>([2015, 2025]);
     const [titleSearch, setTitleSearch] = useState('');
+
+    const [resourceType, setResourceType] = useState<ResourceType>('statements');
+    const [searchType, setSearchType] = useState<SearchType>('keyword');
+
     const [authorSearch, setAuthorSearch] = useState('');
     const [scientificVenues, setScientificVenues] = useState('');
     const [researchFieldSearch, setResearchFieldSearch] = useState('');
@@ -147,7 +156,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
         placeholder
     }) => (
         <div className="mb-4">
-            <label className="block mb-2">{label}</label>
+            {/* <label className="block mb-2">{label}</label> */}
             <div className="relative">
                 <input
                     type="text"
@@ -215,7 +224,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
         </div>
     );
 
-    const { data: researchFields, isLoading: isLoadingFields } = useResearchFields(researchFieldSearch);
+    const { data: researchFields } = useResearchFields(researchFieldSearch);
     useEffect(() => {
         if (researchFields) {
             const storedData = localStorage.getItem('fields');
@@ -237,7 +246,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
         setResearchFieldSearch(e.target.value);
     };
 
-    const { data: journals, isLoading: isLoadingJournals } = useJournals(scientificVenues);
+    const { data: journals } = useJournals(scientificVenues);
     useEffect(() => {
         if (journals) {
             const storedData = localStorage.getItem('journals');
@@ -259,7 +268,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
         setScientificVenues(e.target.value);
     };
 
-    const { data: concepts, isLoading: isLoadingConcepts } = useConcepts(conceptSearch);
+    const { data: concepts } = useConcepts(conceptSearch);
     useEffect(() => {
         if (concepts) {
             const storedData = localStorage.getItem('concepts');
@@ -319,6 +328,12 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                     setTimeRange([start, end]);
                 }
             }
+
+            const urlResource = (searchParams.get('resource_type') as ResourceType) || (window.location.pathname.includes('/articles') ? 'articles' : 'statements');
+            setResourceType(urlResource);
+
+            const urlSearchType = (searchParams.get('search_type') as SearchType) || 'keyword';
+            setSearchType(urlSearchType);
 
             const authorIds = helper.getArrayFromURL('authors');
             const scientificVenueIds = helper.getArrayFromURL('scientific_venues');
@@ -381,32 +396,64 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
         setSelectedScientificVenues([]);
         setSelectedResearchFields([]);
         setSelectedConcepts([]);
-        if (window.location.pathname.includes('/statements')) {
-            handleFilter({
-                title: '',
-                timeRange: { start: 2015, end: 2025 },
-                page: currentPage,
-                per_page: pageSize,
-                authors: [],
-                scientific_venues: [],
-                research_fields: [],
-                concepts: []
-            });
-            router.push(`/statements`);
-        } else {
-            handleFilter({
-                title: '',
-                timeRange: { start: 2015, end: 2025 },
-                page: currentPage,
-                per_page: pageSize,
-                authors: [],
-                scientific_venues: [],
-                research_fields: [],
-                concepts: []
-            });
-            router.push('/statements');
-            // router.refresh();
-        }
+        const currentPathType: ResourceType = window.location.pathname.includes('/articles') ? 'articles' : 'statements';
+        setResourceType(currentPathType);
+        setSearchType('keyword');
+
+        const baseFilter: FilterData = {
+            title: '',
+            timeRange: { start: 2015, end: 2025 },
+            page: currentPage,
+            per_page: pageSize,
+            authors: [],
+            scientific_venues: [],
+            research_fields: [],
+            concepts: [],
+            resource_type: currentPathType,
+            search_type: 'keyword'
+        };
+
+        handleFilter(baseFilter);
+        const urlParams = {
+            title: '',
+            start_year: 2015,
+            end_year: 2025,
+            authors: [],
+            scientific_venues: [],
+            research_fields: [],
+            concepts: [],
+            page: currentPage,
+            per_page: pageSize,
+            resource_type: currentPathType,
+            search_type: 'keyword'
+        };
+        updateURLParams(urlParams, currentPathType);
+        // if (window.location.pathname.includes('/statements')) {
+        //     handleFilter({
+        //         title: '',
+        //         timeRange: { start: 2015, end: 2025 },
+        //         page: currentPage,
+        //         per_page: pageSize,
+        //         authors: [],
+        //         scientific_venues: [],
+        //         research_fields: [],
+        //         concepts: []
+        //     });
+        //     router.push(`/statements`);
+        // } else {
+        //     handleFilter({
+        //         title: '',
+        //         timeRange: { start: 2015, end: 2025 },
+        //         page: currentPage,
+        //         per_page: pageSize,
+        //         authors: [],
+        //         scientific_venues: [],
+        //         research_fields: [],
+        //         concepts: []
+        //     });
+        //     router.push('/statements');
+        //     // router.refresh();
+        // }
     };
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -422,7 +469,9 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
             authors: selectedAuthors.map(author => author.id),
             scientific_venues: selectedScientificVenues.map(journal => journal.id),
             research_fields: selectedResearchFields.map(field => field.id),
-            concepts: selectedConcepts.map(concept => concept.id)
+            concepts: selectedConcepts.map(concept => concept.id),
+            resource_type: resourceType,
+            search_type: searchType
         };
 
         const urlParams = {
@@ -434,9 +483,11 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
             research_fields: selectedResearchFields.map(field => field.id),
             concepts: selectedConcepts.map(concept => concept.id),
             page: currentPage,
-            per_page: pageSize
+            per_page: pageSize,
+            resource_type: resourceType,
+            search_type: searchType
         };
-        updateURLParams(urlParams);
+        updateURLParams(urlParams, resourceType);
         handleFilter(filterData);
         // if (window.location.pathname.includes('/statements')) {
         //     updateURLParams(urlParams);
@@ -470,7 +521,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
         return concept?.name;
     }
 
-    const updateURLParams = (params: Record<string, any>) => {
+    const updateURLParams = (params: Record<string, any>, resource: ResourceType) => {
         const searchParams = new URLSearchParams();
 
         Object.entries(params).forEach(([key, value]) => {
@@ -478,11 +529,12 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                 value.forEach(v => {
                     if (v) searchParams.append(key, v);
                 });
-            } else if (value) {
+            } else if (value !== undefined && value !== null && value !== '') {
                 searchParams.set(key, String(value));
             }
         });
 
+        const basePath = resource === 'articles' ? '/articles' : '/statements';
         const newUrl = `${'/statements'}${searchParams.toString() ? '?' + searchParams.toString() : ''}`;
         window.location.href = newUrl;
         // router.push(newUrl);
@@ -491,7 +543,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
 
     return (
         <div>
-            <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md">
+            <form onSubmit={handleSubmit} className="bg-white border border-gray-100 p-1 mr-1">
                 <div className="mb-4 px-4 pt-4">
                     <label className="block mb-2 text-sm font-medium text-gray-700">
                         Time Range: {timeRange[0]} - {timeRange[1]}
@@ -555,13 +607,60 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
 
                 <div className="space-y-4 px-4 pb-4">
                     <div>
-                        <label className="block mb-2">Title or DOI</label>
+                        {/* <label className="block mb-2">Resource Type</label> */}
+                        <select
+                            value={resourceType}
+                            onChange={(e) => setResourceType(e.target.value as ResourceType)}
+                            className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                        >
+                            <option value="">--Type of Resource--</option>
+                            <option value="articles" className="py-2">
+                                {resourceType === "articles" ?
+                                    "Articles ✓" :
+                                    "Articles"}
+                            </option>
+                            <option value="statements" className="py-2">
+                                {resourceType === "statements" ?
+                                    "Statements ✓" :
+                                    "Statements"}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div>
+                        {/* <label className="block mb-2">Search Type</label> */}
+                        <select
+                            value={searchType}
+                            onChange={(e) => setSearchType(e.target.value as SearchType)}
+                            className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                        >
+                            <option value="">--Type of Search--</option>
+                            <option value="keyword" className="py-2">
+                                {searchType === "keyword" ?
+                                    "Keyword based ✓" :
+                                    "Keyword based"}
+                            </option>
+                            <option value="semantic" className="py-2">
+                                {searchType === "semantic" ?
+                                    "Semantic search ✓" :
+                                    "Semantic search"}
+                            </option>
+                            <option value="hybrid" className="py-2">
+                                {searchType === "hybrid" ?
+                                    "Hybrid ✓" :
+                                    "Hybrid"}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div>
+                        {/* <label className="block mb-2">Title or DOI</label> */}
                         <input
                             type="text"
                             value={titleSearch}
                             onChange={(e) => setTitleSearch(e.target.value)}
                             placeholder="Search by Title or DOI..."
-                            className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
                         />
                     </div>
 

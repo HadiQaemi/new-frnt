@@ -68,8 +68,8 @@ const Executes: React.FC<ExecutesProps> = ({ executes, styles }) => {
 
     return (
         <div className="w-full">
-            <div className="border-t border-r border-b border-red-700 border-l-[10px] border-l-red-700 my-1 relative">
-                <span className={`bg-red-700 absolute -top-[12px] text-[12px] -left-[10px] p-[2px] text-white pl-4 pr-2`}>
+            <div className="border-red-700 border-l-[10px] border-l-red-700 my-1 relative">
+                <span className={`bg-red-700 absolute -top-[12px] text-[12px] -left-[10px] p-[2px] text-white pl-4 pr-2 w-[122px]`}>
                     Procedure
                 </span>
                 <div className="p-2 pt-4">

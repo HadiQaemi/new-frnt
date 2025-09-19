@@ -200,7 +200,7 @@ const JsonTable: React.FC<JsonTableProps> = ({ data, styles, button, color, Comp
                                             onToggle={(show) => handlePopoverToggle(column.col_titles, show)}
                                             trigger={
                                                 <span
-                                                    className="cursor-pointer overlay-trigger me-2 mb-2 font-bold underline"
+                                                    className="cursor-pointer overlay-trigger mb-2 font-bold underline"
                                                     onClick={(e) => {
                                                         e.stopPropagation()
                                                         handlePopoverToggle(column.col_titles, activePopover !== column.col_titles)
@@ -236,7 +236,7 @@ const JsonTable: React.FC<JsonTableProps> = ({ data, styles, button, color, Comp
                                                 onToggle={(show) => handlePopoverToggle(rowTitles[(currentPage - 1) * pageSize + rowIndex], show)}
                                                 trigger={
                                                     <span
-                                                        className="cursor-pointer overlay-trigger me-2 mb-2 font-bold underline"
+                                                        className="cursor-pointer overlay-trigger mb-2 font-bold underline"
                                                         onClick={(e) => {
                                                             e.stopPropagation()
                                                             handlePopoverToggle(rowTitles[(currentPage - 1) * pageSize + rowIndex], activePopover !== rowTitles[(currentPage - 1) * pageSize + rowIndex])

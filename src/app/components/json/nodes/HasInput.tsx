@@ -72,8 +72,8 @@ const HasInput: FC<HasInputData> = ({ has_input, label, components }) => {
                 />
             )}
 
-            {!source_table && has_parts && (
-                has_parts.map((type: any, index: number) => {
+            {!source_table && components && (
+                components.map((type: any, index: number) => {
                     return (
                         helper.filterByStringMatch(components, type.label).length !== 0 ?
                             <CustomPopover
@@ -87,7 +87,7 @@ const HasInput: FC<HasInputData> = ({ has_input, label, components }) => {
                                     <span key={`CustomPopover-Components-${nanoid()}`}>
                                         {index === 0 ? 'Components: ' : ', '}
                                         <span
-                                            className="cursor-pointer overlay-trigger me-2 mb-2 font-bold underline"
+                                            className="cursor-pointer overlay-trigger mb-2 font-bold underline"
                                             onClick={(e) => {
                                                 e.stopPropagation()
                                                 handlePopoverToggle(type.label, activePopover !== type.label)

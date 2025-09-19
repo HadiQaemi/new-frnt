@@ -242,8 +242,8 @@ const TreeNode: React.FC<TreeNodeProps> = ({
                   let level_targets = true
                   let turn = 1
                   return (
-                    <div key={`data-type-${data_type.type.name}-${nanoid()}`} className="d-flex p-2 mb-4 border-t border-r border-b border-[#5b9bd5] border-l-[10px] border-l-[#5b9bd5] my-1">
-                      <span className={`bg-[#5b9bd5] relative -top-[18px] -left-[18px] p-1 text-[12px] text-white pl-4`}>
+                    <div key={`data-type-${data_type.type.name}-${nanoid()}`} className="d-flex p-2 mb-4 border-[#5b9bd5] border-l-[10px] border-l-[#5b9bd5] my-1">
+                      <span className={`bg-[#5b9bd5] relative -top-[18px] -left-[18px] p-1 text-[12px] text-white pl-4 w-[140px] inline-block`}>
                         {helper.capitalizeFirstLetter(helper.cleanFirstLetter(data_type.type.name))}
                       </span>
                       <div>
@@ -255,8 +255,8 @@ const TreeNode: React.FC<TreeNodeProps> = ({
                             <div key={`property-${type}-${nanoid()}`}>
                               {type === 'has_input' ? (
                                 <div className={`mx-0 ${turn > 1 ? 'pt-4' : ``}`} key={`has_input-all-${nanoid()}`}>
-                                  <div key={`has_input-parent-${nanoid()}`} className="p-2 pt-4 border-t border-r border-b border-[#00b050] border-l-[10px] border-l-[#00b050] my-1 relative scrollbar-custom sm:overflow-visible overflow-auto">
-                                    <span className={`bg-[#00b050] absolute -top-[12px] text-[12px] -left-[10px] p-[2px] text-white pl-4 pr-2`}>
+                                  <div key={`has_input-parent-${nanoid()}`} className="p-2 pt-4 border-[#00b050] border-l-[10px] border-l-[#00b050] my-1 relative scrollbar-custom sm:overflow-visible overflow-auto">
+                                    <span className={`bg-[#00b050] absolute -top-[12px] text-[12px] -left-[10px] p-[2px] text-white pl-4 pr-2 w-[122px]`}>
                                       Input data
                                     </span>
                                     {data_type.has_part[type]?.map((input: any) => (
@@ -271,8 +271,8 @@ const TreeNode: React.FC<TreeNodeProps> = ({
                                 </div>
                               ) : type === 'has_output' ? (
                                 <div className={`mx-0 ${turn > 1 ? 'pt-4' : ``}`} key={`has_output-all-${nanoid()}`}>
-                                  <div key={`has_output-parent-${nanoid()}`} className="p-2 border-t border-r border-b border-[#00b050] border-l-[10px] border-l-[#00b050] my-1 relative scrollbar-custom sm:overflow-visible overflow-auto">
-                                    <span className={`bg-[#00b050] absolute -top-[12px] text-[12px] -left-[10px] p-[2px] text-white pl-4 pr-2`}>
+                                  <div key={`has_output-parent-${nanoid()}`} className="p-2 border-[#00b050] border-l-[10px] border-l-[#00b050] my-1 relative scrollbar-custom sm:overflow-visible overflow-auto">
+                                    <span className={`bg-[#00b050] absolute -top-[12px] text-[12px] -left-[10px] p-[2px] text-white pl-4 pr-2 w-[122px]`}>
                                       Output data
                                     </span>
                                     {data_type.has_part[type]?.map((input: any) => (
@@ -309,7 +309,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
                                     return (data_type.has_part[type] && (
                                       // <Evaluates evaluates={data_type.has_part['evaluates']} evaluates_for={data_type.has_part['evaluates_for']} key={`evaluates-${type}`} />
                                       <div className={`mx-0 ${turn > 1 ? 'pt-4' : ``}`} key={`has_output-all-${nanoid()}`}>
-                                        <Level key={`targets-${type}-${nanoid()}`} level={data_type.has_part['level']} targets={data_type.has_part['targets']} components={statement.components} />
+                                        <Level key={`targets-${type}-${nanoid()}`} level={data_type.has_part['level']} targets={data_type.has_part['targets']} components={data_type.components} />
                                       </div>
                                     ))
                                   }

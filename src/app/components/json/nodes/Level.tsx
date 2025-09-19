@@ -29,8 +29,8 @@ const Level: React.FC<LevelProps> = ({ level, targets, components }) => {
     const { activePopover, containerRef, handlePopoverToggle } = usePopoverManager()
 
     return (
-        <div className="p-2 border-t border-r border-b border-amber-500 border-l-[10px] border-l-amber-500 my-1 relative">
-            <span className={`bg-amber-500 absolute -top-[12px] text-[12px] -left-[10px] p-[2px] text-white pl-4 pr-2`}>
+        <div className="p-2 border-amber-500 border-l-[10px] border-l-amber-500 my-1 relative">
+            <span className={`bg-amber-500 absolute -top-[12px] text-[12px] -left-[10px] p-[2px] text-white pl-4 pr-2 w-[122px]`}>
                 Setup
             </span>
             {Array.isArray(targets) ? (
@@ -42,15 +42,15 @@ const Level: React.FC<LevelProps> = ({ level, targets, components }) => {
                                 key={`targets-key-${index}`}
                                 id={`popover-targetsText`}
                                 subTitle=""
-                                title={item[1]['label']}
-                                show={activePopover === item[1]['label']}
-                                onToggle={(show) => handlePopoverToggle(item[1]['label'], show)}
+                                title={item['label']}
+                                show={activePopover === item['label']}
+                                onToggle={(show) => handlePopoverToggle(item['label'], show)}
                                 trigger={
                                     <span
-                                        className="cursor-pointer overlay-trigger me-2 mb-2 font-bold underline"
+                                        className="cursor-pointer overlay-trigger mb-2 font-bold underline"
                                         onClick={(e) => {
                                             e.stopPropagation()
-                                            handlePopoverToggle(item[1]['label'], activePopover !== item[1]['label'])
+                                            handlePopoverToggle(item['label'], activePopover !== item['label'])
                                         }}
                                     >
                                         {item['label']}
@@ -59,7 +59,7 @@ const Level: React.FC<LevelProps> = ({ level, targets, components }) => {
                             >
                                 <div className="inline-block" dangerouslySetInnerHTML={{
                                     __html: `<span class='block'>` + helper.renderIdentifiersComponentList(
-                                        helper.filterByStringMatch(components, item[1]['label'])
+                                        helper.filterByStringMatch(components, item['label'])
                                     ) + `</span>`
                                 }} />
                             </CustomPopover>
@@ -78,7 +78,7 @@ const Level: React.FC<LevelProps> = ({ level, targets, components }) => {
                             onToggle={(show) => handlePopoverToggle(targets['label'], show)}
                             trigger={
                                 <span
-                                    className="cursor-pointer overlay-trigger me-2 mb-2 font-bold underline"
+                                    className="cursor-pointer overlay-trigger mb-2 font-bold underline"
                                     onClick={(e) => {
                                         e.stopPropagation()
                                         handlePopoverToggle(targets['label'], activePopover !== targets['label'])
@@ -111,7 +111,7 @@ const Level: React.FC<LevelProps> = ({ level, targets, components }) => {
                                     onToggle={(show) => handlePopoverToggle(item[1]['label'], show)}
                                     trigger={
                                         <span
-                                            className="cursor-pointer overlay-trigger me-2 mb-2 font-bold underline"
+                                            className="cursor-pointer overlay-trigger mb-2 font-bold underline"
                                             onClick={(e) => {
                                                 e.stopPropagation()
                                                 handlePopoverToggle(item[1]['label'], activePopover !== item[1]['label'])
@@ -143,7 +143,7 @@ const Level: React.FC<LevelProps> = ({ level, targets, components }) => {
                             onToggle={(show) => handlePopoverToggle(level['label'], show)}
                             trigger={
                                 <span
-                                    className="cursor-pointer overlay-trigger me-2 mb-2 font-bold underline"
+                                    className="cursor-pointer overlay-trigger mb-2 font-bold underline"
                                     onClick={(e) => {
                                         e.stopPropagation()
                                         handlePopoverToggle(level['label'], activePopover !== level['label'])
