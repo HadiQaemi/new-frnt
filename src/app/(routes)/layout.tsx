@@ -7,6 +7,7 @@ import Matomo from "./Matomo/Matomo";
 import CartComponent from "../components/cart/StatementCart";
 import type { Metadata } from 'next';
 import { REBORN_URL } from "../lib/config/constants";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: {
@@ -48,13 +49,15 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${roboto.variable}`}>
       <body className="font-inter dark:text-black dark:bg-white">
-        <Navbar />
-        <Providers>
-          {children}
-          <CartComponent />
-        </Providers>
-        <Matomo />
-        <Footer />
+        <Suspense fallback={null}>
+          <Navbar />
+          <Providers>
+            {children}
+            <CartComponent />
+          </Providers>
+          <Matomo />
+          <Footer />
+        </Suspense>
       </body>
     </html>
   );
