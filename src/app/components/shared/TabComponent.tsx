@@ -266,9 +266,12 @@ const TabComponent: React.FC<TabComponentProps> = ({
     };
     return (
         <div className="w-full mx-auto bg-white">
+
             <div className="space-y-2">
                 {isLoading ? (
                     <div className="text-center py-4 text-gray-500">Loading...</div>
+                ) : tabContents[activeTab]?.length === 0 ? (
+                    <div className="text-center py-4 text-gray-500">Nothing found</div>
                 ) : (
                     tabContents[activeTab].map((item: any, index) => (
                         <div key={index}>
