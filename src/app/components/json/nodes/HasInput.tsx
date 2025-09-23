@@ -71,9 +71,8 @@ const HasInput: FC<HasInputData> = ({ has_input, label, components }) => {
                     content={comment}
                 />
             )}
-
-            {!source_table && components && (
-                components.map((type: any, index: number) => {
+            {!source_table && has_parts && (
+                has_parts.map((type: any, index: number) => {
                     return (
                         helper.filterByStringMatch(components, type.label).length !== 0 ?
                             <CustomPopover

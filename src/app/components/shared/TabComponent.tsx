@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { REBORN_API_URL } from '@/app/lib/config/constants';
 import { helper } from '@/app/utils/helper';
 import { nanoid } from 'nanoid';
+import { InitialParams } from '../json/types';
 
 type TabId = 'articles' | 'statements' | 'keywords' | 'authors' | 'journals';
 
@@ -21,12 +22,14 @@ type TabContents = {
 
 interface TabComponentProps {
     selectedResearchFields: any[];
+    initialParams: InitialParams;
     ranking: string;
 }
 
 const TabComponent: React.FC<TabComponentProps> = ({
     selectedResearchFields,
     ranking = 'a-z',
+    initialParams
 }) => {
     const [activeTab, setActiveTab] = useState<TabId>('articles');
     const [isLoading, setIsLoading] = useState(false);
@@ -93,10 +96,20 @@ const TabComponent: React.FC<TabComponentProps> = ({
     const fetchData = async () => {
         setIsLoading(true);
         try {
+            const params = new URLSearchParams(
+                Object.entries(initialParams)
+                    .flatMap(([k, v]) =>
+                        v == null
+                            ? []
+                            : Array.isArray(v)
+                                ? v.map(x => [k, String(x)] as [string, string])
+                                : [[k, String(v)] as [string, string]]
+                    )
+            );
             const queryParams = buildQueryParams();
             let url = ''
             if (activeTab == 'articles')
-                url = `${REBORN_API_URL}/articles/get_articles/?${queryParams}`
+                url = `${REBORN_API_URL}/articles/get_articles/?${params.toString()}`
             else if (activeTab == 'statements')
                 url = `${REBORN_API_URL}/articles/get_statements/?${queryParams}`
             else if (activeTab == 'authors')
@@ -252,81 +265,8 @@ const TabComponent: React.FC<TabComponentProps> = ({
         setSearchType(e.target.value);
     };
     return (
-        <div className="w-full mx-auto p-4 bg-white">
-            <div className="flex sm:border-b overflow-auto scrollbar-custom">
-                {tabs.map((tab) => (
-                    <button
-                        key={tab.id}
-                        onClick={() => {
-                            setActiveTab(tab.id);
-                            setPagination(prev => ({ ...prev, currentPage: 1 }));
-                            setSearchTerm('');
-                        }}
-                        className={`px-4 py-2 mr-2 font-medium transition-colors duration-150
-                            ${activeTab === tab.id
-                                ? 'text-red-500 border-b-2 border-red-500'
-                                : 'text-gray-600 hover:text-gray-800'
-                            }`}
-                    >
-                        <h1 className="font-inter font-bold">{tab.label}</h1>
-                    </button>
-                ))}
-            </div>
-
-            <div className="mt-4 mb-2">
-                <div className="flex gap-2">
-                    <div className="relative flex-1">
-                        <input
-                            ref={searchInputRef}
-                            type="text"
-                            onChange={handleSearch}
-                            onKeyDown={handleKeyDown}
-                            placeholder={`Search ${activeTab}...`}
-                            className={`w-full px-4 py-2 ${!(activeTab === 'statements' || activeTab === 'articles') ? `pl-10` : ''} border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500`}
-                        />
-                        {!(activeTab === 'statements' || activeTab === 'articles') && (
-                            <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-                        )}
-                    </div>
-                    {(activeTab === 'statements' || activeTab === 'articles') && (
-                        <span>
-                            <select
-                                value={searchType}
-                                onChange={handleSearchTypeChange}
-                                className="px-3 py-2 pr-8 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-                            >
-                                <option value="">--Type of Search--</option>
-                                <option value="keyword" className="py-2">
-                                    {searchType === "keyword" ?
-                                        "Keyword based ✓" :
-                                        (searchType === "" ?
-                                            "Keyword based ✓" :
-                                            "Keyword based")}
-                                </option>
-                                <option value="semantic" className="py-2">
-                                    {searchType === "semantic" ?
-                                        "Semantic search ✓" :
-                                        "Semantic search"}
-                                </option>
-                                <option value="hybrid" className="py-2">
-                                    {searchType === "hybrid" ?
-                                        "Hybrid ✓" :
-                                        "Hybrid"}
-                                </option>
-                            </select>
-                            <button
-                                className="p-2 text-gray-400"
-                                onClick={handleSemanticSearch}
-                                title="Semantic Search"
-                            >
-                                <Search className="h-5 w-5" />
-                            </button>
-                        </span>
-                    )}
-                </div>
-            </div>
-
-            <div className="space-y-2 mt-4">
+        <div className="w-full mx-auto bg-white">
+            <div className="space-y-2">
                 {isLoading ? (
                     <div className="text-center py-4 text-gray-500">Loading...</div>
                 ) : (
@@ -372,14 +312,6 @@ const TabComponent: React.FC<TabComponentProps> = ({
                                                     <Dot className="me-1 inline font-bold" />
                                                 </span>
                                                 <span className="font-inter font-[400] text-sm">{item.date_published}</span>
-                                                {/* {item.publisher && (
-                                                    <>
-                                                        <span className="font-inter font-[500]">
-                                                            <Dot className="me-1 inline font-bold" />
-                                                        </span>
-                                                        <span className="font-inter font-[400] text-sm">{item.publisher}</span>
-                                                    </>
-                                                )} */}
                                             </div>
                                             <div className="col-span-4" key={`has_input-all-${nanoid()}`}>
                                                 <div
@@ -389,7 +321,7 @@ const TabComponent: React.FC<TabComponentProps> = ({
                                                     <div className="bg-[#00b0505e] p-1.5 text-gray-700 font-[700] text-sm">
                                                         {item.basises[0].publication_issue.type}
                                                     </div>
-                                                    <div key={`${nanoid()}`} className="border border-gray-100 border-t-0 d-flex p-2">
+                                                    <div key={`${nanoid()}`} className="border border-gray-100 border-t-0 d-flex px-2">
                                                         <div className="block my-0.5">
                                                             <span className="font-inter font-[400] text-xs">
                                                                 {item.basises[0].authors[0].family_name} et al. (

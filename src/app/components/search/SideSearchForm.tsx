@@ -7,6 +7,7 @@ import { useConcepts } from '@/app/hooks/useConcepts';
 import { helper } from '@/app/utils/helper';
 import { useRouter } from 'next/navigation';
 import { nanoid } from 'nanoid';
+import { InitialParams } from '../json/types';
 
 interface Item {
     id: string;
@@ -20,10 +21,11 @@ interface SideSearchFormProps {
     conceptParam?: any;
     titleParam?: any;
     isSubmitting: any;
+    initialParams: InitialParams;
     handleFilter: (data: FilterData) => void;
 }
 
-type ResourceType = 'articles' | 'statements';
+type ResourceType = 'article' | 'dataset' | 'loom' | 'all';
 type SearchType = 'keyword' | 'hybrid' | 'semantic';
 
 interface FilterData {
@@ -71,11 +73,11 @@ interface SuggestionBoxProps {
     inputRef: React.RefObject<HTMLInputElement>;
 }
 
-const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(({ currentPage, pageSize, submitError, isSubmitting, handleFilter, conceptParam, titleParam }, ref) => {
+const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(({ currentPage, pageSize, submitError, isSubmitting, handleFilter, conceptParam, titleParam, initialParams }, ref) => {
     const [timeRange, setTimeRange] = useState<[number, number]>([2015, 2025]);
     const [titleSearch, setTitleSearch] = useState('');
 
-    const [resourceType, setResourceType] = useState<ResourceType>('statements');
+    const [resourceType, setResourceType] = useState<ResourceType>('article');
     const [searchType, setSearchType] = useState<SearchType>('keyword');
 
     const [authorSearch, setAuthorSearch] = useState('');
@@ -329,7 +331,8 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                 }
             }
 
-            const urlResource = (searchParams.get('resource_type') as ResourceType) || (window.location.pathname.includes('/articles') ? 'articles' : 'statements');
+            // const urlResource = (searchParams.get('resource_type') as ResourceType) || (window.location.pathname.includes('/articles') ? 'articles' : 'statements');
+            const urlResource = (searchParams.get('resource_type') as ResourceType) || 'loom';
             setResourceType(urlResource);
 
             const urlSearchType = (searchParams.get('search_type') as SearchType) || 'keyword';
@@ -396,7 +399,8 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
         setSelectedScientificVenues([]);
         setSelectedResearchFields([]);
         setSelectedConcepts([]);
-        const currentPathType: ResourceType = window.location.pathname.includes('/articles') ? 'articles' : 'statements';
+        // const currentPathType: ResourceType = window.location.pathname.includes('/articles') ? 'article' : 'dataset';
+        const currentPathType: ResourceType = 'loom';
         setResourceType(currentPathType);
         setSearchType('keyword');
 
@@ -534,8 +538,8 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
             }
         });
 
-        const basePath = resource === 'articles' ? '/articles' : '/statements';
-        const newUrl = `${'/statements'}${searchParams.toString() ? '?' + searchParams.toString() : ''}`;
+        const basePath = resource === 'article' ? '/' : '/';
+        const newUrl = `${'/'}${searchParams.toString() ? '?' + searchParams.toString() : ''}`;
         window.location.href = newUrl;
         // router.push(newUrl);
         router.refresh();
@@ -607,28 +611,36 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
 
                 <div className="space-y-4 px-4 pb-4">
                     <div>
-                        {/* <label className="block mb-2">Resource Type</label> */}
                         <select
                             value={resourceType}
                             onChange={(e) => setResourceType(e.target.value as ResourceType)}
                             className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
                         >
                             <option value="">--Type of Resource--</option>
-                            <option value="articles" className="py-2">
-                                {resourceType === "articles" ?
-                                    "Articles ✓" :
-                                    "Articles"}
+                            <option value="loom" className="py-2">
+                                {resourceType === "loom" ?
+                                    "Loom ✓" :
+                                    "Loom"}
                             </option>
-                            <option value="statements" className="py-2">
-                                {resourceType === "statements" ?
-                                    "Statements ✓" :
-                                    "Statements"}
+                            <option value="article" className="py-2">
+                                {resourceType === "article" ?
+                                    "Article ✓" :
+                                    "Article"}
+                            </option>
+                            <option value="dataset" className="py-2">
+                                {resourceType === "dataset" ?
+                                    "Dataset ✓" :
+                                    "Dataset"}
+                            </option>
+                            <option value="all" className="py-2">
+                                {resourceType === "all" ?
+                                    "All ✓" :
+                                    "All"}
                             </option>
                         </select>
                     </div>
 
                     <div>
-                        {/* <label className="block mb-2">Search Type</label> */}
                         <select
                             value={searchType}
                             onChange={(e) => setSearchType(e.target.value as SearchType)}

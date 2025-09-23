@@ -1,133 +1,50 @@
-'use client';
+import PageClient from './PageClient';
+import { InitialParams, ResourceType, SearchType } from '../components/json/types';
 
-import { useRef, useState } from 'react';
-import { motion } from 'framer-motion';
-import TabComponent from '../components/shared/TabComponent';
-import MultiSelect, { ResearchField } from '../components/shared/MultiSelect';
-import SideSearchForm from '../components/search/SideSearchForm';
-import { useSearchParams } from 'next/navigation';
+type Q = Record<string, string | string[] | undefined>;
 
-export default function HomePage() {
+function toArray(v: Q[keyof Q]) {
+  if (Array.isArray(v)) return v.filter(Boolean) as string[];
+  if (typeof v === 'string' && v) return [v];
+  return [];
+}
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2
-      }
-    }
+function clampYear(raw: string | undefined, fallback: number) {
+  const n = Number(raw);
+  if (Number.isFinite(n)) return Math.min(2025, Math.max(2000, n));
+  return fallback;
+}
+function isResourceType(x: unknown): x is ResourceType {
+  return x === 'article' || x === 'dataset' || x === 'loom' || x === 'all';
+}
+function isSearchType(x: unknown): x is SearchType {
+  return x === 'keyword' || x === 'semantic' || x === 'hybrid';
+}
+
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const sp = await searchParams;
+
+  const rtRaw = Array.isArray(sp.resource_type) ? sp.resource_type[0] : sp.resource_type;
+  const stRaw = Array.isArray(sp.search_type) ? sp.search_type[0] : sp.search_type;
+
+  const parsed: InitialParams = {
+    title: typeof sp.title === 'string' ? sp.title.trim() : undefined,
+    start_year: clampYear(typeof sp.start_year === 'string' ? sp.start_year : undefined, 2015),
+    end_year: clampYear(typeof sp.end_year === 'string' ? sp.end_year : undefined, 2025),
+    page: Math.max(1, Number(sp.page) || 1),
+    per_page: Math.min(100, Math.max(1, Number(sp.per_page) || 10)),
+    resource_type: isResourceType(rtRaw) ? rtRaw : 'loom',
+    search_type: isSearchType(stRaw) ? stRaw : 'keyword',
+    authors: toArray(sp.authors),
+    scientific_venues: toArray(sp.scientific_venues),
+    research_fields: toArray(sp.research_fields),
+    concepts: toArray(sp.concepts),
   };
 
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5
-      }
-    }
-  };
-
-  const [ranking, setRanking] = useState('a-z');
-  const handleRankingChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setRanking(e.target.value);
-  };
-
-  // **********SideSearchForm**********
-  
-  interface TimeRange {
-    start: number;
-    end: number;
-  }
-
-  interface QueryParams {
-    timeRange?: TimeRange;
-    authors?: string[];
-    scientific_venues?: string[];
-    concepts?: string[];
-  }
-  const sideSearchFormRef = useRef<any>(null);
-  const [filterParams, setFilterParams] = useState<QueryParams>({
-    timeRange: {
-      start: 2000,
-      end: 2025
-    },
-    authors: [],
-    scientific_venues: [],
-    concepts: []
-  });
-  const handleFilter = (formData: QueryParams) => {
-    setFilterParams(formData);
-  };
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
-  const searchParams = useSearchParams();
-  const conceptParam = searchParams.get('concept');
-  const titleParam = searchParams.get('title');
-
-  // **********SideSearchForm**********
-
-  const [selectedResearchFields, setSelectedResearchFields] = useState<ResearchField[]>([]);
-
-  return (
-    <div className="min-h-[calc(100vh-19.1rem)] flex flex-col bg-white">
-      <div className="flex-grow">
-        <motion.div
-          className="w-full px-4 mx-auto sm:px-6 md:px-8 lg:px-12 xl:max-w-screen-xl 2xl:max-w-screen-2xl px-4 pt-[40px]"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          <motion.div
-            className="grid grid-cols-1 md:grid-cols-4 gap-6"
-            variants={containerVariants}
-          >
-            <motion.div variants={itemVariants}>
-              {/* <div className="bg-white mb-4 pt-8">
-                <MultiSelect
-                  selectedFields={selectedResearchFields}
-                  onChange={setSelectedResearchFields}
-                  placeholder="Select research fields..."
-                />
-              </div> */}
-              <div className="bg-white mb-4">
-                {/* <select
-                  value={ranking}
-                  onChange={handleRankingChange}
-                  className="w-full px-4 py-2 border rounded-lg shadow-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value="a-z">A-Z</option>
-                  <option value="z-a">Z-A</option>
-                  <option value="newest">Newest</option>
-                </select> */}
-                <SideSearchForm
-                  ref={sideSearchFormRef}
-                  handleFilter={handleFilter}
-                  currentPage={currentPage}
-                  pageSize={pageSize}
-                  isSubmitting={isSubmitting}
-                  submitError={submitError}
-                  conceptParam={conceptParam}
-                  titleParam={titleParam}
-                />
-              </div>
-            </motion.div>
-
-            <motion.div
-              className="md:col-span-3"
-              variants={itemVariants}
-            >
-              <TabComponent selectedResearchFields={selectedResearchFields} ranking={ranking} />
-            </motion.div>
-
-          </motion.div>
-        </motion.div>
-      </div>
-    </div>
-  );
+  return <PageClient initialParams={parsed} />;
 }
