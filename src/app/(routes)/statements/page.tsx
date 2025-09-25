@@ -77,14 +77,14 @@ export default function StatementsPage() {
 
   if (!isInitialized) {
     return (
-      <main className="w-full mx-auto p-4 bg-[#e9ebf2] pb-[50px] min-h-[calc(100vh-18.9rem)]">
+      <main className="w-full mx-auto p-4 pb-[50px] min-h-[calc(100vh-18.9rem)] lg:px-12 xl:max-w-screen-xl 2xl:max-w-screen-2xl">
         <LoadingState />
       </main>
     );
   }
 
   return (
-    <main className="w-full mx-auto p-4 bg-[#e9ebf2] pb-[50px] min-h-[calc(100vh-18.9rem)]">
+    <main className="w-full mx-auto p-4 pb-[50px] min-h-[calc(100vh-18.9rem)] lg:px-12 xl:max-w-screen-xl 2xl:max-w-screen-2xl">
       {isLoading ? (
         <LoadingState />
       ) : isError ? (

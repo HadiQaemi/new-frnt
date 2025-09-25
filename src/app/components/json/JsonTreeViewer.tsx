@@ -163,12 +163,9 @@ const TreeNode: React.FC<TreeNodeProps> = ({
             {helper.capitalizeFirstLetter(helper.cleanFirstLetter(statement.type.name))}
           </span>
         )}
-        <div
-          className={`flex items-start cursor-pointer p-2 transition-all duration-300 pl-5 ${level ? 'ml-2.5' : ''}`}
-          style={{ paddingLeft }}
-        >
-          <div className='w-full border border-gray-300'>
-            <div className="bg-[#728aac] p-2 text-white font-[700] text-sm">
+        <div className={`flex items-start cursor-pointer p-2 transition-all duration-300${level ? ' ml-2.5' : ''}`}>
+          <div className='flex-1 min-w-0 border border-gray-300'>
+            <div className="bg-[#89b1d5] p-2 text-[#353839]">
               Statement
             </div>
             {isLoading ? (
@@ -198,10 +195,10 @@ const TreeNode: React.FC<TreeNodeProps> = ({
             <div className={`transition-all duration-300 ${isOpen || parentOpen ? 'max-h-full opacity-100' : 'max-h-0 opacity-0'}`}>
               {details !== null && isOpen && (
                 <div className="pl-4">
-                  <span className={`bg-[#4f79b3] relative p-1 pl-4 text-[12px] text-[#f0f0f0] w-full inline-block`}>
+                  <span className={`bg-[#bbd5ec] relative p-1 pl-4 text-[12px] text-[#353839] w-full inline-block`}>
                     Data Analysis
                   </span>
-                  <div className="d-flex p-2 pr-0 mb-4 border-[#4f79b3] border-l-[10px] border-l-[#4f79b3] ">
+                  <div className="d-flex p-2 pr-0 mb-4 border-[#bbd5ec] border-l-[10px] border-l-[#bbd5ec] ">
                     {
                       details.data_type.map((data_type: {
                         type: {
@@ -217,10 +214,10 @@ const TreeNode: React.FC<TreeNodeProps> = ({
                         let turn = 1
                         return (
                           <span key={`data-type-${data_type.type.name}-${nanoid()}`}>
-                            <span className={`bg-[#6b95d1] text-[#f5f5f5] relative p-1 text-[12px] pl-4 w-full inline-block`}>
+                            <span className={`bg-[#ddebf7] text-[#353839] relative p-1 text-[12px] pl-4 w-full inline-block`}>
                               {helper.capitalizeFirstLetter(helper.cleanFirstLetter(data_type.type.name))}
                             </span>
-                            <div className="d-flex p-2 pr-0 mb-4 border-[#6b95d1] border-l-[10px] border-l-[#6b95d1] ">
+                            <div className="d-flex p-2 pr-0 mb-4 border-[#ddebf7] border-l-[10px] border-l-[#ddebf7] ">
                               {/* <div className={`bg-[#5b9bd5] relative -top-[18px] -left-[18px] p-1 text-[12px] text-white pl-4 w-full inline-block`}>
                             <span className={`bg-[#5b9bd5] -top-[18px] p-1 text-[12px] text-white pl-4 w-full inline-block`}>
                               {helper.capitalizeFirstLetter(helper.cleanFirstLetter(data_type.type.name))}
@@ -238,10 +235,10 @@ const TreeNode: React.FC<TreeNodeProps> = ({
                                     <div key={`property-${type}-${nanoid()}`}>
                                       {type === 'has_input' ? (
                                         <div className={`mx-0 ${turn > 1 ? 'pt-4' : ``}`} key={`has_input-all-${nanoid()}`}>
-                                          <span className={`bg-[#8fbbe3] relative p-1 text-[12px] text-[#1a1a1a] pl-4 w-full inline-block`}>
+                                          <span className={`bg-[#f1f5f9] relative p-1 text-[12px] text-[#353839] pl-4 w-full inline-block`}>
                                             Input data
                                           </span>
-                                          <div key={`has_input-parent-${nanoid()}`} className="p-2 pt-4 border-[#8fbbe3] border-l-[10px] border-l-[#8fbbe3] relative scrollbar-custom sm:overflow-visible overflow-auto">
+                                          <div key={`has_input-parent-${nanoid()}`} className="p-2 pt-4 border-[#f1f5f9] border-l-[10px] border-l-[#f1f5f9] relative scrollbar-custom sm:overflow-visible overflow-auto">
                                             {data_type.has_part[type]?.map((input: any) => (
                                               <div
                                                 key={`entry-${input.label}-${nanoid()}`}
@@ -254,10 +251,10 @@ const TreeNode: React.FC<TreeNodeProps> = ({
                                         </div>
                                       ) : type === 'has_output' ? (
                                         <div className={`mx-0 ${turn > 1 ? 'pt-4' : ``}`} key={`has_output-all-${nanoid()}`}>
-                                          <span className={`bg-[#8fbbe3] relative p-1 text-[12px] text-[#1a1a1a] pl-4 w-full inline-block`}>
+                                          <span className={`bg-[#f1f5f9] relative p-1 text-[12px] text-[#353839] pl-4 w-full inline-block`}>
                                             Output data
                                           </span>
-                                          <div key={`has_output-parent-${nanoid()}`} className="p-2 border-[#8fbbe3] border-l-[10px] border-l-[#8fbbe3] relative scrollbar-custom sm:overflow-visible overflow-auto">
+                                          <div key={`has_output-parent-${nanoid()}`} className="p-2 border-[#f1f5f9] border-l-[10px] border-l-[#f1f5f9] relative scrollbar-custom sm:overflow-visible overflow-auto">
                                             {data_type.has_part[type]?.map((input: any) => (
                                               <div
                                                 key={`entry-${input.label}-${nanoid()}`}
@@ -326,7 +323,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
               )}
             </div>
           </div>
-          <div className="border border-gray-300 border-l-0 p-1 rounded-r-md">
+          <div className="flex-none border border-gray-300 border-l-0 p-1 rounded-r-md">
             {hasChildren && !level && !color && (
               <span
                 className="relative flex flex-col group cursor-default"
@@ -341,9 +338,9 @@ const TreeNode: React.FC<TreeNodeProps> = ({
                 {hasChildren && !level && !color && (
                   <div>
                     {!isOpen ? (
-                      <CircleChevronLeft className="text-[#728aac] cursor-pointer mt-1" onClick={toggleNode} />
+                      <CircleChevronLeft className="text-[#89b1d5] cursor-pointer mt-1" onClick={toggleNode} />
                     ) : (
-                      <CircleChevronDown className="text-[#728aac] cursor-pointer mt-1" onClick={toggleNode} />
+                      <CircleChevronDown className="text-[#89b1d5] cursor-pointer mt-1" onClick={toggleNode} />
                     )}
                   </div>
                 )}

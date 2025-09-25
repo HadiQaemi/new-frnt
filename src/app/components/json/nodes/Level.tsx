@@ -31,10 +31,10 @@ const Level: React.FC<LevelProps> = ({ level, targets, components }) => {
 
     return (
         <>
-            <span className={`bg-[#8fbbe3] relative p-1 text-[12px] text-[#1a1a1a] pl-4 w-full inline-block`}>
+            <span className={`bg-[#f1f5f9] relative p-1 text-[12px] text-[#353839] pl-4 w-full inline-block`}>
                 Setup
             </span>
-            <div className="p-2 border-[#8fbbe3] border-l-[10px] border-l-[#8fbbe3] relative text-[#353839]">
+            <div className="p-2 border-[#f1f5f9] border-l-[10px] border-l-[#f1f5f9] relative text-[#353839]">
                 {Array.isArray(targets) ? (
                     <div className="flex-grow text-left w-[85%] font-bold text-[#353839]" key={`targets-${targets}`}>
                         {targets && `Targets: `}

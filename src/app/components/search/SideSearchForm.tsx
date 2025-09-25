@@ -566,7 +566,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
     return (
         <div>
             <form onSubmit={handleSubmit} className="bg-white border border-gray-100 mr-1">
-                <div className="p-1.5 bg-[#4f79b3] text-white font-[700] text-sm">
+                <div className="p-2 bg-[#1e3a5f] text-white font-[700] text-md">
                     Search
                 </div>
 
@@ -606,7 +606,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                                 selected={selectedConcepts}
                                 onRemove={(id) => removeItem(id, 'concept')}
                                 type="concept"
-                                placeholder="Search Concept..."
+                                placeholder="Concept..."
                             />
 
                             <AutocompleteField
@@ -618,7 +618,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                                 selected={selectedAuthors}
                                 onRemove={(id) => removeItem(id, 'author')}
                                 type="author"
-                                placeholder="Search authors..."
+                                placeholder="Authors..."
                             />
 
                             <AutocompleteField
@@ -630,7 +630,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                                 selected={selectedScientificVenues}
                                 onRemove={(id) => removeItem(id, 'journal')}
                                 type="journal"
-                                placeholder="Search Journals or Conferences..."
+                                placeholder="Journals or Conferences..."
                             />
 
                             <div className='flex gap-2'>
@@ -713,13 +713,13 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                                 >
                                     <option value="alphabet" className="py-2">
                                         {sortBy === "alphabet" ?
-                                            "Alphabet ✓" :
-                                            "Alphabet "}
+                                            "Alphabetical ✓" :
+                                            "Alphabetical "}
                                     </option>
                                     <option value="time" className="py-2">
                                         {sortBy === "time" ?
-                                            "Time ✓" :
-                                            "Time "}
+                                            "Chronological ✓" :
+                                            "Chronological "}
                                     </option>
                                 </select>
                                 <select
@@ -729,13 +729,13 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                                 >
                                     <option value="ASC" className="py-2">
                                         {sortOrder === "ASC" ?
-                                            "ASC ✓" :
-                                            "ASC "}
+                                            "Ascending ✓" :
+                                            "Ascending "}
                                     </option>
                                     <option value="DESC" className="py-2">
                                         {sortOrder === "DESC" ?
-                                            "DESC ✓" :
-                                            "DESC "}
+                                            "Descending ✓" :
+                                            "Descending "}
                                     </option>
                                 </select>
                             </div>
@@ -746,7 +746,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                         type="button"
                         onClick={() => setShowMore((v) => !v)}
                         aria-expanded={showMore}
-                        className="m-1 inline-flex items-center gap-2 text-blue-500 underline"
+                        className="m-1 inline-flex items-center gap-2 text-[#1e3a5f] underline"
                     >
                         {showMore ? "Show less" : "Show more..."}
                     </button>
@@ -761,7 +761,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:opacity-50"
+                            className="px-4 py-2 text-white bg-[#1e3a5f] rounded-md disabled:opacity-50"
                         >
                             {isSubmitting ? 'Filtering...' : 'Filter'}
                         </button>

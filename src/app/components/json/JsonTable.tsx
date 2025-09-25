@@ -113,8 +113,8 @@ const JsonTable: React.FC<JsonTableProps> = ({ data, styles, button, color, Comp
                         key={i}
                         onClick={() => handlePageChange(i)}
                         className={`px-3 py-1 mx-1 rounded ${i === currentPage
-                            ? 'bg-[#6b95d1] text-white'
-                            : 'bg-white text-[#6b95d1] border border-[#6b95d1] hover:bg-[#eef4ff]'
+                            ? 'bg-[#8fbbe3] text-white'
+                            : 'bg-white text-[#8fbbe3] border border-[#8fbbe3] hover:bg-[#eef4ff]'
                             }`}
                     >
                         {i}

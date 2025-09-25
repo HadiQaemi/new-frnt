@@ -206,7 +206,7 @@ export default function ListStatements({ data, statements, statementId = null, i
                                         {articles.map((item: any) => {
                                             const article = item.article
                                             return (
-                                                <div className="border rounded bg-white p-0" key={`article-${nanoid()}`}>
+                                                <div className="bg-white p-0" key={`article-${nanoid()}`}>
                                                     <PaperInfo
                                                         paper={article}
                                                         key={`article-info-${nanoid()}`}
@@ -258,7 +258,7 @@ export default function ListStatements({ data, statements, statementId = null, i
                             <CardContent className="p-0">
                                 <div className="relative">
                                     <div>
-                                        <div className="border rounded p-0 max-h-[85vh] text-[#353839]" key={`article-${nanoid()}`}>
+                                        <div className="p-0 max-h-[85vh] text-[#353839]" key={`article-${nanoid()}`}>
                                             <div className={`p-2 font-[700] text-sm ${data.basises[0].publication_issue.type === "Article"
                                                 ? "bg-[#ffb703]"
                                                 : "bg-[#f08a4b]"

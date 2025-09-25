@@ -68,10 +68,10 @@ const Executes: React.FC<ExecutesProps> = ({ executes, styles }) => {
 
     return (
         <div className="w-full">
-            <span className={`bg-[#8fbbe3] relative p-1 text-[12px] text-[#1a1a1a] pl-4 w-full inline-block`}>
+            <span className={`bg-[#f1f5f9] relative p-1 text-[12px] text-[#353839] pl-4 w-full inline-block`}>
                 Procedure
             </span>
-            <div className="border-[#8fbbe3] border-l-[10px] border-l-[#8fbbe3] relative">
+            <div className="border-[#f1f5f9] border-l-[10px] border-l-[#f1f5f9] relative">
                 <div className="p-2 pt-4">
                     <URLOrText content={text} />
                     {is_implemented_by && (

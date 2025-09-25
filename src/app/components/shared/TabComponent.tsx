@@ -265,7 +265,7 @@ const TabComponent: React.FC<TabComponentProps> = ({
         setSearchType(e.target.value);
     };
     return (
-        <div className="w-full mx-auto bg-white">
+        <div className="w-full mx-auto bg-white ml-4">
 
             <div className="space-y-2">
                 {isLoading ? (

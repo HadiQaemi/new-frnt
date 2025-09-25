@@ -69,10 +69,10 @@ const IsImplementedBy: FC<IsImplementedByProps> = ({
 
     return (
         <>
-            <span className={`bg-[#6b95d1] relative p-1 text-[12px] text-[#f5f5f5] pl-4 w-full inline-block`}>
+            <span className={`bg-[#ddebf7] relative p-1 text-[12px] text-[#353839] pl-4 w-full inline-block`}>
                 Implementation
             </span>
-            <div className="p-2 pt-0 border-[#6b95d1] border-l-[10px] border-l-[#6b95d1] relative mb-1">
+            <div className="p-2 pt-0 border-[#ddebf7] border-l-[10px] border-l-[#ddebf7] relative mb-1">
                 {stringType.fileType === 'sourceCode' ? (
                     <JsonSourceCode
                         highlightCode={highlightCode(sourceCode, executes_is_implemented_by)}
