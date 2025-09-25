@@ -115,7 +115,7 @@ const Label = ({
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <h5 onClick={toggleNode} className="group cursor-default text-black text-[18px] leading-tight mb-2 pb-2 font-medium flex items-center gap-2">
+                                <h5 onClick={toggleNode} className="group cursor-default text-[#353839] text-[18px] leading-tight mb-2 font-medium flex items-center gap-2">
                                     <span className="flex-1 cursor-pointer">{textLabel}</span>
                                 </h5>
                             </TooltipTrigger>
@@ -152,7 +152,7 @@ const Label = ({
                         ))}
                     </div> */}
 
-                    <div className="cursor-default">
+                    <div className="cursor-default text-[#353839]">
                         {concepts && (
                             concepts.map((item: any, k: any) => (
                                 <CustomPopover
@@ -167,7 +167,7 @@ const Label = ({
                                     onSelect={() => onConceptSelect?.(item)}
                                     trigger={
                                         <span
-                                            className={`${item.see_also ? 'underline' : ''} underline inline-flex items-center gap-1 px-1 py-1 mb-2 text-sm cursor-pointer overlay-trigger`}
+                                            className={`${item.see_also ? 'underline' : ''} underline inline-flex items-center gap-1 px-1 py-1 text-sm cursor-pointer overlay-trigger`}
                                             onClick={(e) => {
                                                 e;
                                                 handlePopoverToggle(item.label, activePopover !== item.label);

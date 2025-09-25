@@ -267,7 +267,7 @@ const URLOrText: React.FC<URLOrTextProps> = ({
                     )}
                 </div>
             ) : (
-                <div className="flex mb-2 w-full">
+                <div className="flex mb-2 w-full text-[#353839]">
                     <div className="flex-grow text-left w-[85%] font-bold">
                         <div className="inline-block" dangerouslySetInnerHTML={{ __html: content.replace(/[\[\]']+/g, '') }} />
                         {type === "source_url" && (

@@ -37,10 +37,10 @@ const Evaluates: React.FC<EvaluatesProps> = ({ evaluates_for, evaluates }) => {
 
     return (
         <div className="w-full">
-            <div className="p-2 pt-4 border-amber-500 border-l-[10px] border-l-amber-500 my-1 relative">
-                <span className={`bg-amber-500 absolute -top-[12px] text-[12px] -left-[10px] p-[2px] text-white pl-4 pr-2 w-[122px]`}>
-                    Setup
-                </span>
+            <span className={`bg-[#8fbbe3] relative p-1 text-[12px] text-[#1a1a1a] pl-4 w-full inline-block`}>
+                Setup
+            </span>
+            <div className="p-2 pt-4 border-[#8fbbe3] border-l-[10px] border-l-[#8fbbe3] relative">
                 <URLOrText content={evaluatesText} />
                 <URLOrText content={evaluatesForText} />
             </div>

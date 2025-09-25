@@ -7,7 +7,7 @@ import { useConcepts } from '@/app/hooks/useConcepts';
 import { helper } from '@/app/utils/helper';
 import { useRouter } from 'next/navigation';
 import { nanoid } from 'nanoid';
-import { InitialParams } from '../json/types';
+import { InitialParams, ResourceType, SearchType, SortBy, SortOrder } from '../json/types';
 
 interface Item {
     id: string;
@@ -25,15 +25,12 @@ interface SideSearchFormProps {
     handleFilter: (data: FilterData) => void;
 }
 
-type ResourceType = 'article' | 'dataset' | 'loom' | 'all';
-type SearchType = 'keyword' | 'hybrid' | 'semantic';
+
 
 interface FilterData {
     title: string | undefined;
-    timeRange: {
-        start: number;
-        end: number;
-    };
+    start_year: string;
+    end_year: string;
     page: number;
     per_page: number;
     authors: string[];
@@ -41,6 +38,8 @@ interface FilterData {
     research_fields: string[];
     concepts: string[];
     resource_type: ResourceType;
+    sort_by: SortBy;
+    sort_order: SortOrder;
     search_type: SearchType;
 }
 
@@ -79,11 +78,18 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
 
     const [resourceType, setResourceType] = useState<ResourceType>('article');
     const [searchType, setSearchType] = useState<SearchType>('keyword');
+    const [sortBy, setSortBy] = useState<SortBy>('alphabet');
+    const [sortOrder, setSortOrder] = useState<SortOrder>('ASC');
 
     const [authorSearch, setAuthorSearch] = useState('');
     const [scientificVenues, setScientificVenues] = useState('');
     const [researchFieldSearch, setResearchFieldSearch] = useState('');
     const [conceptSearch, setConceptSearch] = useState('');
+
+    const [startYear, setStartYear] = useState<string>('');
+    const [endYear, setEndYear] = useState<string>('');
+
+    const [showMore, setShowMore] = useState(false);
 
     const [authorSuggestions, setAuthorSuggestions] = useState<Item[]>([]);
     const [scientificVenuesSuggestions, setScientificVenuesSuggestions] = useState<Item[]>([]);
@@ -323,17 +329,18 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
 
             const startYear = searchParams.get('start_year');
             const endYear = searchParams.get('end_year');
-            if (startYear && endYear) {
-                const start = parseInt(startYear);
-                const end = parseInt(endYear);
-                if (!isNaN(start) && !isNaN(end)) {
-                    setTimeRange([start, end]);
-                }
-            }
+            if (startYear) setStartYear(startYear);
+            if (endYear) setEndYear(endYear);
 
             // const urlResource = (searchParams.get('resource_type') as ResourceType) || (window.location.pathname.includes('/articles') ? 'articles' : 'statements');
-            const urlResource = (searchParams.get('resource_type') as ResourceType) || 'loom';
+            const urlResource = (searchParams.get('resource_type') as ResourceType) || 'all';
             setResourceType(urlResource);
+
+            const urlSortBy = (searchParams.get('sort_by') as SortBy) || 'alphabet';
+            setSortBy(urlSortBy);
+
+            const urlSortOrder = (searchParams.get('sort_order') as SortOrder) || 'ASC';
+            setSortOrder(urlSortOrder);
 
             const urlSearchType = (searchParams.get('search_type') as SearchType) || 'keyword';
             setSearchType(urlSearchType);
@@ -391,6 +398,8 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
     const handleReset = () => {
         setTimeRange([2015, 2025]);
         setTitleSearch('');
+        setStartYear('');
+        setEndYear('');
         setAuthorSearch('');
         setScientificVenues('');
         setResearchFieldSearch('');
@@ -400,13 +409,16 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
         setSelectedResearchFields([]);
         setSelectedConcepts([]);
         // const currentPathType: ResourceType = window.location.pathname.includes('/articles') ? 'article' : 'dataset';
-        const currentPathType: ResourceType = 'loom';
+        const currentPathType: ResourceType = 'all';
         setResourceType(currentPathType);
+        setSortBy('alphabet')
+        setSortOrder('ASC')
         setSearchType('keyword');
 
         const baseFilter: FilterData = {
             title: '',
-            timeRange: { start: 2015, end: 2025 },
+            start_year: '',
+            end_year: '',
             page: currentPage,
             per_page: pageSize,
             authors: [],
@@ -414,7 +426,9 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
             research_fields: [],
             concepts: [],
             resource_type: currentPathType,
-            search_type: 'keyword'
+            search_type: 'keyword',
+            sort_by: 'alphabet',
+            sort_order: 'ASC',
         };
 
         handleFilter(baseFilter);
@@ -429,7 +443,9 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
             page: currentPage,
             per_page: pageSize,
             resource_type: currentPathType,
-            search_type: 'keyword'
+            search_type: 'keyword',
+            sort_by: 'alphabet',
+            sort_order: 'ASC',
         };
         updateURLParams(urlParams, currentPathType);
         // if (window.location.pathname.includes('/statements')) {
@@ -464,10 +480,8 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
         e.preventDefault();
         const filterData = {
             title: titleSearch || undefined,
-            timeRange: {
-                start: timeRange[0],
-                end: timeRange[1]
-            },
+            start_year: startYear,
+            end_year: endYear,
             page: currentPage,
             per_page: pageSize,
             authors: selectedAuthors.map(author => author.id),
@@ -475,13 +489,15 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
             research_fields: selectedResearchFields.map(field => field.id),
             concepts: selectedConcepts.map(concept => concept.id),
             resource_type: resourceType,
-            search_type: searchType
+            search_type: searchType,
+            sort_by: sortBy,
+            sort_order: sortOrder,
         };
 
         const urlParams = {
             title: titleSearch || undefined,
-            start_year: timeRange[0],
-            end_year: timeRange[1],
+            start_year: startYear,
+            end_year: endYear,
             authors: selectedAuthors.map(author => author.id),
             scientific_venues: selectedScientificVenues.map(journal => journal.id),
             research_fields: selectedResearchFields.map(field => field.id),
@@ -489,7 +505,9 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
             page: currentPage,
             per_page: pageSize,
             resource_type: resourceType,
-            search_type: searchType
+            search_type: searchType,
+            sort_by: sortBy,
+            sort_order: sortOrder,
         };
         updateURLParams(urlParams, resourceType);
         handleFilter(filterData);
@@ -547,158 +565,12 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
 
     return (
         <div>
-            <form onSubmit={handleSubmit} className="bg-white border border-gray-100 p-1 mr-1">
-                <div className="mb-4 px-4 pt-4">
-                    <label className="block mb-2 text-sm font-medium text-gray-700">
-                        Time Range: {timeRange[0]} - {timeRange[1]}
-                    </label>
-                    <div className="relative w-full h-8">
-                        <div className="absolute h-1 w-full bg-gray-200 rounded top-1/2 -translate-y-1/2"></div>
-                        <input
-                            type="range"
-                            min={2000}
-                            max={2025}
-                            value={timeRange[0]}
-                            onChange={(e) => {
-                                const value = parseInt(e.target.value);
-                                if (value < timeRange[1]) {
-                                    setTimeRange([value, timeRange[1]]);
-                                }
-                            }}
-                            className="absolute top-1/2 -translate-y-1/2 w-full pointer-events-none appearance-none bg-transparent cursor-pointer z-[100]
-                             [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:pointer-events-auto
-                             [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:rounded-full
-                             [&::-webkit-slider-thumb]:bg-blue-600 [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white
-                             [&::-webkit-slider-thumb]:shadow-md hover:[&::-webkit-slider-thumb]:bg-blue-700
-                             
-                             [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:pointer-events-auto
-                             [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:rounded-full
-                             [&::-moz-range-thumb]:bg-blue-600 [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white
-                             [&::-moz-range-thumb]:shadow-md hover:[&::-moz-range-thumb]:bg-blue-700"
-                        />
-                        <input
-                            type="range"
-                            min={2000}
-                            max={2025}
-                            value={timeRange[1]}
-                            onChange={(e) => {
-                                const value = parseInt(e.target.value);
-                                if (value > timeRange[0]) {
-                                    setTimeRange([timeRange[0], value]);
-                                }
-                            }}
-                            className="absolute top-1/2 -translate-y-1/2 w-full pointer-events-none appearance-none bg-transparent cursor-pointer z-[100]
-                             [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:pointer-events-auto
-                             [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:rounded-full
-                             [&::-webkit-slider-thumb]:bg-blue-600 [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white
-                             [&::-webkit-slider-thumb]:shadow-md hover:[&::-webkit-slider-thumb]:bg-blue-700
-                             
-                             [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:pointer-events-auto
-                             [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:rounded-full
-                             [&::-moz-range-thumb]:bg-blue-600 [&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white
-                             [&::-moz-range-thumb]:shadow-md hover:[&::-moz-range-thumb]:bg-blue-700"
-                        />
-
-                        <div
-                            className="absolute h-1 bg-blue-600 rounded top-1/2 -translate-y-1/2"
-                            style={{
-                                left: `${(timeRange[0] - 2000) * (100 / 25)}%`,
-                                width: `${((timeRange[1] - timeRange[0]) / 25) * 100}%`
-                            }}
-                        ></div>
-                    </div>
+            <form onSubmit={handleSubmit} className="bg-white border border-gray-100 mr-1">
+                <div className="p-1.5 bg-[#4f79b3] text-white font-[700] text-sm">
+                    Search
                 </div>
 
-                <div className="space-y-4 px-4 pb-4">
-                    <div>
-                        <select
-                            value={resourceType}
-                            onChange={(e) => setResourceType(e.target.value as ResourceType)}
-                            className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-                        >
-                            <option value="">--Type of Resource--</option>
-                            <option value="loom" className="py-2">
-                                {resourceType === "loom" ?
-                                    "Loom ✓" :
-                                    "Loom"}
-                            </option>
-                            <option value="article" className="py-2">
-                                {resourceType === "article" ?
-                                    "Article ✓" :
-                                    "Article"}
-                            </option>
-                            <option value="dataset" className="py-2">
-                                {resourceType === "dataset" ?
-                                    "Dataset ✓" :
-                                    "Dataset"}
-                            </option>
-                            <option value="all" className="py-2">
-                                {resourceType === "all" ?
-                                    "All ✓" :
-                                    "All"}
-                            </option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <select
-                            value={searchType}
-                            onChange={(e) => setSearchType(e.target.value as SearchType)}
-                            className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-                        >
-                            <option value="">--Type of Search--</option>
-                            <option value="keyword" className="py-2">
-                                {searchType === "keyword" ?
-                                    "Keyword based ✓" :
-                                    "Keyword based"}
-                            </option>
-                            <option value="semantic" className="py-2">
-                                {searchType === "semantic" ?
-                                    "Semantic search ✓" :
-                                    "Semantic search"}
-                            </option>
-                            <option value="hybrid" className="py-2">
-                                {searchType === "hybrid" ?
-                                    "Hybrid ✓" :
-                                    "Hybrid"}
-                            </option>
-                        </select>
-                    </div>
-
-                    <div>
-                        {/* <label className="block mb-2">Title or DOI</label> */}
-                        <input
-                            type="text"
-                            value={titleSearch}
-                            onChange={(e) => setTitleSearch(e.target.value)}
-                            placeholder="Search by Title or DOI..."
-                            className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-                        />
-                    </div>
-
-                    <AutocompleteField
-                        label="Authors"
-                        value={authorSearch}
-                        inputRef={authorsRef}
-                        onChange={handleAuthorsChange}
-                        suggestions={authors || []}
-                        selected={selectedAuthors}
-                        onRemove={(id) => removeItem(id, 'author')}
-                        type="author"
-                        placeholder="Search authors..."
-                    />
-
-                    <AutocompleteField
-                        label="Journals or Conferences"
-                        value={scientificVenues}
-                        inputRef={journalsRef}
-                        onChange={handleJournalsChange}
-                        suggestions={journals || []}
-                        selected={selectedScientificVenues}
-                        onRemove={(id) => removeItem(id, 'journal')}
-                        type="journal"
-                        placeholder="Search Journals or Conferences..."
-                    />
+                <div className="space-y-4 px-4 pb-4 mt-4">
 
                     <AutocompleteField
                         label="Research Fields"
@@ -709,20 +581,175 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                         selected={selectedResearchFields}
                         onRemove={(id) => removeItem(id, 'research_field')}
                         type="research_field"
-                        placeholder="Search Research Fields..."
+                        placeholder="Subject Area..."
                     />
 
-                    <AutocompleteField
-                        label="Keywords"
-                        value={conceptSearch}
-                        inputRef={conceptRef}
-                        onChange={handleConcepsChange}
-                        suggestions={concepts || []}
-                        selected={selectedConcepts}
-                        onRemove={(id) => removeItem(id, 'concept')}
-                        type="concept"
-                        placeholder="Search Keywords..."
-                    />
+                    <div>
+                        {/* <label className="block mb-2">Title or DOI</label> */}
+                        <input
+                            type="text"
+                            value={titleSearch}
+                            onChange={(e) => setTitleSearch(e.target.value)}
+                            placeholder="Keywords..."
+                            className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                        />
+                    </div>
+
+                    {showMore && (
+                        <>
+                            <AutocompleteField
+                                label=""
+                                value={conceptSearch}
+                                inputRef={conceptRef}
+                                onChange={handleConcepsChange}
+                                suggestions={concepts || []}
+                                selected={selectedConcepts}
+                                onRemove={(id) => removeItem(id, 'concept')}
+                                type="concept"
+                                placeholder="Search Concept..."
+                            />
+
+                            <AutocompleteField
+                                label="Authors"
+                                value={authorSearch}
+                                inputRef={authorsRef}
+                                onChange={handleAuthorsChange}
+                                suggestions={authors || []}
+                                selected={selectedAuthors}
+                                onRemove={(id) => removeItem(id, 'author')}
+                                type="author"
+                                placeholder="Search authors..."
+                            />
+
+                            <AutocompleteField
+                                label="Journals or Conferences"
+                                value={scientificVenues}
+                                inputRef={journalsRef}
+                                onChange={handleJournalsChange}
+                                suggestions={journals || []}
+                                selected={selectedScientificVenues}
+                                onRemove={(id) => removeItem(id, 'journal')}
+                                type="journal"
+                                placeholder="Search Journals or Conferences..."
+                            />
+
+                            <div className='flex gap-2'>
+                                <input
+                                    type="text"
+                                    value={startYear}
+                                    onChange={(e) => setStartYear(e.target.value)}
+                                    placeholder="Year start..."
+                                    className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                                />
+                                <input
+                                    type="text"
+                                    value={endYear}
+                                    onChange={(e) => setEndYear(e.target.value)}
+                                    placeholder="Year end..."
+                                    className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                                />
+                            </div>
+
+                            <div>
+                                <select
+                                    value={resourceType}
+                                    onChange={(e) => setResourceType(e.target.value as ResourceType)}
+                                    className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                                >
+                                    <option value="">--Type of Resource--</option>
+                                    <option value="all" className="py-2">
+                                        {resourceType === "all" ?
+                                            "All ✓" :
+                                            "All"}
+                                    </option>
+                                    <option value="loom" className="py-2">
+                                        {resourceType === "loom" ?
+                                            "Loom ✓" :
+                                            "Loom"}
+                                    </option>
+                                    <option value="article" className="py-2">
+                                        {resourceType === "article" ?
+                                            "Article ✓" :
+                                            "Article"}
+                                    </option>
+                                    <option value="dataset" className="py-2">
+                                        {resourceType === "dataset" ?
+                                            "Dataset ✓" :
+                                            "Dataset"}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <select
+                                    value={searchType}
+                                    onChange={(e) => setSearchType(e.target.value as SearchType)}
+                                    className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                                >
+                                    <option value="">--Type of Search--</option>
+                                    <option value="keyword" className="py-2">
+                                        {searchType === "keyword" ?
+                                            "Keyword based ✓" :
+                                            "Keyword based"}
+                                    </option>
+                                    <option value="semantic" className="py-2">
+                                        {searchType === "semantic" ?
+                                            "Semantic search ✓" :
+                                            "Semantic search"}
+                                    </option>
+                                    <option value="hybrid" className="py-2">
+                                        {searchType === "hybrid" ?
+                                            "Hybrid ✓" :
+                                            "Hybrid"}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div className='flex gap-2'>
+                                <select
+                                    value={sortBy}
+                                    onChange={(e) => setSortBy(e.target.value as SortBy)}
+                                    className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                                >
+                                    <option value="alphabet" className="py-2">
+                                        {sortBy === "alphabet" ?
+                                            "Alphabet ✓" :
+                                            "Alphabet "}
+                                    </option>
+                                    <option value="time" className="py-2">
+                                        {sortBy === "time" ?
+                                            "Time ✓" :
+                                            "Time "}
+                                    </option>
+                                </select>
+                                <select
+                                    value={sortOrder}
+                                    onChange={(e) => setSortOrder(e.target.value as SortOrder)}
+                                    className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                                >
+                                    <option value="ASC" className="py-2">
+                                        {sortOrder === "ASC" ?
+                                            "ASC ✓" :
+                                            "ASC "}
+                                    </option>
+                                    <option value="DESC" className="py-2">
+                                        {sortOrder === "DESC" ?
+                                            "DESC ✓" :
+                                            "DESC "}
+                                    </option>
+                                </select>
+                            </div>
+                        </>
+                    )}
+
+                    <button
+                        type="button"
+                        onClick={() => setShowMore((v) => !v)}
+                        aria-expanded={showMore}
+                        className="m-1 inline-flex items-center gap-2 text-blue-500 underline"
+                    >
+                        {showMore ? "Show less" : "Show more..."}
+                    </button>
 
                     {submitError && (
                         <div className="p-3 mb-4 text-red-700 bg-red-100 rounded-md">

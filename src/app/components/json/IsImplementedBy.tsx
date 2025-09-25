@@ -68,30 +68,32 @@ const IsImplementedBy: FC<IsImplementedByProps> = ({
     // }
 
     return (
-        <div className="p-2 pt-4 border-[#c40dfd] border-l-[10px] border-l-[#c40dfd] my-1 relative">
-            <span className={`bg-[#c40dfd] absolute -top-[12px] text-[12px] -left-[10px] p-[2px] text-white pl-4 pr-2 w-[140px]`}>
+        <>
+            <span className={`bg-[#6b95d1] relative p-1 text-[12px] text-[#f5f5f5] pl-4 w-full inline-block`}>
                 Implementation
             </span>
-            {stringType.fileType === 'sourceCode' ? (
-                <JsonSourceCode
-                    highlightCode={highlightCode(sourceCode, executes_is_implemented_by)}
-                    isCodeLoading={isCodeLoading}
-                    sourceCode={sourceCode}
-                    showAllCode={showAllCode}
-                    toggleShowAllCode={toggleShowAllCode}
-                />
-            ) : (
-                <div className="font-bold flex cursor-help">
-                    <span className="inline">Source code: </span>
-                    <span className="inline ml-2">
-                        <URLOrText
-                            content={String(is_implemented_by)}
-                            button=""
-                        />
-                    </span>
-                </div>
-            )}
-        </div>
+            <div className="p-2 pt-0 border-[#6b95d1] border-l-[10px] border-l-[#6b95d1] relative mb-1">
+                {stringType.fileType === 'sourceCode' ? (
+                    <JsonSourceCode
+                        highlightCode={highlightCode(sourceCode, executes_is_implemented_by)}
+                        isCodeLoading={isCodeLoading}
+                        sourceCode={sourceCode}
+                        showAllCode={showAllCode}
+                        toggleShowAllCode={toggleShowAllCode}
+                    />
+                ) : (
+                    <div className="font-bold flex cursor-help">
+                        <span className="inline">Source code: </span>
+                        <span className="inline ml-2">
+                            <URLOrText
+                                content={String(is_implemented_by)}
+                                button=""
+                            />
+                        </span>
+                    </div>
+                )}
+            </div>
+        </>
     );
 };
 

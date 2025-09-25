@@ -25,6 +25,8 @@ export interface TreeNodeProps {
 
 export type ResourceType = 'article' | 'dataset' | 'loom' | 'all';
 export type SearchType = 'keyword' | 'semantic' | 'hybrid';
+export type SortBy = 'alphabet' | 'time';
+export type SortOrder = 'ASC' | 'DESC';
 
 export interface InitialParams {
   title?: string;
@@ -33,6 +35,8 @@ export interface InitialParams {
   page: number;
   per_page: number;
   resource_type: ResourceType;
+  sort_by: SortBy,
+  sort_order: SortOrder,
   search_type: SearchType;
   authors: string[];
   scientific_venues: string[];

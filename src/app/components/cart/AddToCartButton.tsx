@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Square, Check } from 'lucide-react';
-import { useCartStore, Statement } from '@/app/stores/cartStore';
+import { Square, SquareCheckBig } from 'lucide-react';
+import { useCartStore } from '@/app/stores/cartStore';
 import { useToast } from '@/components/ui/use-toast';
 
 interface AddToCartButtonProps {
@@ -30,7 +30,7 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
     const inCart = isInCart(statement.statement_id);
 
     const sizeClasses = {
-        sm: 'p-1 text-xs',
+        sm: 'p-[1px] text-sm',
         md: 'p-2 text-sm',
         lg: 'p-3 text-base',
     };
@@ -73,9 +73,9 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
                         className={`${size === 'md' ? 'h-3 w-3' : 'h-4 w-4'} animate-spin rounded-full border-2 border-gray-300 border-t-blue-600`}
                     ></div>
                 ) : inCart ? (
-                    <Check className={size === 'md' ? 'h-3 w-3' : 'h-4 w-4'} />
+                    <SquareCheckBig className={size === 'md' ? 'h-4 w-4' : 'h-5 w-5'} />
                 ) : (
-                    <Square className={size === 'md' ? 'h-3 w-3' : 'h-4 w-4'} />
+                    <Square className={size === 'md' ? 'h-4 w-4' : 'h-5 w-5'} />
                 )}
             </button>
         ) : (

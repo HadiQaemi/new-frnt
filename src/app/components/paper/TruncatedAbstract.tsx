@@ -19,7 +19,7 @@ const TruncatedAbstract: React.FC<TruncatedAbstractProps> = ({
 
     return (
         <div className="items-center justify-center text-justify">
-            <p className="text-gray-700 inline">
+            <p className="text-[#353839] inline">
                 {displayText}
                 {!isExpanded && shouldTruncate && maxWords > 0 && '...'}
             </p>

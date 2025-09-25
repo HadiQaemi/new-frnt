@@ -159,24 +159,27 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
 
   return (
     <div>
-      <div ref={containerRef} className='bg-[#f8f9fa] p-4'>
+      <div className="bg-[#1e3a5f] p-2 text-white font-[700] text-sm">
+        Loom Recod
+      </div>
+      <div ref={containerRef} className='bg-white p-4'>
         <div className="grid grid-cols-1">
-          <h4 className="text-black text-2xl leading-tight mb-2 font-medium">{paper.name}</h4>
+          <h4 className="text-[#353839] text-2xl leading-tight mb-2 font-medium">{paper.name}</h4>
         </div>
 
         <div className="grid grid-cols-12">
           <div className="col-span-12">
             <span className="badge overlay-trigger me-2 mb-2 text-sm">
-              <Scan className="me-1 inline text-gray-500 w-[1.7rem] h-[1.7rem]" />
-              <GraduationCap className="inline -ml-[25px] text-gray-500 w-[0.9rem] text-xs" />
+              <Scan className="me-1 inline text-[#353839] w-[1.7rem] h-[1.7rem]" />
+              <GraduationCap className="inline -ml-[25px] text-[#353839] w-[0.9rem] text-xs" />
               <span className='ml-3'>{research_field['label']}</span>
             </span>
             <span className="badge me-2 text-sm">
-              <Calendar className="me-1 inline underline text-gray-500" />
+              <Calendar className="me-1 inline underline text-[#353839]" />
               {paper.date_published}
             </span>
             <span className='mr-2 text-sm'>
-              <User className="me-1 inline text-gray-500" />
+              <User className="me-1 inline text-[#353839]" />
               {paper.authors.map((author: any, index: any) => (
                 <CustomPopover
                   key={`author-${index}`}
@@ -197,7 +200,7 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
                       }}
                     >
                       {`${author.name}`}
-                      {(paper.authors.length != (index + 1)) && <Dot className='inline text-gray-500' />}
+                      {(paper.authors.length != (index + 1)) && <Dot className='inline text-[#353839]' />}
                     </span>
                   }
                 >

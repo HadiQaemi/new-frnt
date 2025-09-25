@@ -258,35 +258,38 @@ export default function ListStatements({ data, statements, statementId = null, i
                             <CardContent className="p-0">
                                 <div className="relative">
                                     <div>
-                                        <div className="border rounded p-0" key={`article-${nanoid()}`}>
-                                            <div className="bg-[#00b0505e] p-2 text-gray-700 font-[700] text-sm">
-                                                {data.basises[0].publication_issue.type}
+                                        <div className="border rounded p-0 max-h-[85vh] text-[#353839]" key={`article-${nanoid()}`}>
+                                            <div className={`p-2 font-[700] text-sm ${data.basises[0].publication_issue.type === "Article"
+                                                ? "bg-[#ffb703]"
+                                                : "bg-[#f08a4b]"
+                                                }`}>
+                                                Source {data.basises[0].publication_issue.type}
                                             </div>
                                             {data.basises.map((item: any) => {
                                                 return (
                                                     <div key={`basis-${nanoid()}`}>
                                                         <div className='bg-white p-4 pt-2'>
                                                             <div className="grid grid-cols-1">
-                                                                <h6 className="text-black leading-tight mb-2 font-medium">
+                                                                <h6 className="leading-tight mb-2 font-medium">
                                                                     {item.name}
                                                                 </h6>
-                                                                <h6 className="text-black leading-tight mb-2 font-medium">
-                                                                    <Calendar className="me-1 inline underline text-gray-500" size={16} />
+                                                                <h6 className="leading-tight mb-2 font-medium">
+                                                                    <Calendar className="me-1 inline underline" size={16} />
                                                                     <span className='text-xs mr-2'>{item.publication_issue.date_published}</span>
-                                                                    <User className="me-1 inline text-gray-500" size={16} />
+                                                                    <User className="me-1 inline" size={16} />
                                                                     {item.authors.map((author: any, index: any) => (
                                                                         <span key={`author-${nanoid()}`} className={`badge overlay-trigger text-xs ${(item.authors.length == index + 1) && 'mr-2'}`}>
-                                                                            {`${author.name}`}{(item.authors.length != index + 1) && <Dot size={16} className='inline text-gray-500 mx-0' />} {` `}
+                                                                            {`${author.name}`}{(item.authors.length != index + 1) && <Dot size={16} className='inline mx-0' />} {` `}
                                                                         </span>
                                                                     ))}
                                                                     {item && (
                                                                         <span className="badge cursor-pointer overlay-trigger underline mr-2 text-xs inline-block">
-                                                                            <BookText className="me-1 inline text-gray-500" size={16} />
+                                                                            <BookText className="me-1 inline" size={16} />
                                                                             <a href={item.publication_issue.periodical_url} target="_blank" rel="noopener noreferrer" className="underline text-xs inline mr-1">
                                                                                 {item.publication_issue.periodical}
                                                                             </a>
                                                                             {item.publication_issue.periodical_url && item.publication_issue.publisher_name && (
-                                                                                <Dot size={16} className='inline text-gray-500 mx-0' />
+                                                                                <Dot size={16} className='inline mx-0' />
                                                                             )}
                                                                             <a href={item.publication_issue.publisher_url} target="_blank" rel="noopener noreferrer" className="underline text-xs inline mr-1">
                                                                                 {item.publication_issue.publisher_name}
@@ -295,13 +298,13 @@ export default function ListStatements({ data, statements, statementId = null, i
                                                                     )}
                                                                     {helper.validURL(item.id) && (
                                                                         <>
-                                                                            <MousePointer2 size={16} className='inline mr-1 text-gray-500 transform scale-x-[-1]' />
+                                                                            <MousePointer2 size={16} className='inline mr-1 transform scale-x-[-1]' />
                                                                             <a href={item.id} className={`text-shadow-custom text-blue-500 underline text-xs inline`}>{item.id}</a>
                                                                             <span className={`text-shadow-custom px-1.5 py-1 inline`}>
                                                                                 <CopyIcon
                                                                                     size={16}
                                                                                     onClick={() => copyToClipboard(item.id)}
-                                                                                    className="h-4 w-4 cursor-pointer text-xs inline text-gray-500"
+                                                                                    className="h-4 w-4 cursor-pointer text-xs inline"
                                                                                 />
                                                                             </span>
                                                                         </>
@@ -309,7 +312,7 @@ export default function ListStatements({ data, statements, statementId = null, i
                                                                 </h6>
                                                             </div>
 
-                                                            <div className='my-4 text-sm'>
+                                                            <div className='my-4 max-h-[60vh] overflow-y-auto text-sm text-justify pr-2'>
                                                                 {item && <TruncatedAbstract text={item.abstract} />}
                                                             </div>
 

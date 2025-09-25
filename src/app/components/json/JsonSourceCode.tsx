@@ -51,7 +51,7 @@ const JsonSourceCode: FC<JsonSourceCodeProps> = ({
     return (
         <div className="font-mono text-sm relative">
             <Button
-                className="absolute text-white !bg-[#e86161] border border-gray-200 right-2 top-3 mr-1 mt-2 py-0 px-1 h-8"
+                className="absolute text-white !bg-[#6b95d1] border border-gray-200 right-2 top-3 mr-1 mt-2 py-0 px-1 h-8"
                 onClick={copyToClipboard}
                 aria-label="Copy to clipboard"
             >
@@ -62,7 +62,7 @@ const JsonSourceCode: FC<JsonSourceCodeProps> = ({
                 {toggleShowAllCode !== undefined && (
                     <button
                         onClick={toggleShowAllCode}
-                        className="px-4 py-2 bg-[#ff6464] text-[#fff]"
+                        className="px-4 py-2 bg-[#6b95d1] text-[#f5f5f5]"
                     >
                         {showAllCode ? 'Show less' : 'Show more'}
                     </button>

@@ -303,20 +303,37 @@ const TabComponent: React.FC<TabComponentProps> = ({
                                 activeTab === 'articles' ? (
                                     <div key={index} className="transition-colors duration-200">
                                         <span key={`articles-${index}`} className="grid grid-cols-12">
-                                            <div className="col-span-8 border border-gray-100 p-1 mr-1">
-                                                <Link
-                                                    href={`/article/${item.article_id}`}
-                                                    className="text-[#000] cursor-pointer hover:text-[#555] block"
-                                                >
-                                                    <h4 className="font-inter font-[700]">{item.name}</h4>
-                                                </Link>
-                                                <span className="font-inter font-[400] text-sm">{item.author} et al.</span>
-                                                <span className="font-inter font-[500]">
-                                                    <Dot className="me-1 inline font-bold" />
-                                                </span>
-                                                <span className="font-inter font-[400] text-sm">{item.date_published}</span>
+                                            <div className="col-span-12 border border-gray-100 p-2 mb-1">
+                                                <div className="block">
+                                                    <Link
+                                                        href={`/article/${item.article_id}`}
+                                                        className="text-[#000] cursor-pointer hover:text-[#555] block"
+                                                    >
+                                                        <h4 className="font-inter font-[700]">{item.name}</h4>
+                                                    </Link>
+                                                </div>
+                                                <div className="block">
+                                                    <span className="font-inter font-[400] text-sm">{item.author} et al.</span>
+                                                    <span className="font-inter font-[500]">
+                                                        <Dot className="me-1 inline font-bold" />
+                                                    </span>
+                                                    <span className="font-inter font-[400] text-sm">{item.date_published}</span>
+                                                </div>
+                                                <div className="block">
+                                                    <span className="font-inter font-[400] text-xs italic">
+                                                        <span className="mr-1">
+                                                            Source {item.basises[0].publication_issue.type}:
+                                                        </span>
+                                                        {item.basises[0].authors[0].family_name} et al. (
+                                                        {item.basises[0].publication_issue.date_published}).{" "}
+                                                        {item.basises[0].name}.
+                                                        {item.basises[0].publication_issue.periodical && (
+                                                            <> {item.basises[0].publication_issue.periodical}</>
+                                                        )}.
+                                                    </span>
+                                                </div>
                                             </div>
-                                            <div className="col-span-4" key={`has_input-all-${nanoid()}`}>
+                                            {/* <div className="col-span-4" key={`has_input-all-${nanoid()}`}>
                                                 <div
                                                     key={`${nanoid()}`}
                                                     className="h-full relative"
@@ -337,7 +354,7 @@ const TabComponent: React.FC<TabComponentProps> = ({
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> */}
                                         </span>
                                     </div>
                                 ) : (
