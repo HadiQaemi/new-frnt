@@ -559,7 +559,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
         const basePath = resource === 'article' ? '/' : '/';
         const newUrl = `${'/'}${searchParams.toString() ? '?' + searchParams.toString() : ''}`;
         window.location.href = newUrl;
-        // router.push(newUrl);
+        router.push(newUrl);
         router.refresh();
     };
 

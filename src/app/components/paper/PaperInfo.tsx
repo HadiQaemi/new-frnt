@@ -160,7 +160,7 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
   return (
     <div>
       <div className="bg-[#1e3a5f] p-2 text-white font-[700] text-sm">
-        Loom Recod
+        Loom Record
       </div>
       <div ref={containerRef} className='bg-white p-4'>
         <div className="grid grid-cols-1">
