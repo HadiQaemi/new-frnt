@@ -111,7 +111,7 @@ const Label = ({
 
         if (!level) {
             return (
-                <div className="flex flex-col p-2">
+                <div className="flex flex-col pt-2 pb-1 pl-2">
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>

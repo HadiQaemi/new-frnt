@@ -164,8 +164,8 @@ const TreeNode: React.FC<TreeNodeProps> = ({
           </span>
         )}
         <div className={`flex items-start cursor-pointer p-2 transition-all duration-300${level ? ' ml-2.5' : ''}`}>
-          <div className='flex-1 min-w-0 border border-gray-300'>
-            <div className="bg-[#89b1d5] p-2 text-[#353839]">
+          <div className='flex-1 min-w-0 border border-[#89b1d5]'>
+            <div className="bg-[#89b1d5] p-[0.18rem] pl-4 text-[14px] text-[#353839]">
               Statement
             </div>
             {isLoading ? (
@@ -338,9 +338,9 @@ const TreeNode: React.FC<TreeNodeProps> = ({
                 {hasChildren && !level && !color && (
                   <div>
                     {!isOpen ? (
-                      <CircleChevronLeft className="text-[#89b1d5] cursor-pointer mt-1" onClick={toggleNode} />
+                      <CircleChevronLeft className="text-[#89b1d5] cursor-pointer mt-1" size={19} onClick={toggleNode} />
                     ) : (
-                      <CircleChevronDown className="text-[#89b1d5] cursor-pointer mt-1" onClick={toggleNode} />
+                      <CircleChevronDown className="text-[#89b1d5] cursor-pointer mt-1" size={19} onClick={toggleNode} />
                     )}
                   </div>
                 )}

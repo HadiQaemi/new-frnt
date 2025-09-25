@@ -73,9 +73,9 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
                         className={`${size === 'md' ? 'h-3 w-3' : 'h-4 w-4'} animate-spin rounded-full border-2 border-gray-300 border-t-blue-600`}
                     ></div>
                 ) : inCart ? (
-                    <SquareCheckBig className={size === 'md' ? 'h-4 w-4' : 'h-5 w-5'} />
+                    <SquareCheckBig size={18} />
                 ) : (
-                    <Square className={size === 'md' ? 'h-4 w-4' : 'h-5 w-5'} />
+                    <Square size={18} />
                 )}
             </button>
         ) : (
