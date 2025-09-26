@@ -37,8 +37,8 @@ const Evaluates: React.FC<EvaluatesProps> = ({ evaluates_for, evaluates }) => {
 
     return (
         <div className="w-full">
-            <div className="border-[#d9ebf7] border-l-[5px] border-t-[5px] border-l-[#d9ebf7] relative scrollbar-custom sm:overflow-visible overflow-auto">
-                <div className={`bg-[#f7fafc] relative p-1 text-[12px] text-[#353839] pl-4`}>
+            <div className="border-[#d9ebf7] border-l-[5px] border-t-[5px] border-l-[#d9ebf7] relative scrollbar-custom sm:overflow-visible overflow-auto rounded-tl-[10px]">
+                <div className={`bg-[#f7fafc] relative p-1 text-[12px] text-[#353839] pl-4 rounded-tl-[5px]`}>
                     Setup
                 </div>
                 <div className='p-2'>

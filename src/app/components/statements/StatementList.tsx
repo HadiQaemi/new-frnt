@@ -193,65 +193,57 @@ export default function ListStatements({ data, statements, statementId = null, i
         }
     };
     return (
-        <div className={`grid grid-cols-1 md:grid-cols-4 gap-4`}>
-            <div className={`md:col-span-3`}>
-                <Card>
-                    <CardContent className="p-0">
-                        {articles.length === 0 ? (
-                            <p className="text-gray-500 text-center">No results found</p>
-                        ) : (
-                            <>
-                                <div className="relative">
-                                    <div className="space-y-4">
-                                        {articles.map((item: any) => {
-                                            const article = item.article
+        <div className='grid grid-cols-1 md:grid-cols-4 gap-4'>
+            <Card className='md:col-span-3'>
+                <CardContent className="relative p-0 space-y-4">
+                    {articles.length === 0 ? (
+                        <p className="text-gray-500 text-center">No results found</p>
+                    ) : (
+                        <>
+                            {articles.map((item: any) => {
+                                const article = item.article
+                                return (
+                                    <div className="bg-white p-0" key={`article-${nanoid()}`}>
+                                        <PaperInfo
+                                            paper={article}
+                                            key={`article-info-${nanoid()}`}
+                                            onAuthorSelect={handleSelect('author')}
+                                            onJournalSelect={handleSelect('journal')}
+                                            onResearchFieldSelect={handleSelect('field')} />
+                                        {item.statements && item.statements.map((statement: any, index: any) => {
                                             return (
-                                                <div className="bg-white p-0 border-b border-gray-300" key={`article-${nanoid()}`}>
-                                                    <PaperInfo
-                                                        paper={article}
-                                                        key={`article-info-${nanoid()}`}
+                                                <div
+                                                    key={`list-${index}`}
+                                                    className='mt-4 mx-4'
+                                                    ref={(el: HTMLDivElement | null) => {
+                                                        if (statement['statement_id'] === statementId) {
+                                                            statementRefs.current[statement['statement_id']] = el;
+                                                        }
+                                                    }}
+                                                >
+                                                    <JsonTreeViewer
+                                                        handleTreeViewerClick={() => handleTreeViewerClick(statement.statement_id)}
+                                                        // parentOpen={statement.statement_id === openStatementId && statement.data_type.length > 0}
+                                                        parentOpen={statement.statement_id === openStatementId}
+                                                        // parentOpen={statement.statement_id === statementId && statement.data_type.length > 0}
                                                         onAuthorSelect={handleSelect('author')}
-                                                        onJournalSelect={handleSelect('journal')}
-                                                        onResearchFieldSelect={handleSelect('field')} />
-                                                    {item.statements && item.statements.map((statement: any, index: any) => {
-                                                        return (
-                                                            <div key={index} ref={(el: HTMLDivElement | null): void => { headerRefs.current[index] = el; }}>
-                                                                <div
-                                                                    key={`list-${index}`}
-                                                                    className='border-x border-gray-300'
-                                                                    ref={(el: HTMLDivElement | null) => {
-                                                                        if (statement['statement_id'] === statementId) {
-                                                                            statementRefs.current[statement['statement_id']] = el;
-                                                                        }
-                                                                    }}
-                                                                >
-                                                                    <JsonTreeViewer
-                                                                        handleTreeViewerClick={() => handleTreeViewerClick(statement.statement_id)}
-                                                                        // parentOpen={statement.statement_id === openStatementId && statement.data_type.length > 0}
-                                                                        parentOpen={statement.statement_id === openStatementId}
-                                                                        // parentOpen={statement.statement_id === statementId && statement.data_type.length > 0}
-                                                                        onAuthorSelect={handleSelect('author')}
-                                                                        onConceptSelect={handleSelect('concept')}
-                                                                        jsonData={statement}
-                                                                        article={article}
-                                                                        single={true}
-                                                                        statement={statement}
-                                                                        statementDetails={statement.statement_id === openStatementId ? statementDetails : null}
-                                                                    />
-                                                                </div>
-                                                            </div>
-                                                        );
-                                                    })}
+                                                        onConceptSelect={handleSelect('concept')}
+                                                        jsonData={statement}
+                                                        article={article}
+                                                        single={true}
+                                                        statement={statement}
+                                                        statementDetails={statement.statement_id === openStatementId ? statementDetails : null}
+                                                    />
                                                 </div>
-                                            )
+                                            );
                                         })}
                                     </div>
-                                </div>
-                            </>
-                        )}
-                    </CardContent>
-                </Card>
-            </div>
+                                )
+                            })}
+                        </>
+                    )}
+                </CardContent>
+            </Card>
             <div className={`md:col-span-1 sticky top-5`}>
                 <div className={`sticky ${activeHeader !== null ? 'top-[calc(9rem)]' : 'top-[calc(5rem)]'} transition-[top] duration-300 ease-in-out ${isSidebarOpen ? '' : ''}`}>
                     <div className="max-h-[calc(100vh-2rem)] overflow-y-visible">
@@ -264,12 +256,12 @@ export default function ListStatements({ data, statements, statementId = null, i
                                             ? "border-[#ffb703]"
                                             : "border-[#f08a4b]"
                                             }`} key={`article-${nanoid()}`}>
-                                            <div className='bg-[#FDF6EB] p-2 text-[#353839] font-[700] text-sm'>
+                                            <div className='bg-[#FDF6EB] p-2 pl-4 text-[#353839] font-[700] text-sm'>
                                                 Source {data.basises[0].publication_issue.type}
                                             </div>
                                             {data.basises.map((item: any) => {
                                                 return (
-                                                    <div className='border-x border-b border-gray-300' key={`basis-${nanoid()}`}>
+                                                    <div key={`basis-${nanoid()}`}>
                                                         <div className='bg-white p-4 pt-2'>
                                                             <div className="grid grid-cols-1">
                                                                 <h6 className="leading-tight mb-2 font-medium">

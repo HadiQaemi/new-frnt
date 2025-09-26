@@ -160,10 +160,10 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
   return (
     <div>
       <div ref={containerRef} className='bg-white border-[#1e3a5f] border-t-[5px]'>
-        <div className="bg-[#f7fafc] p-2 text-[#353839] font-[700] text-sm">
+        <div className="bg-[#f7fafc] p-2 pl-4 text-[#353839] font-[700] text-sm">
           Loom Record
         </div>
-        <div className="p-4 border-x border-gray-300">
+        <div className="p-4">
           <div className="grid grid-cols-1">
             <h4 className="text-[#353839] text-2xl leading-tight mb-2 font-medium">{paper.name}</h4>
           </div>

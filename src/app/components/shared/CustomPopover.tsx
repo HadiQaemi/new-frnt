@@ -45,7 +45,7 @@ const CustomPopover: React.FC<CustomPopoverProps> = ({
           <Button
             variant="ghost"
             size="sm"
-            className="p-0 w-[5%] text-gray-600 hover:text-gray-900"
+            className="p-0 w-[5%] text-[#353839]"
             onClick={(e) => {
               e.stopPropagation();
               onToggle(false);

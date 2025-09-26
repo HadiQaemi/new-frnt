@@ -265,8 +265,10 @@ const TabComponent: React.FC<TabComponentProps> = ({
         setSearchType(e.target.value);
     };
     return (
-        <div className="w-full mx-auto bg-white ml-4">
-
+        <div className="w-full mx-auto bg-white ml-4 border-[#1e3a5f] border-t-[5px] mb-5">
+            <div className="bg-[#f7fafc] p-2 text-[#353839] font-[700] text-sm">
+                Loom Record
+            </div>
             <div className="space-y-2">
                 {isLoading ? (
                     <div className="text-center py-4 text-gray-500">Loading...</div>
@@ -303,7 +305,7 @@ const TabComponent: React.FC<TabComponentProps> = ({
                                 activeTab === 'articles' ? (
                                     <div key={index} className="transition-colors duration-200">
                                         <span key={`articles-${index}`} className="grid grid-cols-12">
-                                            <div className="col-span-12 border border-gray-100 p-2 mb-1">
+                                            <div className="col-span-12 p-2 mb-1">
                                                 <div className="block">
                                                     <Link
                                                         href={`/article/${item.article_id}`}

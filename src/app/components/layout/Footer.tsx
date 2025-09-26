@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import vertical_logo from '../../../assets/images/vertical_logo.svg';
+import OrkgLogo from '../../../assets/images/logo.svg';
 import Image from 'next/image';
 
 const Footer = () => {
@@ -10,7 +10,7 @@ const Footer = () => {
         orkg: {
             logo: true,
             title: 'ORKG',
-            description: 'ORKG reborn is a digital library of machine-readable scientific knowledge.',
+            description: 'TIB Knowledge Loom is a digital library of machine-readable scientific knowledge.',
         },
         about: {
             title: 'About',
@@ -42,7 +42,7 @@ const Footer = () => {
     };
 
     return (
-        <footer className="bg-gray-100 pt-6 pb-4 border-t border-gray-200 min-h-[15.1rem]">
+        <footer className="bg-[#fffcf7] pt-6 pb-4 border-t border-gray-200 min-h-[15.1rem]">
             <div className="w-full px-4 mx-auto sm:px-6 md:px-8 lg:px-12 xl:max-w-screen-xl 2xl:max-w-screen-2xl">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                     <div>
@@ -50,21 +50,18 @@ const Footer = () => {
                         <div className="mb-4">
                             <span className="inline-block pr-5 relative">
                                 <Image
-                                    src={vertical_logo}
-                                    alt="ORKG Logo"
+                                    src={OrkgLogo}
+                                    alt="TIB Logo"
                                     width={60}
                                     height={100}
                                     className="object-contain pt-1"
                                 />
-                                <div className="absolute left-[20px] -bottom-[15px]">
-                                    <span className="text-[12px]">
-                                        <span className="font-black text-[#e86161]">re</span>
-                                        <span>born</span>
-                                    </span>
-                                </div>
                             </span>
-                            <div className='font-inter font-[400] text-md inline-block w-3/4 text-left align-top pt-2.5'>
+                            <div className='font-inter font-[400] text-md inline-block w-3/4 text-left align-top'>
                                 {footerSections.orkg.description}
+                            </div>
+                            <div className="relative text-[10px] -top-[10px] right-[22px] text-[#191e20] font-bold inline-block">
+                                TIB Knowledge L<span className="text-[#f08a4b]">oo</span>m
                             </div>
                         </div>
                     </div>

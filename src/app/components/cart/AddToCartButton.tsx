@@ -65,7 +65,7 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
         isLoad ? (
             <button
                 onClick={handleClick}
-                className={`${sizeClasses[size]} ${inCart ? 'text-green-700' : 'text-blue-700'} rounded-full transition-colors flex items-center justify-center ${className}`}
+                className={`${sizeClasses[size]} ${inCart ? 'text-green-700' : 'text-[#2f72ad]'} rounded-full transition-colors flex items-center justify-center ${className}`}
                 title={inCart ? 'Remove from list' : 'Add to list'}
             >
                 {isLoading ? (
