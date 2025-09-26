@@ -69,29 +69,31 @@ const IsImplementedBy: FC<IsImplementedByProps> = ({
 
     return (
         <>
-            <span className={`bg-[#ddebf7] relative p-1 text-[12px] text-[#353839] pl-4 w-full inline-block`}>
-                Implementation
-            </span>
-            <div className="p-2 pt-0 border-[#ddebf7] border-l-[10px] border-l-[#ddebf7] relative mb-1">
-                {stringType.fileType === 'sourceCode' ? (
-                    <JsonSourceCode
-                        highlightCode={highlightCode(sourceCode, executes_is_implemented_by)}
-                        isCodeLoading={isCodeLoading}
-                        sourceCode={sourceCode}
-                        showAllCode={showAllCode}
-                        toggleShowAllCode={toggleShowAllCode}
-                    />
-                ) : (
-                    <div className="font-bold flex cursor-help">
-                        <span className="inline">Source code: </span>
-                        <span className="inline ml-2">
-                            <URLOrText
-                                content={String(is_implemented_by)}
-                                button=""
-                            />
-                        </span>
-                    </div>
-                )}
+            <div className="d-flex mb-4 border-[#71b4ef] border-l-[5px] border-t-[5px] border-l-[#71b4ef]">
+                <div className='bg-[#f7fafc] text-[#353839] relative p-1 text-[12px] pl-4'>
+                    Implementation
+                </div>
+                <div className='p-2'>
+                    {stringType.fileType === 'sourceCode' ? (
+                        <JsonSourceCode
+                            highlightCode={highlightCode(sourceCode, executes_is_implemented_by)}
+                            isCodeLoading={isCodeLoading}
+                            sourceCode={sourceCode}
+                            showAllCode={showAllCode}
+                            toggleShowAllCode={toggleShowAllCode}
+                        />
+                    ) : (
+                        <div className="font-bold flex cursor-help">
+                            <span className="inline">Source code: </span>
+                            <span className="inline ml-2">
+                                <URLOrText
+                                    content={String(is_implemented_by)}
+                                    button=""
+                                />
+                            </span>
+                        </div>
+                    )}
+                </div>
             </div>
         </>
     );

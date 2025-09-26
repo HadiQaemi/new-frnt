@@ -62,7 +62,7 @@ const JsonSourceCode: FC<JsonSourceCodeProps> = ({
                 {toggleShowAllCode !== undefined && (
                     <button
                         onClick={toggleShowAllCode}
-                        className="px-4 py-2 bg-[#bbd5ec] text-[#353839]"
+                        className="px-4 py-2 bg-[#5b9ed9] text-[#FFF]"
                     >
                         {showAllCode ? 'Show less' : 'Show more'}
                     </button>

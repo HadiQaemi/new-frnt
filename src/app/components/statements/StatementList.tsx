@@ -206,7 +206,7 @@ export default function ListStatements({ data, statements, statementId = null, i
                                         {articles.map((item: any) => {
                                             const article = item.article
                                             return (
-                                                <div className="bg-white p-0" key={`article-${nanoid()}`}>
+                                                <div className="bg-white p-0 border-b border-gray-300" key={`article-${nanoid()}`}>
                                                     <PaperInfo
                                                         paper={article}
                                                         key={`article-info-${nanoid()}`}
@@ -218,6 +218,7 @@ export default function ListStatements({ data, statements, statementId = null, i
                                                             <div key={index} ref={(el: HTMLDivElement | null): void => { headerRefs.current[index] = el; }}>
                                                                 <div
                                                                     key={`list-${index}`}
+                                                                    className='border-x border-gray-300'
                                                                     ref={(el: HTMLDivElement | null) => {
                                                                         if (statement['statement_id'] === statementId) {
                                                                             statementRefs.current[statement['statement_id']] = el;
@@ -258,16 +259,17 @@ export default function ListStatements({ data, statements, statementId = null, i
                             <CardContent className="p-0">
                                 <div className="relative">
                                     <div>
-                                        <div className="p-0 max-h-[85vh] text-[#353839]" key={`article-${nanoid()}`}>
-                                            <div className={`p-2 font-[700] text-sm ${data.basises[0].publication_issue.type === "Article"
-                                                ? "bg-[#ffb703]"
-                                                : "bg-[#f08a4b]"
-                                                }`}>
+
+                                        <div className={`p-0 max-h-[85vh] text-[#353839] border-t-[5px] ${data.basises[0].publication_issue.type === "Article"
+                                            ? "border-[#ffb703]"
+                                            : "border-[#f08a4b]"
+                                            }`} key={`article-${nanoid()}`}>
+                                            <div className='bg-[#FDF6EB] p-2 text-[#353839] font-[700] text-sm'>
                                                 Source {data.basises[0].publication_issue.type}
                                             </div>
                                             {data.basises.map((item: any) => {
                                                 return (
-                                                    <div key={`basis-${nanoid()}`}>
+                                                    <div className='border-x border-b border-gray-300' key={`basis-${nanoid()}`}>
                                                         <div className='bg-white p-4 pt-2'>
                                                             <div className="grid grid-cols-1">
                                                                 <h6 className="leading-tight mb-2 font-medium">
