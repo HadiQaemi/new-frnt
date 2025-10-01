@@ -24,7 +24,7 @@ const HasInput: FC<HasInputData> = ({ has_input, label, components }) => {
         const number_of_columns = has_characteristic['number_rows'];
         const number_of_rows = has_characteristic['number_columns'];
         if (number_of_columns && number_of_rows) {
-            character = `Size: ${number_of_columns} x ${number_of_rows}`;
+            character = `${number_of_columns} x ${number_of_rows}`;
         }
     }
 
@@ -57,11 +57,14 @@ const HasInput: FC<HasInputData> = ({ has_input, label, components }) => {
             )}
 
             {character && (
-                <URLOrText
-                    button={!label && !source_url ? 'Input data' : ''}
-                    color="#00b050"
-                    content={character}
-                />
+                <div className='flex'>
+                    {`Size: `}
+                    <URLOrText
+                        button={!label && !source_url ? 'Input data' : ''}
+                        color="#00b050"
+                        content={character}
+                    />
+                </div>
             )}
 
             {comment && (

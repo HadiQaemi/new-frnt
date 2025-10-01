@@ -153,93 +153,87 @@ const URLOrText: React.FC<URLOrTextProps> = ({
 
         return (
             <div className="flex flex-col h-full">
-                <div className="flex-1 border border-gray-300 overflow-hidden bg-white">
-                    <div className="overflow-auto max-h-96">
-                        <table className="min-w-full border-collapse">
-                            <thead className="bg-gray-50 sticky top-0 z-10 border-b border-gray-200">
-                                <tr>
-                                    {tableData.columns.map((column, index) => (
-                                        <th
-                                            key={index}
-                                            className="border-b border-r border-gray-300 px-3 py-3 text-left font-semibold text-gray-900 text-sm bg-gray-50 min-w-[120px]"
+                <div className="flex-1 border border-gray-300 overflow-hidden bg-white overflow-auto max-h-96">
+                    <table className="min-w-full border-collapse">
+                        <thead className="bg-gray-50 sticky top-0 z-10 border-b border-gray-200">
+                            <tr>
+                                {tableData.columns.map((column, index) => (
+                                    <th
+                                        key={index}
+                                        className="border-b border-r border-gray-300 px-3 py-3 text-left font-semibold text-gray-900 text-sm bg-gray-50 min-w-[120px]"
+                                    >
+                                        <div className="truncate" title={column}>
+                                            {column}
+                                        </div>
+                                    </th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody className="bg-white">
+                            {currentData.map((row, rowIndex) => (
+                                <tr key={startIndex + rowIndex} className="hover:bg-gray-50 transition-colors">
+                                    {tableData.columns.map((column, colIndex) => (
+                                        <td
+                                            key={`${startIndex + rowIndex}-${colIndex}`}
+                                            className="border-b border-r border-gray-200 px-3 py-2 text-sm text-gray-700 align-top min-w-[120px] max-w-[200px]"
                                         >
-                                            <div className="truncate" title={column}>
-                                                {column}
+                                            <div className="whitespace-pre-wrap break-words">
+                                                {row[column] !== null && row[column] !== undefined ?
+                                                    String(row[column]) : ''
+                                                }
                                             </div>
-                                        </th>
+                                        </td>
                                     ))}
                                 </tr>
-                            </thead>
-                            <tbody className="bg-white">
-                                {currentData.map((row, rowIndex) => (
-                                    <tr key={startIndex + rowIndex} className="hover:bg-gray-50 transition-colors">
-                                        {tableData.columns.map((column, colIndex) => (
-                                            <td
-                                                key={`${startIndex + rowIndex}-${colIndex}`}
-                                                className="border-b border-r border-gray-200 px-3 py-2 text-sm text-gray-700 align-top min-w-[120px] max-w-[200px]"
-                                            >
-                                                <div className="whitespace-pre-wrap break-words">
-                                                    {row[column] !== null && row[column] !== undefined ?
-                                                        String(row[column]) : ''
-                                                    }
-                                                </div>
-                                            </td>
-                                        ))}
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
 
                 {totalPages > 1 && (
-                    <div className="mt-6 bg-white p-4">
-                        <div className="flex items-center justify-center">
-                            <div className="flex items-center space-x-1">
+                    <div className="mt-6 bg-white p-4 flex items-center justify-center space-x-1">
+                        <button
+                            onClick={goToPreviousPage}
+                            disabled={currentPage === 1}
+                            className="flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white transition-colors mr-2"
+                        >
+                            <ChevronLeft className="h-4 w-4 mr-1" />
+                            Previous
+                        </button>
+
+                        {getPageNumbers().map((pageNumber) => (
+                            <button
+                                key={pageNumber}
+                                onClick={() => goToPage(pageNumber)}
+                                className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${currentPage === pageNumber
+                                    ? 'bg-red-400 text-white shadow-sm'
+                                    : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
+                                    }`}
+                            >
+                                {pageNumber}
+                            </button>
+                        ))}
+
+                        {totalPages > 5 && !getPageNumbers().includes(totalPages) && (
+                            <>
+                                <span className="px-2 text-gray-500">...</span>
                                 <button
-                                    onClick={goToPreviousPage}
-                                    disabled={currentPage === 1}
-                                    className="flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white transition-colors mr-2"
+                                    onClick={() => goToPage(totalPages)}
+                                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                                 >
-                                    <ChevronLeft className="h-4 w-4 mr-1" />
-                                    Previous
+                                    {totalPages}
                                 </button>
+                            </>
+                        )}
 
-                                {getPageNumbers().map((pageNumber) => (
-                                    <button
-                                        key={pageNumber}
-                                        onClick={() => goToPage(pageNumber)}
-                                        className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${currentPage === pageNumber
-                                            ? 'bg-red-400 text-white shadow-sm'
-                                            : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
-                                            }`}
-                                    >
-                                        {pageNumber}
-                                    </button>
-                                ))}
-
-                                {totalPages > 5 && !getPageNumbers().includes(totalPages) && (
-                                    <>
-                                        <span className="px-2 text-gray-500">...</span>
-                                        <button
-                                            onClick={() => goToPage(totalPages)}
-                                            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-                                        >
-                                            {totalPages}
-                                        </button>
-                                    </>
-                                )}
-
-                                <button
-                                    onClick={goToNextPage}
-                                    disabled={currentPage === totalPages}
-                                    className="flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white transition-colors ml-2"
-                                >
-                                    Next
-                                    <ChevronRight className="h-4 w-4 ml-1" />
-                                </button>
-                            </div>
-                        </div>
+                        <button
+                            onClick={goToNextPage}
+                            disabled={currentPage === totalPages}
+                            className="flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white transition-colors ml-2"
+                        >
+                            Next
+                            <ChevronRight className="h-4 w-4 ml-1" />
+                        </button>
                     </div>
                 )}
             </div>
@@ -276,7 +270,7 @@ const URLOrText: React.FC<URLOrTextProps> = ({
                                     onClick={openModal}
                                     className="px-3 py-1 text-gray-700 rounded text-sm"
                                 >
-                                    <Search size={16}/>
+                                    <Search size={16} />
                                 </button>
                             </div>
                         )}
@@ -306,28 +300,26 @@ const URLOrText: React.FC<URLOrTextProps> = ({
                             </button>
                         </div>
 
-                        <div className="mb-4">
-                            <div className="flex gap-2 mb-4">
-                                <input
-                                    type="text"
-                                    value={question}
-                                    onChange={(e) => setQuestion(e.target.value)}
-                                    onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                                    placeholder="Ask a question about the data..."
-                                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    disabled={isLoading}
-                                />
-                                <button
-                                    onClick={handleSearch}
-                                    className="px-4 py-2 text-gray-700 flex items-center gap-2"
-                                >
-                                    {isLoading ? (
-                                        <Loader2 className="h-4 w-4 animate-spin" />
-                                    ) : (
-                                        <Search className="h-4 w-4" />
-                                    )}
-                                </button>
-                            </div>
+                        <div className="flex gap-2 mb-4">
+                            <input
+                                type="text"
+                                value={question}
+                                onChange={(e) => setQuestion(e.target.value)}
+                                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                                placeholder="Ask a question about the data..."
+                                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                disabled={isLoading}
+                            />
+                            <button
+                                onClick={handleSearch}
+                                className="px-4 py-2 text-gray-700 flex items-center gap-2"
+                            >
+                                {isLoading ? (
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                ) : (
+                                    <Search className="h-4 w-4" />
+                                )}
+                            </button>
                         </div>
 
                         <div className="flex-1 overflow-hidden">

@@ -100,7 +100,7 @@ export default function PageClient({ initialParams }: { initialParams: InitialPa
             variants={containerVariants}
           >
             <motion.div variants={itemVariants}>
-              <div className="bg-white mb-4">
+              <div className="bg-white mb-4 round-[10px]">
                 <SideSearchForm
                   ref={sideSearchFormRef}
                   initialParams={initialParams}

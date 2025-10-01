@@ -565,7 +565,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
 
     return (
         <div>
-            <form onSubmit={handleSubmit} className="bg-white border-[#1e3a5f] border-t-[5px]">
+            <form onSubmit={handleSubmit} className="bg-white border-[#1e3a5f] border-t-[5px] rounded-tl-[10px] rounded-tr-[10px]">
                 <div className="bg-[#f7fafc] p-2 pl-4 text-[#353839] font-[700] text-sm">
                     Search
                 </div>
@@ -581,7 +581,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                         selected={selectedResearchFields}
                         onRemove={(id) => removeItem(id, 'research_field')}
                         type="research_field"
-                        placeholder="Subject Area..."
+                        placeholder="Subject Areas"
                     />
 
                     <div>
@@ -590,7 +590,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                             type="text"
                             value={titleSearch}
                             onChange={(e) => setTitleSearch(e.target.value)}
-                            placeholder="Keywords..."
+                            placeholder="Keywords"
                             className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
                         />
                     </div>
@@ -606,7 +606,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                                 selected={selectedConcepts}
                                 onRemove={(id) => removeItem(id, 'concept')}
                                 type="concept"
-                                placeholder="Concept..."
+                                placeholder="Concepts"
                             />
 
                             <AutocompleteField
@@ -618,7 +618,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                                 selected={selectedAuthors}
                                 onRemove={(id) => removeItem(id, 'author')}
                                 type="author"
-                                placeholder="Authors..."
+                                placeholder="Authors"
                             />
 
                             <AutocompleteField
@@ -630,7 +630,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                                 selected={selectedScientificVenues}
                                 onRemove={(id) => removeItem(id, 'journal')}
                                 type="journal"
-                                placeholder="Journals or Conferences..."
+                                placeholder="Journals or Conferences"
                             />
 
                             <div className='flex gap-2'>
@@ -638,14 +638,14 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                                     type="text"
                                     value={startYear}
                                     onChange={(e) => setStartYear(e.target.value)}
-                                    placeholder="Year start..."
+                                    placeholder="Year start"
                                     className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
                                 />
                                 <input
                                     type="text"
                                     value={endYear}
                                     onChange={(e) => setEndYear(e.target.value)}
-                                    placeholder="Year end..."
+                                    placeholder="Year end"
                                     className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
                                 />
                             </div>

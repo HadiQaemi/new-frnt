@@ -163,10 +163,10 @@ const TreeNode: React.FC<TreeNodeProps> = ({
         </span>
       )}
       <div className={`flex items-start p-2 transition-all duration-300${level ? ' ml-2.5' : ''}`}>
-        <div className='flex-1 min-w-0 border-[#2f72ad] border-t-[5px] border-b-[#2f72ad]'>
+        <div className='flex-1 min-w-0 border-[#2f72ad] border-t-[5px] border-b-[#2f72ad] rounded-tl-[10px] rounded-tr-[10px]'>
           <div className="bg-[#f7fafc] p-2 text-[#353839] font-[700] text-sm flex items-center">
             Statement
-            <div className="flex items-center flex-none border border-gray-300 p-1 bg-white rounded ml-auto">
+            <div className="flex items-center flex-none p-1 rounded ml-auto">
               {hasChildren && !level && !color && (
                 <>
                   <div className="transition-transform duration-300">
@@ -216,7 +216,7 @@ const TreeNode: React.FC<TreeNodeProps> = ({
             <div className={`transition-all duration-300 ${isOpen || parentOpen ? 'max-h-full opacity-100' : 'max-h-0 opacity-0'}`}>
               <div className="pl-4">
                 <div className="d-flex pr-0 mb-4 border-[#5b9ed9] border-l-[5px] border-t-[5px] border-l-[#5b9ed9] rounded-tl-[10px]">
-                  <div className={`bg-[#f7fafc] p-1 pl-2 text-[#353839] text-[12px] rounded-tl-[10px]`}>
+                  <div className={`bg-[#f7fafc] p-1 pl-2 text-[#353839] text-[12px] rounded-tl-[10px] font-[700]`}>
                     Data Analysis
                   </div>
                   <div className='p-2 pr-0'>

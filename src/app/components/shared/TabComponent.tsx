@@ -265,176 +265,49 @@ const TabComponent: React.FC<TabComponentProps> = ({
         setSearchType(e.target.value);
     };
     return (
-        <div className="w-full mx-auto bg-white ml-4 border-[#1e3a5f] border-t-[5px] mb-5">
+        <div className="w-full mx-auto bg-white ml-4 border-[#1e3a5f] border-t-[5px] mb-5 rounded-tl-[10px] rounded-tr-[10px]">
             <div className="bg-[#f7fafc] p-2 text-[#353839] font-[700] text-sm">
-                Loom Record
+                Loom Records
             </div>
             <div className="space-y-2">
                 {isLoading ? (
-                    <div className="text-center py-4 text-gray-500">Loading...</div>
+                    <div key={nanoid()} className="text-center py-4 text-gray-500">Loading...</div>
                 ) : tabContents[activeTab]?.length === 0 ? (
-                    <div className="text-center py-4 text-gray-500">Nothing found</div>
+                    <div key={nanoid()} className="text-center py-4 text-gray-500">Nothing found</div>
                 ) : (
                     tabContents[activeTab].map((item: any, index) => (
-                        <div key={index}>
-                            {activeTab === 'statements' ? (
-                                <div key={index} className="p-2 rounded-lg transition-colors duration-200 border border-gray-100 shadow-sm">
-                                    <span key={`statements-${item.id}`}>
-                                        <Link
-                                            href={`/statement/${item.statement_id}`}
-                                            className="text-[#000] cursor-pointer hover:text-[#555] block"
-                                        >
-                                            <h4 className="font-inter font-[700]">{item.name}</h4>
-                                        </Link>
-                                        <div className="block my-1 pt-1">
-                                            <span className="font-inter font-[400] text-sm">{item.author} et al.</span>
-                                            <span className="font-inter font-[500]"><Dot className="me-1 inline font-bold" /></span>
-                                            <span className="font-inter font-[400] text-sm">{item.date_published}</span>
-                                            <span className="font-inter font-[500]"><Dot className="me-1 inline font-bold" /></span>
-                                            <span className="font-inter font-[400] text-sm">{item.article}</span>
-                                            {item.scientific_venue && (
-                                                <>
-                                                    <span className="font-inter font-[500]"><Dot className="me-1 inline font-bold" /></span>
-                                                    <span className="font-inter font-[400] text-sm">{item.scientific_venue}</span>
-                                                </>
-                                            )}
-                                        </div>
+                        <div key={nanoid()} className="col-span-12 px-4 py-2 my-4">
+                            <div className="block">
+                                <Link
+                                    href={`/article/${item.article_id}`}
+                                    className="text-[#000] cursor-pointer hover:text-[#555] block"
+                                >
+                                    <h4 className="font-inter font-[700]">{item.name}</h4>
+                                </Link>
+                            </div>
+                            <div className="block">
+                                <span className="font-inter font-[400] text-sm">{item.author} et al.</span>
+                                <span className="font-inter font-[500]">
+                                    <Dot className="me-1 inline font-bold" />
+                                </span>
+                                <span className="font-inter font-[400] text-sm">{item.date_published}</span>
+                            </div>
+                            <div className="block">
+                                <span className="font-inter font-[400] text-xs italic">
+                                    <span className="mr-1">
+                                        Source {item.basises[0].publication_issue.type}:
                                     </span>
-                                </div>
-                            ) : (
-                                activeTab === 'articles' ? (
-                                    <div key={index} className="transition-colors duration-200">
-                                        <span key={`articles-${index}`} className="grid grid-cols-12">
-                                            <div className="col-span-12 p-2 mb-1">
-                                                <div className="block">
-                                                    <Link
-                                                        href={`/article/${item.article_id}`}
-                                                        className="text-[#000] cursor-pointer hover:text-[#555] block"
-                                                    >
-                                                        <h4 className="font-inter font-[700]">{item.name}</h4>
-                                                    </Link>
-                                                </div>
-                                                <div className="block">
-                                                    <span className="font-inter font-[400] text-sm">{item.author} et al.</span>
-                                                    <span className="font-inter font-[500]">
-                                                        <Dot className="me-1 inline font-bold" />
-                                                    </span>
-                                                    <span className="font-inter font-[400] text-sm">{item.date_published}</span>
-                                                </div>
-                                                <div className="block">
-                                                    <span className="font-inter font-[400] text-xs italic">
-                                                        <span className="mr-1">
-                                                            Source {item.basises[0].publication_issue.type}:
-                                                        </span>
-                                                        {item.basises[0].authors[0].family_name} et al. (
-                                                        {item.basises[0].publication_issue.date_published}).{" "}
-                                                        {item.basises[0].name}.
-                                                        {item.basises[0].publication_issue.periodical && (
-                                                            <> {item.basises[0].publication_issue.periodical}</>
-                                                        )}.
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            {/* <div className="col-span-4" key={`has_input-all-${nanoid()}`}>
-                                                <div
-                                                    key={`${nanoid()}`}
-                                                    className="h-full relative"
-                                                >
-                                                    <div className="bg-[#00b0505e] p-1.5 text-gray-700 font-[700] text-sm">
-                                                        {item.basises[0].publication_issue.type}
-                                                    </div>
-                                                    <div key={`${nanoid()}`} className="border border-gray-100 border-t-0 d-flex px-2">
-                                                        <div className="block my-0.5">
-                                                            <span className="font-inter font-[400] text-xs">
-                                                                {item.basises[0].authors[0].family_name} et al. (
-                                                                {item.basises[0].publication_issue.date_published}).{" "}
-                                                                {item.basises[0].name}.
-                                                                {item.basises[0].publication_issue.periodical && (
-                                                                    <> {item.basises[0].publication_issue.periodical}</>
-                                                                )}.
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div> */}
-                                        </span>
-                                    </div>
-                                ) : (
-                                    activeTab === 'keywords' ? (
-                                        <div key={index} className="p-2 rounded-lg transition-colors duration-200 border border-gray-100 shadow-sm">
-                                            <span key={`keywords-${index}`}>
-                                                <Link
-                                                    // href={`/statements?start_year=2015&end_year=2025&concepts=${item.id}&page=1&per_page=10`}
-                                                    href={``}
-                                                    className="text-[#e86161] cursor-pointer hover:text-[#555] block"
-                                                >
-                                                    <h4 className="font-inter font-[500]">{item.name}</h4>
-                                                </Link>
-                                                <div className="block my-1 pt-1">
-                                                    <span className="font-inter font-[400] text-sm">{item.author} et al.</span>
-                                                    <span className="font-inter font-[500]"><Dot className="me-1 inline font-bold" /></span>
-                                                    <span className="font-inter font-[400] text-sm">{item.date}</span>
-                                                    <span className="font-inter font-[500]"><Dot className="me-1 inline font-bold" /></span>
-                                                    <span className="font-inter font-[400] text-sm">{item.scientific_venue}</span>
-                                                </div>
-                                            </span>
-                                        </div>
-                                    ) : (
-                                        activeTab === 'authors' ? (
-                                            <div key={index} className="p-2 rounded-lg transition-colors duration-200 border border-gray-100 shadow-sm">
-                                                <span key={`authors-${index}`}>
-                                                    <Link
-                                                        // href={`/statements?start_year=2015&end_year=2025&authors=${item.author_id}&page=1&per_page=10`}
-                                                        href={``}
-                                                        className="text-[#000] cursor-pointer hover:text-[#555]"
-                                                    >
-                                                        <h4 className="font-inter font-[700] inline">{item.name}</h4>
-                                                    </Link>
-                                                    {helper.validURL(item.orcid) && (
-                                                        <span>
-                                                            <span className="font-inter font-[500]"><Dot className="me-1 inline font-bold underline text-[10px]" /></span>
-                                                            <span className="font-inter font-[400] text-sm"><a href={item.orcid} className='underline' target="_blank">{item.orcid}</a></span>
-                                                        </span>
-                                                    )}
-                                                </span>
-                                            </div>
-                                        ) : (
-                                            activeTab === 'journals' ? (
-                                                item.name && (
-                                                    <div key={index} className="p-2 rounded-lg transition-colors duration-200 border border-gray-100 shadow-sm">
-                                                        <span key={`journals-${index}`}>
-                                                            <Link
-                                                                // href={`/statements?start_year=2015&end_year=2025&scientific_venues=${item.journal_id}&page=1&per_page=10`}
-                                                                href={``}
-                                                                className="text-[#000] cursor-pointer hover:text-[#555]"
-                                                            >
-                                                                <h4 className="font-inter font-[700] inline">{item.name}</h4>
-                                                            </Link>
-                                                            <span>
-                                                                <span className="font-inter font-[500]"><Dot className="me-1 inline font-bold underline text-[10px]" /></span>
-                                                                <span className="font-inter font-[400] text-sm">{item.publisher}</span>
-                                                            </span>
-                                                            <span>
-                                                                <span className="font-inter font-[500]"><Dot className="me-1 inline font-bold underline text-[10px]" /></span>
-                                                                <span className="font-inter font-[400] text-sm">
-                                                                    <Link
-                                                                        href={item.url}
-                                                                        className="text-[#000] cursor-pointer hover:text-[#555]"
-                                                                    >
-                                                                        <h4 className="font-inter font-[700] inline">{item.url}</h4>
-                                                                    </Link>
-                                                                </span>
-                                                            </span>
-                                                        </span>
-                                                    </div>
-                                                )
-                                            ) : ''
-                                        )
-                                    )
-                                )
-                            )}
+                                    {item.basises[0].authors[0].family_name} et al. (
+                                    {item.basises[0].publication_issue.date_published}).{" "}
+                                    {item.basises[0].name}.
+                                    {item.basises[0].publication_issue.periodical && (
+                                        <> {item.basises[0].publication_issue.periodical}</>
+                                    )}.
+                                </span>
+                            </div>
                         </div>
-                    ))
+                    )
+                    )
                 )}
             </div>
 

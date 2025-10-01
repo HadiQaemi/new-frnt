@@ -252,7 +252,7 @@ export default function ListStatements({ data, statements, statementId = null, i
                                 <div className="relative">
                                     <div>
 
-                                        <div className={`p-0 max-h-[85vh] text-[#353839] border-t-[5px] ${data.basises[0].publication_issue.type === "Article"
+                                        <div className={`p-0 max-h-[85vh] text-[#353839] border-t-[5px] rounded-tl-[10px] rounded-tr-[10px] ${data.basises[0].publication_issue.type === "Article"
                                             ? "border-[#ffb703]"
                                             : "border-[#f08a4b]"
                                             }`} key={`article-${nanoid()}`}>

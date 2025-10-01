@@ -76,7 +76,6 @@ export const helper = {
         const normalizedSearchTerm = searchTerm.toLowerCase();
         return variables.filter((variable: any) => {
             if (!variable.string_match) return false;
-
             return variable.string_match.some((match: any) =>
                 match.toLowerCase() === normalizedSearchTerm
             );
@@ -379,6 +378,7 @@ export const helper = {
         );
     },
     renderIdentifiersComponentList: (identifiers: any) => {
+        console.log(identifiers)
         if (identifiers[0] === undefined) {
 
         } else {
@@ -410,8 +410,8 @@ export const helper = {
                         temp = identifiers['operation'][0]['close_match'][0]
                     }
                 }
-                text = temp.length === 0 ? `<span>${identifiers['operation'][0]['label'][0]}</span>` : `<a href=${temp} class='underline' target="_blank">${identifiers['operation'][0]['label'][0]}</a>`
-                links = `<span class='text-black pt-2 block' target="_blank">${identifiers['operation'][0]['label'][0]} (<a href=${temp} class='underline' target="_blank">${temp}</a>)</span>`
+                text = temp.length === 0 ? `<span>${identifiers['operation'][0]['label']}</span>` : `<a href=${temp} class='underline' target="_blank">${identifiers['operation'][0]['label']}</a>`
+                links = `<span class='text-black pt-2 block' target="_blank">${identifiers['operation'][0]['label']} (<a href=${temp} class='underline' target="_blank">${temp}</a>)</span>`
             }
             if (identifiers['properties'][0] !== undefined) {
                 let temp = ''
@@ -425,8 +425,8 @@ export const helper = {
                         temp = identifiers['properties'][0]['close_match'][0]
                     }
                 }
-                text = text + (text === '' ? '' : ' of ') + (temp.length === 0 ? `<span>${identifiers['properties'][0]['label'][0]}</span>` : `<a href=${temp} class='underline' target="_blank">${identifiers['properties'][0]['label'][0]}</a>`)
-                links = links + (links === '' ? '' : '') + `<span class='text-black pt-2 block' target="_blank">${identifiers['properties'][0]['label'][0]} (<a href=${temp} class='underline' target="_blank">${temp}</a>)</span>`
+                text = text + (text === '' ? '' : ' of ') + (temp.length === 0 ? `<span>${identifiers['properties'][0]['label']}</span>` : `<a href=${temp} class='underline' target="_blank">${identifiers['properties'][0]['label']}</a>`)
+                links = links + (links === '' ? '' : '') + `<span class='text-black pt-2 block' target="_blank">${identifiers['properties'][0]['label']} (<a href=${temp} class='underline' target="_blank">${temp}</a>)</span>`
             }
             if (identifiers['object_of_interests'][0] !== undefined) {
                 let temp = ''
@@ -440,27 +440,27 @@ export const helper = {
                         temp = identifiers['object_of_interests'][0]['close_match'][0]
                     }
                 }
-                text = text + (text === '' ? '' : ' of ') + (temp.length === 0 ? `<span>${identifiers['object_of_interests'][0]['label'][0]}</span>` : `<a href=${temp} class='underline' target="_blank">${identifiers['object_of_interests'][0]['label'][0]}</a>`)
-                links = links + (links === '' ? '' : '') + `<span class='text-black pt-2 block' target="_blank">${identifiers['object_of_interests'][0]['label'][0]} (<a href=${temp} class='underline' target="_blank">${temp}</a>)</span>`
+                text = text + (text === '' ? '' : ' of ') + (temp.length === 0 ? `<span>${identifiers['object_of_interests'][0]['label']}</span>` : `<a href=${temp} class='underline' target="_blank">${identifiers['object_of_interests'][0]['label']}</a>`)
+                links = links + (links === '' ? '' : '') + `<span class='text-black pt-2 block' target="_blank">${identifiers['object_of_interests'][0]['label']} (<a href=${temp} class='underline' target="_blank">${temp}</a>)</span>`
             }
 
-            if (identifiers['label'][0] !== undefined) {
-                if (identifiers['exact_match'] !== undefined) {
-                    if (identifiers['exact_match'][0]) {
-                        text = text + (text === '' ? '' : ' in ') + `<a href=${identifiers['exact_match'][0]} class='underline' target="_blank">${identifiers['label'][0]}</a>`
-                    } else {
-                        text = text + (text === '' ? '' : ' in ') + `<span>${identifiers['label'][0]}</span>`
-                    }
-                } else if (identifiers['close_match'] !== undefined) {
-                    if (identifiers['close_match'][0]) {
-                        text = text + (text === '' ? '' : ' in ') + `<a href=${identifiers['close_match'][0]} class='underline' target="_blank">${identifiers['label'][0]}</a>`
-                    } else {
-                        text = text + (text === '' ? '' : ' in ') + `<span>${identifiers['label'][0]}</span>`
-                    }
-                } else {
-                    text = text + (text === '' ? '' : ' in ') + `<span>${identifiers['label'][0]}</span>`
-                }
-            }
+            // if (identifiers['label'] !== undefined) {
+            //     if (identifiers['exact_match'] !== undefined) {
+            //         if (identifiers['exact_match'][0]) {
+            //             text = text + (text === '' ? '' : ' in ') + `<a href=${identifiers['exact_match']} class='underline' target="_blank">${identifiers['label']}</a>`
+            //         } else {
+            //             text = text + (text === '' ? '' : ' in ') + `<span>${identifiers['label']}</span>`
+            //         }
+            //     } else if (identifiers['close_match'] !== undefined) {
+            //         if (identifiers['close_match'][0]) {
+            //             text = text + (text === '' ? '' : ' in ') + `<a href=${identifiers['close_match']} class='underline' target="_blank">${identifiers['label']}</a>`
+            //         } else {
+            //             text = text + (text === '' ? '' : ' in ') + `<span>${identifiers['label']}</span>`
+            //         }
+            //     } else {
+            //         text = text + (text === '' ? '' : ' in ') + `<span>${identifiers['label']}</span>`
+            //     }
+            // }
 
             if (identifiers['matrices'][0] !== undefined) {
                 let temp = ''
@@ -474,8 +474,8 @@ export const helper = {
                         temp = identifiers['matrices'][0]['close_match'][0]
                     }
                 }
-                text = text + (text === '' ? '' : ' in ') + (temp.length === 0 ? `<span>${identifiers['matrices'][0]['label'][0]}</span>` : `<a href=${temp} class='underline' target="_blank">${identifiers['matrices'][0]['label'][0]}</a>`)
-                links = links + (links === '' ? '' : '') + `<span class='text-black pt-2 block' target="_blank">${identifiers['matrices'][0]['label'][0]} (<a href=${temp} class='underline' target="_blank">${temp}</a>)</span>`
+                text = text + (text === '' ? '' : ' in ') + (temp.length === 0 ? `<span>${identifiers['matrices'][0]['label']}</span>` : `<a href=${temp} class='underline' target="_blank">${identifiers['matrices'][0]['label']}</a>`)
+                links = links + (links === '' ? '' : '') + `<span class='text-black pt-2 block' target="_blank">${identifiers['matrices'][0]['label']} (<a href=${temp} class='underline' target="_blank">${temp}</a>)</span>`
             }
 
             if (identifiers['units'][0] !== undefined) {
@@ -489,8 +489,8 @@ export const helper = {
                         temp = identifiers['units'][0]['close_match'][0]
                     }
                 }
-                text = text + (text === '' ? '' : ' ') + (temp.length === 0 ? `[<span>${identifiers['units'][0]['label'][0]}</span>]` : `[<a href=${temp} class='underline' target="_blank">${identifiers['units'][0]['label'][0]}</a>]`)
-                links = links + (links === '' ? '' : ' ') + `<span class='text-black pt-2 block' target="_blank">${identifiers['units'][0]['label'][0]} (<a href=${temp} class='underline' target="_blank">${temp}</a>)</span>`
+                text = text + (text === '' ? '' : ' ') + (temp.length === 0 ? `[<span>${identifiers['units'][0]['label']}</span>]` : `[<a href=${temp} class='underline' target="_blank">${identifiers['units'][0]['label']}</a>]`)
+                links = links + (links === '' ? '' : ' ') + `<span class='text-black pt-2 block' target="_blank">${identifiers['units'][0]['label']} (<a href=${temp} class='underline' target="_blank">${temp}</a>)</span>`
             }
             return text
         }

@@ -41,7 +41,7 @@ const HasOutput: React.FC<HasOutput> = ({ has_output, label, components }) => {
         const number_of_columns = has_characteristic['number_rows'];
         const number_of_rows = has_characteristic['number_columns'];
         if (number_of_columns && number_of_rows) {
-            character = `Size: ${number_of_columns} x ${number_of_rows}`;
+            character = `${number_of_columns} x ${number_of_rows}`;
         }
     }
 
@@ -62,11 +62,14 @@ const HasOutput: React.FC<HasOutput> = ({ has_output, label, components }) => {
                 <URLOrText button={label ? '' : 'Output data'} color="#00b050" content={source_url} />
             )}
             {character && (
-                <URLOrText
-                    button={!label && !source_url ? 'Output data' : ''}
-                    color="#00b050"
-                    content={character}
-                />
+                <div className='flex'>
+                    {`Size: `}
+                    <URLOrText
+                        button={!label && !source_url ? 'Output data' : ''}
+                        color="#00b050"
+                        content={character}
+                    />
+                </div>
             )}
             {comment && (
                 <URLOrText

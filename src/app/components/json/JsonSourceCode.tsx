@@ -51,11 +51,11 @@ const JsonSourceCode: FC<JsonSourceCodeProps> = ({
     return (
         <div className="font-mono text-sm relative">
             <Button
-                className="absolute text-white !bg-[#8fbbe3] border border-gray-200 right-2 top-3 mr-1 mt-2 py-0 px-1 h-8"
+                className="absolute text-white !bg-[#8fbbe3] border border-gray-200 right-2 top-3 mr-1 mt-2 py-0 px-1 h-6"
                 onClick={copyToClipboard}
                 aria-label="Copy to clipboard"
             >
-                <Copy />
+                <Copy size={16}/>
             </Button>
             <div className="whitespace-pre-wrap w-full font-mono text-sm">
                 <CodeBlock code={showAllCode ? sourceCode : sourceCode.split('\n').slice(0, 5).join('\n')} />

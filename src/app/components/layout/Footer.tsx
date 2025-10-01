@@ -46,7 +46,7 @@ const Footer = () => {
             <div className="w-full px-4 mx-auto sm:px-6 md:px-8 lg:px-12 xl:max-w-screen-xl 2xl:max-w-screen-2xl">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                     <div>
-                        <h3 className="font-inter font-bold text-gray-800 text-lg mb-3 h-5"></h3>
+                        {/* <h3 className="font-inter font-bold text-gray-800 text-lg mb-3 h-5"></h3>
                         <div className="mb-4">
                             <span className="inline-block pr-5 relative">
                                 <Image
@@ -63,7 +63,7 @@ const Footer = () => {
                             <div className="relative text-[10px] -top-[10px] right-[22px] text-[#191e20] font-bold inline-block">
                                 TIB Knowledge L<span className="text-[#f08a4b]">oo</span>m
                             </div>
-                        </div>
+                        </div> */}
                     </div>
 
                     <div>
