@@ -23,7 +23,7 @@ const Navbar = () => {
     }
 
     return (
-        <nav className="h-[4rem] bg-[#fffcf7] border-b border-gray-200 w-full top-0 z-50 sticky">
+        <nav className="h-[4rem] border-b border-gray-200 w-full top-0 z-50 sticky bg-white">
             <div className="w-full px-4 mx-auto sm:px-6 md:px-8 lg:px-12 xl:max-w-screen-xl 2xl:max-w-screen-2xl">
                 <div className="flex items-center justify-between h-full">
                     <div className="flex items-center animate-fade-in">

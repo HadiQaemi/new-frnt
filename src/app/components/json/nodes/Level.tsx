@@ -32,7 +32,7 @@ const Level: React.FC<LevelProps> = ({ level, targets, components }) => {
     return (
         <>
             <div className="border-[#d9ebf7] border-l-[5px] border-t-[5px] border-l-[#d9ebf7] relative scrollbar-custom sm:overflow-visible overflow-auto rounded-tl-[10px]">
-                <div className={`bg-[#f7fafc] relative p-1 text-[12px] text-[#353839] pl-4 rounded-tl-[5px]`}>
+                <div className={`bg-[#f7fafc] relative p-1 text-[12px] text-[#353839] pl-4 rounded-tl-[5px] font-[700]`}>
                     Setup
                 </div>
                 <div className='p-2'>

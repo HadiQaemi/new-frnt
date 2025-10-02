@@ -9,7 +9,7 @@ const RootLayout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <div className="min-h-[calc(100vh-18.9rem)] flex flex-col bg-[#fffcf7] dark:text-black">
+    <div className="min-h-[calc(100vh-18.9rem)] flex flex-col dark:text-black">
       <main className="flex-grow">
         <Providers>{children}</Providers>
       </main>

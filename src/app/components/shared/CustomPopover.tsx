@@ -2,6 +2,9 @@ import React from 'react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { X, LucideIcon, University, MousePointer2 } from 'lucide-react';
+import ORCID from '../../../assets/images/ORCID_iD.svg';
+import Image from 'next/image';
+import { helper } from '@/app/utils/helper';
 
 interface CustomPopoverProps {
   id: string;
@@ -10,6 +13,7 @@ interface CustomPopoverProps {
   definition?: string;
   children?: React.ReactNode;
   affiliation?: any;
+  orcid?: string[];
   trigger: React.ReactElement;
   show?: boolean;
   onToggle: (show: boolean) => void;
@@ -27,6 +31,7 @@ const CustomPopover: React.FC<CustomPopoverProps> = ({
   trigger,
   show,
   affiliation,
+  orcid,
   onToggle,
   placement = 'bottom',
   icon: Icon,
@@ -61,8 +66,31 @@ const CustomPopover: React.FC<CustomPopoverProps> = ({
             </div>
           )}
           <div className="w-[100%]">
+            {orcid && orcid.map((id, index) => (
+              <a
+                href={id}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 break-all text-sm flex items-center"
+              >
+                {id.includes("https://orcid.org/") && (
+                  <Image
+                    src={ORCID}
+                    alt="ORCID Logo"
+                    width={24}
+                    height={24}
+                    className="object-contain mr-2"
+                  />
+                )}
+                <span>
+                  {helper.cleanString(id).replace('https://orcid.org/', '')}
+                </span>
+              </a>
+            ))}
+          </div>
+          <div className="w-[100%]">
             {affiliation && (
-              <span className="flex items-center">
+              <span className="flex items-center p-[4px]">
                 <University className="mr-2 h-4 w-4" />
                 <a
                   href={affiliation?.url}

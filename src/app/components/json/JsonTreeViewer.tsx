@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronDown, ChevronLeft, ChevronsDown, ChevronsRight, CircleChevronDown, CircleChevronLeft, CopyIcon, ExternalLink } from 'lucide-react';
+import { CircleChevronDown, CircleChevronLeft } from 'lucide-react';
 import { helper } from '@/app/utils/helper';
 import Label from './nodes/Label';
 import HasInput from './nodes/HasInput';
@@ -8,13 +8,12 @@ import IsImplementedBy from './IsImplementedBy';
 import Executes from './nodes/Executes';
 import Evaluates from './nodes/Evaluates';
 import Level from './nodes/Level';
-import Link from 'next/link';
 import { useToast } from '@/components/ui/use-toast';
 import { debounce } from 'lodash';
 import AddToCartButton from '../cart/AddToCartButton';
 import { getTypeFromStorage } from './utils/storage';
 import { TreeNodeProps, TypeInfo } from './types';
-import { REBORN_API_URL, REBORN_URL } from '@/app/lib/config/constants';
+import { REBORN_API_URL } from '@/app/lib/config/constants';
 import { nanoid } from 'nanoid';
 import { useRouter } from 'next/navigation'
 
@@ -35,10 +34,11 @@ const LoadingSpinner = () => (
 
 const TreeNode: React.FC<TreeNodeProps> = ({
   data,
-  handleTreeViewerClick,
   parentOpen = false,
   onConceptSelect,
   onAuthorSelect,
+  open,
+  onOpenChange,
   statement,
   article,
   statementDetails,
@@ -107,12 +107,12 @@ const TreeNode: React.FC<TreeNodeProps> = ({
   }, [data]);
 
   const toggleNode = async () => {
-    // handleTreeViewerClick()
     try {
       const response = await fetch(`${REBORN_API_URL}/articles/get_statement_by_id/?id=${statement.statement_id}`);
       if (!response.ok) {
         throw new Error(`Error fetching statement: ${response.status}`);
       }
+      onOpenChange?.(statement.statement_id)
       const data = await response.json();
       setDetails(data);
     } catch (error) {
@@ -128,35 +128,13 @@ const TreeNode: React.FC<TreeNodeProps> = ({
   };
 
   const hasChildren = data && typeof data === 'object';
-  const paddingLeft = level > 1 ? `${(level - 1) * 5}rem` : '1.25rem';
 
   if (!data) return null;
-  let evaluates_evaluates_for = 0
-  let level_targets = 0
 
   const { toast } = useToast();
-  const copyToClipboard = (rawText: any) => {
-    const formattedText = rawText;
-
-    navigator.clipboard.writeText(formattedText)
-      .then(() =>
-        toast({
-          title: "Success!",
-          description: "Address copied to clipboard!",
-          className: "bg-green-100",
-        })
-      )
-      .catch(() =>
-        toast({
-          title: "Error!",
-          description: "Failed to copy",
-          className: "bg-red-100",
-        })
-      );
-  };
 
   return (
-    <div className="relative w-full">
+    <>
       {typeInfo && hasChildren && color && (
         <span className={`bg-[#5b9bd5] absolute -top-[18px] -left-[18px] p-1 text-[12px] text-white pl-4`}>
           {helper.capitalizeFirstLetter(helper.cleanFirstLetter(statement.type.name))}
@@ -213,132 +191,130 @@ const TreeNode: React.FC<TreeNodeProps> = ({
           )}
 
           {details !== null && isOpen && (
-            <div className={`transition-all duration-300 ${isOpen || parentOpen ? 'max-h-full opacity-100' : 'max-h-0 opacity-0'}`}>
-              <div className="pl-4">
-                <div className="d-flex pr-0 mb-4 border-[#5b9ed9] border-l-[5px] border-t-[5px] border-l-[#5b9ed9] rounded-tl-[10px]">
-                  <div className={`bg-[#f7fafc] p-1 pl-2 text-[#353839] text-[12px] rounded-tl-[10px] font-[700]`}>
-                    Data Analysis
-                  </div>
-                  <div className='p-2 pr-0'>
-                    {
-                      details.data_type.map((data_type: {
-                        type: {
-                          name: string;
-                          properties: string[]
-                        };
-                        has_part: any;
-                        components: any;
-                        is_implemented_by: any;
-                      }) => {
-                        let evaluates = true
-                        let level_targets = true
-                        let turn = 1
-                        return (
-                          <span key={`data-type-${data_type.type.name}-${nanoid()}`}>
-                            <div className="d-flex mb-4 border-[#71b4ef] border-l-[5px] border-t-[5px] border-l-[#71b4ef] rounded-tl-[10px]">
-                              <div className='bg-[#f7fafc] text-[#353839] relative p-1 text-[12px] pl-4 rounded-tl-[10px]'>
-                                {helper.capitalizeFirstLetter(helper.cleanFirstLetter(data_type.type.name))}
-                              </div>
-                              <div className='p-2 pr-0'>
-                                {data_type.type.properties?.map((type, index) => {
-                                  if (data_type.has_part[type] && data_type.has_part[type].length) {
-                                    turn += 1
-                                  }
-                                  return (
-                                    <div key={`property-${type}-${nanoid()}`}>
-                                      {type === 'has_input' ? (
-                                        <div className={`mx-0 ${turn > 1 ? 'pt-4' : ``}`} key={`has_input-all-${nanoid()}`}>
-                                          <div key={`has_input-parent-${nanoid()}`} className="border-[#d9ebf7] border-l-[5px] border-t-[5px] border-l-[#d9ebf7] relative scrollbar-custom sm:overflow-visible overflow-auto rounded-tl-[10px]">
-                                            <div className={`bg-[#f7fafc] relative p-1 text-[12px] text-[#353839] pl-4 rounded-tl-[5px]`}>
-                                              Input data
-                                            </div>
-                                            {data_type.has_part[type]?.map((input: any) => (
-                                              <div
-                                                key={`entry-${input.label}-${nanoid()}`}
-                                                className="d-flex p-2"
-                                              >
-                                                <HasInput has_input={input} label={input.label} key={`has_input-${input.label}-${nanoid()}`} components={data_type.components} />
-                                              </div>
-                                            ))}
-                                          </div>
-                                        </div>
-                                      ) : type === 'has_output' ? (
-                                        <div className={`mx-0 ${turn > 1 ? 'pt-4' : ``}`} key={`has_output-all-${nanoid()}`}>
-                                          <div key={`has_output-parent-${nanoid()}`} className="border-[#d9ebf7] border-l-[5px] border-t-[5px] border-l-[#d9ebf7] relative scrollbar-custom sm:overflow-visible overflow-auto rounded-tl-[10px]">
-                                            <div className={`bg-[#f7fafc] relative p-1 text-[12px] text-[#353839] pl-4 rounded-tl-[5px]`}>
-                                              Output data
-                                            </div>
-                                            {data_type.has_part[type]?.map((input: any) => (
-                                              <div
-                                                key={`entry-${input.label}-${nanoid()}`}
-                                                className="d-flex p-2"
-                                              >
-                                                <HasOutput has_output={input} label={input.label} key={`has_input-${input.label}-${nanoid()}`} components={data_type.components} />
-                                              </div>
-                                            ))}
-                                          </div>
-                                        </div>
-                                      ) : type === 'executes' ? (
-                                        data_type.has_part[type] !== undefined && data_type.has_part[type][0] !== undefined && (
-                                          <div className={`mx-0 ${turn > 1 ? `` : ``}`} key={`has_output-all-${nanoid()}`}>
-                                            <Executes executes={data_type.has_part[type][0]} key={`executes-${type}-${nanoid()}`} />
-                                          </div>
-                                        )
-                                      ) : (type === 'evaluates' || type === 'evaluates_for') ? (
-                                        (() => {
-                                          if (evaluates) {
-                                            evaluates = false
-                                            return (data_type.has_part[type] && (
-                                              <div className={`mx-0 ${turn > 1 ? 'pt-4' : ``}`} key={`has_output-all-${nanoid()}`}>
-                                                <Evaluates evaluates={data_type.has_part['evaluates']} evaluates_for={data_type.has_part['evaluates_for']} key={`evaluates-${type}-${nanoid()}`} />
-                                              </div>
-                                            ))
-                                          }
-                                        })()
-                                      ) : (type === 'level' || type === 'targets') ? (
-                                        (() => {
-                                          if (level_targets) {
-                                            level_targets = false
-                                            return (data_type.has_part[type] && (
-                                              // <Evaluates evaluates={data_type.has_part['evaluates']} evaluates_for={data_type.has_part['evaluates_for']} key={`evaluates-${type}`} />
-                                              <div className={`mx-0 ${turn > 1 ? 'pt-4' : ``}`} key={`has_output-all-${nanoid()}`}>
-                                                <Level key={`targets-${type}-${nanoid()}`} level={data_type.has_part['level']} targets={data_type.has_part['targets']} components={data_type.components} />
-                                              </div>
-                                            ))
-                                          }
-                                        })()
-                                      ) : type === 'label' ? (
-                                        (() => {
-                                          if (data_type.has_part[type].length) {
-                                            return <h5 className="group cursor-default text-[#353839] text-[18px] leading-tight mb-2 pb-2 font-medium flex items-center gap-2">
-                                              <span className="flex-1 cursor-pointer">{data_type.has_part[type]}</span>
-                                            </h5>
-                                          }
-                                        })()
-                                      ) : (
-                                        // <>{type}{JSON.stringify(data_type.has_part[type])}</>
-                                        <></>
-                                      )}
-                                    </div>
-                                  )
-                                })}
-                              </div>
+            <div className={`pl-4 transition-all duration-300 ${isOpen || parentOpen ? 'max-h-full opacity-100' : 'max-h-0 opacity-0'}`}>
+              <div className="d-flex pr-0 mb-4 border-[#5b9ed9] border-l-[5px] border-t-[5px] border-l-[#5b9ed9] rounded-tl-[10px]">
+                <div className={`bg-[#f7fafc] p-1 pl-2 text-[#353839] text-[12px] rounded-tl-[10px] font-[700]`}>
+                  Data Analysis
+                </div>
+                <div className='p-2 pr-0'>
+                  {
+                    details.data_type.map((data_type: {
+                      type: {
+                        name: string;
+                        properties: string[]
+                      };
+                      has_part: any;
+                      components: any;
+                      is_implemented_by: any;
+                    }) => {
+                      let evaluates = true
+                      let level_targets = true
+                      let turn = 1
+                      return (
+                        <span key={`data-type-${data_type.type.name}-${nanoid()}`}>
+                          <div className="d-flex mb-4 border-[#71b4ef] border-l-[5px] border-t-[5px] border-l-[#71b4ef] rounded-tl-[10px]">
+                            <div className='bg-[#f7fafc] text-[#353839] relative p-1 text-[12px] pl-4 rounded-tl-[10px] font-[700]'>
+                              {helper.capitalizeFirstLetter(helper.cleanFirstLetter(data_type.type.name))}
                             </div>
-                          </span>
-                        )
-                      })
-                    }
-                    {details.data_type[0] && details.data_type[0].is_implemented_by && details.data_type[0].is_implemented_by.map((implement: any) => {
-                      return <IsImplementedBy data={implement} key={`is_implemented_by-${level}-${nanoid()}`} />
-                    })}
-                  </div>
+                            <div className='p-2 pr-0'>
+                              {data_type.type.properties?.map((type) => {
+                                if (data_type.has_part[type] && data_type.has_part[type].length) {
+                                  turn += 1
+                                }
+                                return (
+                                  <div key={`property-${type}-${nanoid()}`}>
+                                    {type === 'has_input' ? (
+                                      <div className={`mx-0 ${turn > 1 ? 'pt-4' : ``}`} key={`has_input-all-${nanoid()}`}>
+                                        <div key={`has_input-parent-${nanoid()}`} className="border-[#d9ebf7] border-l-[5px] border-t-[5px] border-l-[#d9ebf7] relative scrollbar-custom sm:overflow-visible overflow-auto rounded-tl-[10px]">
+                                          <div className={`bg-[#f7fafc] relative p-1 text-[12px] text-[#353839] pl-4 rounded-tl-[5px] font-[700]`}>
+                                            Input data
+                                          </div>
+                                          {data_type.has_part[type]?.map((input: any) => (
+                                            <div
+                                              key={`entry-${input.label}-${nanoid()}`}
+                                              className="d-flex p-2"
+                                            >
+                                              <HasInput has_input={input} label={input.label} key={`has_input-${input.label}-${nanoid()}`} components={data_type.components} />
+                                            </div>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    ) : type === 'has_output' ? (
+                                      <div className={`mx-0 ${turn > 1 ? 'pt-4' : ``}`} key={`has_output-all-${nanoid()}`}>
+                                        <div key={`has_output-parent-${nanoid()}`} className="border-[#d9ebf7] border-l-[5px] border-t-[5px] border-l-[#d9ebf7] relative scrollbar-custom sm:overflow-visible overflow-auto rounded-tl-[10px]">
+                                          <div className={`bg-[#f7fafc] relative p-1 text-[12px] text-[#353839] pl-4 rounded-tl-[5px] font-[700]`}>
+                                            Output data
+                                          </div>
+                                          {data_type.has_part[type]?.map((input: any) => (
+                                            <div
+                                              key={`entry-${input.label}-${nanoid()}`}
+                                              className="d-flex p-2"
+                                            >
+                                              <HasOutput has_output={input} label={input.label} key={`has_input-${input.label}-${nanoid()}`} components={data_type.components} />
+                                            </div>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    ) : type === 'executes' ? (
+                                      data_type.has_part[type] !== undefined && data_type.has_part[type][0] !== undefined && (
+                                        <div className={`mx-0 ${turn > 1 ? `` : ``}`} key={`has_output-all-${nanoid()}`}>
+                                          <Executes executes={data_type.has_part[type][0]} key={`executes-${type}-${nanoid()}`} />
+                                        </div>
+                                      )
+                                    ) : (type === 'evaluates' || type === 'evaluates_for') ? (
+                                      (() => {
+                                        if (evaluates) {
+                                          evaluates = false
+                                          return (data_type.has_part[type] && (
+                                            <div className={`mx-0 ${turn > 1 ? 'pt-4' : ``}`} key={`has_output-all-${nanoid()}`}>
+                                              <Evaluates evaluates={data_type.has_part['evaluates']} evaluates_for={data_type.has_part['evaluates_for']} key={`evaluates-${type}-${nanoid()}`} />
+                                            </div>
+                                          ))
+                                        }
+                                      })()
+                                    ) : (type === 'level' || type === 'targets') ? (
+                                      (() => {
+                                        if (level_targets) {
+                                          level_targets = false
+                                          return (data_type.has_part[type] && (
+                                            // <Evaluates evaluates={data_type.has_part['evaluates']} evaluates_for={data_type.has_part['evaluates_for']} key={`evaluates-${type}`} />
+                                            <div className={`mx-0 ${turn > 1 ? 'pt-4' : ``}`} key={`has_output-all-${nanoid()}`}>
+                                              <Level key={`targets-${type}-${nanoid()}`} level={data_type.has_part['level']} targets={data_type.has_part['targets']} components={data_type.components} />
+                                            </div>
+                                          ))
+                                        }
+                                      })()
+                                    ) : type === 'label' ? (
+                                      (() => {
+                                        if (data_type.has_part[type].length) {
+                                          return <h5 className="group cursor-default text-[#353839] text-[18px] leading-tight mb-2 pb-2 font-medium flex items-center gap-2">
+                                            <span className="flex-1 cursor-pointer">{data_type.has_part[type]}</span>
+                                          </h5>
+                                        }
+                                      })()
+                                    ) : (
+                                      // <>{type}{JSON.stringify(data_type.has_part[type])}</>
+                                      <></>
+                                    )}
+                                  </div>
+                                )
+                              })}
+                            </div>
+                          </div>
+                        </span>
+                      )
+                    })
+                  }
+                  {details.data_type[0] && details.data_type[0].is_implemented_by && details.data_type[0].is_implemented_by.map((implement: any) => {
+                    return <IsImplementedBy data={implement} key={`is_implemented_by-${level}-${nanoid()}`} />
+                  })}
                 </div>
               </div>
             </div>
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
@@ -348,6 +324,8 @@ interface JsonTreeViewerProps {
   handleTreeViewerClick?: any;
   onConceptSelect?: (concept: string) => void;
   onAuthorSelect?: (author: string) => void;
+  open?: string;
+  onOpenChange?: (open: string) => void;
   single?: boolean;
   statement?: any;
   article?: any;
@@ -359,6 +337,8 @@ const JsonTreeViewer: React.FC<JsonTreeViewerProps> = ({
   handleTreeViewerClick,
   onConceptSelect,
   onAuthorSelect,
+  open,
+  onOpenChange,
   parentOpen = false,
   statement = null,
   article = null,
@@ -369,6 +349,8 @@ const JsonTreeViewer: React.FC<JsonTreeViewerProps> = ({
       parentOpen={parentOpen}
       data={jsonData}
       statement={statement}
+      open={open}
+      onOpenChange={onOpenChange}
       article={article}
       statementDetails={statementDetails}
       onConceptSelect={onConceptSelect}

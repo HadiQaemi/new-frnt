@@ -1,8 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { getTypeFromStorage } from '../components/json/utils/storage';
 import { getStatementServer } from '../lib/api/server-side';
-import { getStatement } from '../lib/api/statements';
 
 export interface Author {
     id: string;

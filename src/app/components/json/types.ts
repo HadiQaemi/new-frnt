@@ -11,6 +11,8 @@ export interface TreeNodeProps {
   parentOpen?: boolean;
   onConceptSelect?: (concept: string) => void;
   onAuthorSelect?: (author: string) => void;
+  open?: string;
+  onOpenChange?: (open: string) => void;
   statement?: any;
   article?: any;
   statementDetails?: any;

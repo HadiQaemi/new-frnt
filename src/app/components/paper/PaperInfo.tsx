@@ -1,4 +1,4 @@
-import { Menu, BookOpenText, Calendar, User, CopyIcon, BookText, Scan, GraduationCap, MousePointer2, Dot } from 'lucide-react'
+import { BookOpenText, Calendar, User, CopyIcon, Scan, GraduationCap, MousePointer2, Dot } from 'lucide-react'
 import CustomPopover from '../shared/CustomPopover'
 import { usePopoverManager } from '@/app/hooks/usePopoverManager'
 import TruncatedAbstract from './TruncatedAbstract'
@@ -30,16 +30,6 @@ interface Conference {
   type: 'conference'
 }
 
-interface Paper {
-  name: string
-  datePublished: string
-  paper_type: 'journal' | 'conference'
-  journal?: Journal
-  conference?: Conference
-  research_field: ResearchField
-  authors: Author[]
-  identifier: string
-}
 
 interface PaperInfoProps {
   paper: any
@@ -60,7 +50,6 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
       identifiers = [identifiers]
     return (
       <>
-        {identifiers && <div className="mt-2">See also</div>}
         {identifiers && identifiers.map((id, index) => (
           <div key={index} className="mb-1 py-0 px-3">
             <a
@@ -161,7 +150,7 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
     <div>
       <div ref={containerRef} className='bg-white border-[#1e3a5f] border-t-[5px] rounded-tl-[10px] rounded-tr-[10px]'>
         <div className="bg-[#f7fafc] p-2 pl-4 text-[#353839] font-[700] text-sm">
-          Loom Records
+          Loom Record
         </div>
         <div className="p-4">
           <div className="grid grid-cols-1">
@@ -188,6 +177,9 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
                     subTitle="Show content for "
                     title={`${author.name}`}
                     affiliation={author.affiliation}
+                    orcid={author.orcid && !author.orcid.startsWith('#')
+                      ? [author.orcid]
+                      : []}
                     show={activePopover === `${author.name}`}
                     onToggle={(show) => handlePopoverToggle(`${author.name}`, show)}
                     onSelect={() => onAuthorSelect(author)}
@@ -205,11 +197,7 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
                       </span>
                     }
                   >
-                    {renderIdentifiersList(
-                      author.orcid && !author.orcid.startsWith('#')
-                        ? [author.orcid]
-                        : []
-                    )}
+                    {renderIdentifiersList([])}
                   </CustomPopover>
                 ))}
               </span>

@@ -565,7 +565,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
 
     return (
         <div>
-            <form onSubmit={handleSubmit} className="bg-white border-[#1e3a5f] border-t-[5px] rounded-tl-[10px] rounded-tr-[10px]">
+            <form onSubmit={handleSubmit} className="bg-white border-[#1e3a5f] border-t-[5px] rounded-tl-[10px] rounded-tr-[10px] rounded-[10px] shadow-[0_0_8px_0_rgba(0,0,0,0.13)]">
                 <div className="bg-[#f7fafc] p-2 pl-4 text-[#353839] font-[700] text-sm">
                     Search
                 </div>
@@ -659,22 +659,22 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                                     <option value="">--Type of Resource--</option>
                                     <option value="all" className="py-2">
                                         {resourceType === "all" ?
-                                            "All ✓" :
+                                            "All" :
                                             "All"}
                                     </option>
                                     <option value="loom" className="py-2">
                                         {resourceType === "loom" ?
-                                            "Loom ✓" :
+                                            "Loom" :
                                             "Loom"}
                                     </option>
                                     <option value="article" className="py-2">
                                         {resourceType === "article" ?
-                                            "Article ✓" :
+                                            "Article" :
                                             "Article"}
                                     </option>
                                     <option value="dataset" className="py-2">
                                         {resourceType === "dataset" ?
-                                            "Dataset ✓" :
+                                            "Dataset" :
                                             "Dataset"}
                                     </option>
                                 </select>
@@ -689,17 +689,17 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                                     <option value="">--Type of Search--</option>
                                     <option value="keyword" className="py-2">
                                         {searchType === "keyword" ?
-                                            "Keyword based ✓" :
+                                            "Keyword based" :
                                             "Keyword based"}
                                     </option>
                                     <option value="semantic" className="py-2">
                                         {searchType === "semantic" ?
-                                            "Semantic search ✓" :
+                                            "Semantic search" :
                                             "Semantic search"}
                                     </option>
                                     <option value="hybrid" className="py-2">
                                         {searchType === "hybrid" ?
-                                            "Hybrid ✓" :
+                                            "Hybrid" :
                                             "Hybrid"}
                                     </option>
                                 </select>
@@ -713,13 +713,13 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                                 >
                                     <option value="alphabet" className="py-2">
                                         {sortBy === "alphabet" ?
-                                            "Alphabetical ✓" :
-                                            "Alphabetical "}
+                                            "Alphabetical" :
+                                            "Alphabetical"}
                                     </option>
                                     <option value="time" className="py-2">
                                         {sortBy === "time" ?
-                                            "Chronological ✓" :
-                                            "Chronological "}
+                                            "Chronological" :
+                                            "Chronological"}
                                     </option>
                                 </select>
                                 <select
@@ -729,13 +729,13 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                                 >
                                     <option value="ASC" className="py-2">
                                         {sortOrder === "ASC" ?
-                                            "Ascending ✓" :
-                                            "Ascending "}
+                                            "Ascending" :
+                                            "Ascending"}
                                     </option>
                                     <option value="DESC" className="py-2">
                                         {sortOrder === "DESC" ?
-                                            "Descending ✓" :
-                                            "Descending "}
+                                            "Descending" :
+                                            "Descending"}
                                     </option>
                                 </select>
                             </div>
@@ -748,7 +748,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                         aria-expanded={showMore}
                         className="m-1 inline-flex items-center gap-2 text-[#1e3a5f] underline"
                     >
-                        {showMore ? "Show less" : "Show more..."}
+                        {showMore ? "Show less" : "Show more"}
                     </button>
 
                     {submitError && (

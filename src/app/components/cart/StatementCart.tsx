@@ -6,8 +6,6 @@ import { useCartStore } from '@/app/stores/cartStore';
 import { useToast } from '@/components/ui/use-toast';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
-import { getTypeFromStorage, saveTypeToStorage } from '../json/utils/storage';
-import { TypeInfo } from '../json/types';
 import { helper } from '@/app/utils/helper';
 import { REBORN_URL } from '@/app/lib/config/constants';
 
