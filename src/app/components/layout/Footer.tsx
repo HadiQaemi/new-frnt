@@ -42,7 +42,7 @@ const Footer = () => {
     };
 
     return (
-        <footer className="pt-6 pb-4 border-t border-gray-200 min-h-[15.1rem]">
+        <footer className="pt-6 pb-4 border-t border-gray-200 min-h-[15.1rem] bg-[#1e3a5f]">
             <div className="w-full px-4 mx-auto sm:px-6 md:px-8 lg:px-12 xl:max-w-screen-xl 2xl:max-w-screen-2xl">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                     <div>
@@ -67,11 +67,11 @@ const Footer = () => {
                     </div>
 
                     <div>
-                        <h3 className="font-inter font-bold text-gray-800 text-lg mb-3">{footerSections.about.title}</h3>
+                        <h3 className="font-inter font-bold text-[#FDF6EC] text-lg mb-3">{footerSections.about.title}</h3>
                         <ul>
                             {footerSections.about.links.map((link) => (
                                 <li key={link.href}>
-                                    <Link href={link.href} className="font-[400] text-md leading-7 hover:text-gray-900">
+                                    <Link href={link.href} className="font-[400] text-md leading-7 text-[#FDF6EC]">
                                         {link.text}
                                     </Link>
                                 </li>
@@ -80,11 +80,11 @@ const Footer = () => {
                     </div>
 
                     <div>
-                        <h3 className="font-inter font-bold text-gray-800 text-lg mb-3">{footerSections.technical.title}</h3>
+                        <h3 className="font-inter font-bold text-[#FDF6EC] text-lg mb-3">{footerSections.technical.title}</h3>
                         <ul>
                             {footerSections.technical.links.map((link) => (
                                 <li key={link.href}>
-                                    <Link href={link.href} className="font-[400] text-md leading-7 hover:text-gray-900">
+                                    <Link href={link.href} className="font-[400] text-md leading-7 text-[#FDF6EC]">
                                         {link.text}
                                     </Link>
                                 </li>
@@ -93,18 +93,18 @@ const Footer = () => {
                     </div>
 
                     <div>
-                        <h3 className="font-inter font-bold text-gray-800 text-lg mb-3">{footerSections.more.title}</h3>
+                        <h3 className="font-inter font-bold text-[#FDF6EC] text-lg mb-3">{footerSections.more.title}</h3>
                         <ul>
                             {footerSections.more.links.map((link) => (
                                 <li key={link.href}>
-                                    <Link href={link.href} className="font-[400] text-md leading-7 hover:text-gray-900">
+                                    <Link href={link.href} className="font-[400] text-md leading-7 text-[#FDF6EC]">
                                         {link.text}
                                     </Link>
                                 </li>
                             ))}
                         </ul>
                         <div className="font-[400] text-md leading-7">
-                            <span>Version </span>
+                            <span className='text-[#FDF6EC]'>Version </span>
                             <span className="bg-gray-200 px-2 py-1 rounded">0.001.1</span>
                         </div>
                     </div>

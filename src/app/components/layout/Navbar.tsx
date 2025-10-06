@@ -4,11 +4,21 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import NavbarSkeleton from '../shared/Loading/NavbarSkeleton';
-import OrkgLogo from '../../../assets/images/logo.svg';
+import { usePathname } from "next/navigation";
 
 const Navbar = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+    const pathname = usePathname();
+
+    const navLinks = [
+        { href: "/", label: "Search" },
+        { href: "/pages/submit", label: "Submit" },
+        { href: "/pages/help", label: "Help" },
+        { href: "/pages/about", label: "About" },
+        { href: "/pages/contact-us", label: "Contact" },
+    ];
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -23,40 +33,40 @@ const Navbar = () => {
     }
 
     return (
-        <nav className="h-[4rem] border-b border-gray-200 w-full top-0 z-50 sticky bg-white">
+        <nav className="h-[5rem] border-b border-gray-200 w-full top-0 z-50 sticky bg-[#eca400]">
             <div className="w-full px-4 mx-auto sm:px-6 md:px-8 lg:px-12 xl:max-w-screen-xl 2xl:max-w-screen-2xl">
-                <div className="flex items-center justify-between h-full">
+                <div className="flex items-center justify-between h-full pt-[20px]">
                     <div className="flex items-center animate-fade-in">
                         <Link href="/" className="items-center relative">
-                            <Image
+                            {/* <Image
                                 src={OrkgLogo}
                                 alt="ORKG Logo"
                                 width={50}
                                 height={32}
                                 className="object-contain pt-1"
-                            />
-                            <div className="relative -top-[45px] left-[55px] text-[#191e20] text-md font-bold">
-                                <div>TIB Knowledge L<span className="text-[#f08a4b]">oo</span>m</div>
-                                <div className='text-[10px] text-[#555] font-semibold'>Weaving Knowledge Threads</div>
+                            /> */}
+                            {/* <div className="relative -top-[45px] left-[55px] text-[#191e20] text-md font-bold"> */}
+                            <div className="relative text-[#191e20]">
+                                <div className='p-0 m-0 text-xl font-bold'>TIB Knowledge L<span className="text-[#FDF6EC]">oo</span>m</div>
+                                <div className='p-0 m-0 text-[10px] text-[#555] font-semibold'>Weaving Knowledge Threads</div>
                             </div>
                         </Link>
                     </div>
                     <div className="hidden md:flex items-center space-x-8 animate-fade-in">
-                        <Link href="/" className="text-[#353839]">
-                            Search
-                        </Link>
-                        <Link href="/pages/submit" className="text-[#353839]">
-                            Submit
-                        </Link>
-                        <Link href="/pages/help" className="text-[#353839]">
-                            Help
-                        </Link>
-                        <Link href="/pages/about" className="text-[#353839]">
-                            About
-                        </Link>
-                        <Link href="/pages/contact-us" className="text-[#353839]">
-                            Contact
-                        </Link>
+                        {navLinks.map(({ href, label }) => {
+                            const isActive = pathname === href || pathname.startsWith(href + "/");
+
+                            return (
+                                <Link
+                                    key={href}
+                                    href={href}
+                                    className={`font-semibold text-[#FDF6EC] pb-1 transition-all ${isActive ? "border-b-2 border-[#FDF6EC]" : "border-b-2 border-transparent"
+                                        } hover:border-b-2 hover:border-[#FDF6EC]`}
+                                >
+                                    {label}
+                                </Link>
+                            );
+                        })}
                     </div>
 
                     <div className="md:hidden animate-fade-in">

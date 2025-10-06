@@ -245,71 +245,67 @@ export default function ListStatements({ data, statements, statementId = null, i
                 </CardContent>
             </Card>
             <div className={`max-h-[calc(100vh-2rem)] overflow-y-visible md:col-span-1 sticky top-5 sticky ${activeHeader !== null ? 'top-[calc(9rem)]' : 'top-[calc(5rem)]'} transition-[top] duration-300 ease-in-out ${isSidebarOpen ? '' : ''}`}>
-                <Card>
-                    <CardContent>
-                        <div className={`p-0 max-h-[85vh] text-[#353839] border-t-[5px] rounded-[10px] shadow-[0_0_8px_0_rgba(0,0,0,0.13)] ${data.basises[0].publication_issue.type === "Article"
-                            ? "border-[#ffb703]"
-                            : "border-[#f08a4b]"
-                            }`} key={`article-${nanoid()}`}>
-                            <div className='bg-[#FDF6EB] p-2 pl-4 text-[#353839] font-[700] text-sm'>
-                                Source {data.basises[0].publication_issue.type}
+                <div className={`p-0 max-h-[85vh] text-[#353839] border-t-[5px] rounded-[10px] shadow-[0_0_8px_0_rgba(0,0,0,0.13)] ${data.basises[0].publication_issue.type === "Article"
+                    ? "border-[#ffb703]"
+                    : "border-[#f08a4b]"
+                    }`} key={`article-${nanoid()}`}>
+                    <div className='bg-[#FDF6EB] p-2 pl-4 text-[#353839] font-[700] text-sm'>
+                        Source {data.basises[0].publication_issue.type}
+                    </div>
+                    {data.basises.map((item: any) => {
+                        return (
+                            <div key={`basis-${nanoid()}`} className='p-4 pt-2'>
+                                <div className="grid grid-cols-1">
+                                    <h6 className="leading-tight mb-2 font-medium">
+                                        {item.name}
+                                    </h6>
+                                    <h6 className="leading-tight mb-2 font-medium">
+                                        <Calendar className="me-1 inline underline" size={16} />
+                                        <span className='text-xs mr-2'>{item.publication_issue.date_published}</span>
+                                        <User className="me-1 inline" size={16} />
+                                        {item.authors.map((author: any, index: any) => (
+                                            <span key={`author-${nanoid()}`} className={`badge overlay-trigger text-xs ${(item.authors.length == index + 1) && 'mr-2'}`}>
+                                                {`${author.name}`}{(item.authors.length != index + 1) && <Dot size={16} className='inline mx-0' />} {` `}
+                                            </span>
+                                        ))}
+                                        {item && (
+                                            <span className="badge cursor-pointer overlay-trigger underline mr-2 text-xs inline-block">
+                                                <BookText className="me-1 inline" size={16} />
+                                                <a href={item.publication_issue.periodical_url} target="_blank" rel="noopener noreferrer" className="underline text-xs inline mr-1">
+                                                    {item.publication_issue.periodical}
+                                                </a>
+                                                {item.publication_issue.periodical_url && item.publication_issue.publisher_name && (
+                                                    <Dot size={16} className='inline mx-0' />
+                                                )}
+                                                <a href={item.publication_issue.publisher_url} target="_blank" rel="noopener noreferrer" className="underline text-xs inline mr-1">
+                                                    {item.publication_issue.publisher_name}
+                                                </a>
+                                            </span>
+                                        )}
+                                        {helper.validURL(item.id) && (
+                                            <>
+                                                <MousePointer2 size={16} className='inline mr-1 transform scale-x-[-1]' />
+                                                <a href={item.id} className={`text-shadow-custom text-blue-500 underline text-xs inline`}>{item.id}</a>
+                                                <span className={`text-shadow-custom px-1.5 py-1 inline`}>
+                                                    <CopyIcon
+                                                        size={16}
+                                                        onClick={() => copyToClipboard(item.id)}
+                                                        className="h-4 w-4 cursor-pointer text-xs inline"
+                                                    />
+                                                </span>
+                                            </>
+                                        )}
+                                    </h6>
+                                </div>
+
+                                <div className='my-4 max-h-[60vh] overflow-y-auto text-sm text-justify pr-2'>
+                                    {item && <TruncatedAbstract text={item.abstract} />}
+                                </div>
+
                             </div>
-                            {data.basises.map((item: any) => {
-                                return (
-                                    <div key={`basis-${nanoid()}`} className='p-4 pt-2'>
-                                        <div className="grid grid-cols-1">
-                                            <h6 className="leading-tight mb-2 font-medium">
-                                                {item.name}
-                                            </h6>
-                                            <h6 className="leading-tight mb-2 font-medium">
-                                                <Calendar className="me-1 inline underline" size={16} />
-                                                <span className='text-xs mr-2'>{item.publication_issue.date_published}</span>
-                                                <User className="me-1 inline" size={16} />
-                                                {item.authors.map((author: any, index: any) => (
-                                                    <span key={`author-${nanoid()}`} className={`badge overlay-trigger text-xs ${(item.authors.length == index + 1) && 'mr-2'}`}>
-                                                        {`${author.name}`}{(item.authors.length != index + 1) && <Dot size={16} className='inline mx-0' />} {` `}
-                                                    </span>
-                                                ))}
-                                                {item && (
-                                                    <span className="badge cursor-pointer overlay-trigger underline mr-2 text-xs inline-block">
-                                                        <BookText className="me-1 inline" size={16} />
-                                                        <a href={item.publication_issue.periodical_url} target="_blank" rel="noopener noreferrer" className="underline text-xs inline mr-1">
-                                                            {item.publication_issue.periodical}
-                                                        </a>
-                                                        {item.publication_issue.periodical_url && item.publication_issue.publisher_name && (
-                                                            <Dot size={16} className='inline mx-0' />
-                                                        )}
-                                                        <a href={item.publication_issue.publisher_url} target="_blank" rel="noopener noreferrer" className="underline text-xs inline mr-1">
-                                                            {item.publication_issue.publisher_name}
-                                                        </a>
-                                                    </span>
-                                                )}
-                                                {helper.validURL(item.id) && (
-                                                    <>
-                                                        <MousePointer2 size={16} className='inline mr-1 transform scale-x-[-1]' />
-                                                        <a href={item.id} className={`text-shadow-custom text-blue-500 underline text-xs inline`}>{item.id}</a>
-                                                        <span className={`text-shadow-custom px-1.5 py-1 inline`}>
-                                                            <CopyIcon
-                                                                size={16}
-                                                                onClick={() => copyToClipboard(item.id)}
-                                                                className="h-4 w-4 cursor-pointer text-xs inline"
-                                                            />
-                                                        </span>
-                                                    </>
-                                                )}
-                                            </h6>
-                                        </div>
-
-                                        <div className='my-4 max-h-[60vh] overflow-y-auto text-sm text-justify pr-2'>
-                                            {item && <TruncatedAbstract text={item.abstract} />}
-                                        </div>
-
-                                    </div>
-                                )
-                            })}
-                        </div>
-                    </CardContent>
-                </Card>
+                        )
+                    })}
+                </div>
             </div>
         </div>
     );

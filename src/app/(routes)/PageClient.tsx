@@ -87,7 +87,7 @@ export default function PageClient({ initialParams }: { initialParams: InitialPa
 
 
   return (
-    <div className="min-h-[calc(100vh-19.1rem)] flex flex-col">
+    <div className="min-h-[calc(100vh-19.1rem)] flex flex-col pt-[10px]">
       <div className="flex-grow">
         <motion.div
           className="w-full mx-auto sm:px-6 md:px-8 lg:px-12 xl:max-w-screen-xl 2xl:max-w-screen-2xl px-4 pt-[20px]"
