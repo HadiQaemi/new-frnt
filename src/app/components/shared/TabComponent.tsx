@@ -210,21 +210,6 @@ const TabComponent: React.FC<TabComponentProps> = ({
         }
     };
 
-    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-        debouncedSearch(e.target.value);
-    };
-
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            debouncedSearch.cancel();
-            setPagination(prev => ({ ...prev, currentPage: 1 }));
-            setSearchTerm(e.currentTarget.value);
-            if (activeTab === 'statements' || activeTab === 'articles') {
-                handleSemanticSearch();
-            }
-        }
-    };
-
     const handlePageChange = (newPage: number) => {
         if (newPage >= 1 && newPage <= pagination.totalPages) {
             setPagination(prev => ({
@@ -233,13 +218,6 @@ const TabComponent: React.FC<TabComponentProps> = ({
             }));
         }
     };
-
-    const tabs: Array<{ id: TabId; label: string }> = [
-        { id: 'articles', label: 'Articles' },
-        { id: 'statements', label: 'Statements' },
-        { id: 'authors', label: 'Authors' },
-        { id: 'journals', label: 'Journals' }
-    ];
 
     const renderPaginationNumbers = () => {
         const pages = [];
@@ -261,9 +239,6 @@ const TabComponent: React.FC<TabComponentProps> = ({
         }
         return pages;
     };
-    const handleSearchTypeChange = (e: any) => {
-        setSearchType(e.target.value);
-    };
     return (
         <div className="w-full mx-auto bg-white ml-4 border-[#1e3a5f] border-t-[5px] mb-5 rounded-tl-[10px] rounded-tr-[10px] rounded-[10px] shadow-[0_0_8px_0_rgba(0,0,0,0.13)]">
             <div className="bg-[#f7fafc] p-2 text-[#353839] font-[700] text-sm">
@@ -275,7 +250,7 @@ const TabComponent: React.FC<TabComponentProps> = ({
                 ) : tabContents[activeTab]?.length === 0 ? (
                     <div key={nanoid()} className="text-center py-4 text-gray-500">Nothing found</div>
                 ) : (
-                    tabContents[activeTab].map((item: any, index) => (
+                    tabContents[activeTab].map((item: any) => (
                         <div key={nanoid()} className="col-span-12 px-4 py-2 my-4">
                             <div className="block">
                                 <Link
@@ -292,19 +267,23 @@ const TabComponent: React.FC<TabComponentProps> = ({
                                 </span>
                                 <span className="font-inter font-[400] text-sm">{item.date_published}</span>
                             </div>
-                            <div className="block">
-                                <span className="font-inter font-[400] text-xs italic">
-                                    <span className="mr-1">
-                                        Source {item.basises[0].publication_issue.type}:
+                            {/* {JSON.stringify(item.basises)} */}
+                            {/* {item.basises.length} */}
+                            {item.basises.length > 0 && (
+                                <div className="block">
+                                    <span className="font-inter font-[400] text-xs italic">
+                                        <span className="mr-1">
+                                            Source {item.basises[0].publication_issue.type}:
+                                        </span>
+                                        {item.basises[0].authors[0].family_name} et al. (
+                                        {item.basises[0].publication_issue.date_published}).{" "}
+                                        {item.basises[0].name}.
+                                        {item.basises[0].publication_issue.periodical && (
+                                            <> {item.basises[0].publication_issue.periodical}</>
+                                        )}.
                                     </span>
-                                    {item.basises[0].authors[0].family_name} et al. (
-                                    {item.basises[0].publication_issue.date_published}).{" "}
-                                    {item.basises[0].name}.
-                                    {item.basises[0].publication_issue.periodical && (
-                                        <> {item.basises[0].publication_issue.periodical}</>
-                                    )}.
-                                </span>
-                            </div>
+                                </div>
+                            )}
                         </div>
                     )
                     )

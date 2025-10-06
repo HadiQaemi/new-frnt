@@ -68,6 +68,7 @@ const CustomPopover: React.FC<CustomPopoverProps> = ({
           <div className="w-[100%]">
             {orcid && orcid.map((id, index) => (
               <a
+                key={`orcid-${index}`}
                 href={id}
                 target="_blank"
                 rel="noopener noreferrer"
