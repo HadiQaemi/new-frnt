@@ -43,33 +43,14 @@ const Footer = () => {
 
     return (
         <footer className="pt-6 pb-4 border-t border-gray-200 min-h-[15.1rem] bg-[#1e3a5f]">
-            <div className="w-full px-4 mx-auto sm:px-6 md:px-8 lg:px-12 xl:max-w-screen-xl 2xl:max-w-screen-2xl">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-                    <div>
-                        {/* <h3 className="font-inter font-bold text-gray-800 text-lg mb-3 h-5"></h3>
-                        <div className="mb-4">
-                            <span className="inline-block pr-5 relative">
-                                <Image
-                                    src={OrkgLogo}
-                                    alt="TIB Logo"
-                                    width={60}
-                                    height={100}
-                                    className="object-contain pt-1"
-                                />
-                            </span>
-                            <div className='font-inter font-[400] text-md inline-block w-3/4 text-left align-top'>
-                                {footerSections.orkg.description}
-                            </div>
-                            <div className="relative text-[10px] -top-[10px] right-[22px] text-[#191e20] font-bold inline-block">
-                                TIB Knowledge L<span className="text-[#f08a4b]">oo</span>m
-                            </div>
-                        </div> */}
-                    </div>
-
-                    <div>
-                        <h3 className="font-inter font-bold text-[#FDF6EC] text-lg mb-3">{footerSections.about.title}</h3>
+            <section className="w-full px-4 mx-auto sm:px-6 md:px-8 lg:px-12 xl:max-w-screen-xl 2xl:max-w-screen-2xl">
+                <ul className="grid grid-cols-1 md:grid-cols-3 gap-8 list-none p-0 m-0">
+                    <li>
+                        <h3 className="font-inter font-bold text-[#FDF6EC] text-lg mb-3">
+                            {footerSections.about.title}
+                        </h3>
                         <ul>
-                            {footerSections.about.links.map((link) => (
+                            {footerSections.about.links.map(link => (
                                 <li key={link.href}>
                                     <Link href={link.href} className="font-[400] text-md leading-7 text-[#FDF6EC]">
                                         {link.text}
@@ -77,12 +58,13 @@ const Footer = () => {
                                 </li>
                             ))}
                         </ul>
-                    </div>
-
-                    <div>
-                        <h3 className="font-inter font-bold text-[#FDF6EC] text-lg mb-3">{footerSections.technical.title}</h3>
+                    </li>
+                    <li>
+                        <h3 className="font-inter font-bold text-[#FDF6EC] text-lg mb-3">
+                            {footerSections.technical.title}
+                        </h3>
                         <ul>
-                            {footerSections.technical.links.map((link) => (
+                            {footerSections.technical.links.map(link => (
                                 <li key={link.href}>
                                     <Link href={link.href} className="font-[400] text-md leading-7 text-[#FDF6EC]">
                                         {link.text}
@@ -90,12 +72,13 @@ const Footer = () => {
                                 </li>
                             ))}
                         </ul>
-                    </div>
-
-                    <div>
-                        <h3 className="font-inter font-bold text-[#FDF6EC] text-lg mb-3">{footerSections.more.title}</h3>
+                    </li>
+                    <li>
+                        <h3 className="font-inter font-bold text-[#FDF6EC] text-lg mb-3">
+                            {footerSections.more.title}
+                        </h3>
                         <ul>
-                            {footerSections.more.links.map((link) => (
+                            {footerSections.more.links.map(link => (
                                 <li key={link.href}>
                                     <Link href={link.href} className="font-[400] text-md leading-7 text-[#FDF6EC]">
                                         {link.text}
@@ -103,13 +86,13 @@ const Footer = () => {
                                 </li>
                             ))}
                         </ul>
-                        <div className="font-[400] text-md leading-7">
-                            <span className='text-[#FDF6EC]'>Version </span>
-                            <span className="bg-gray-200 px-2 py-1 rounded">0.001.1</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                        <p className="font-[400] text-md leading-7 text-[#FDF6EC] mt-2">
+                            Version <span className="bg-gray-200 px-2 py-1 rounded text-[#1e3a5f]">0.001.1</span>
+                        </p>
+                    </li>
+
+                </ul>
+            </section>
         </footer>
     );
 };
