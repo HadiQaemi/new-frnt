@@ -99,8 +99,15 @@ export default function PageClient({ initialParams }: { initialParams: InitialPa
             className="grid grid-cols-1 md:grid-cols-4"
             variants={containerVariants}
           >
+            <motion.div
+              className="md:col-span-3"
+              variants={itemVariants}
+            >
+              <TabComponent selectedResearchFields={selectedResearchFields} initialParams={initialParams} ranking={ranking} />
+            </motion.div>
+
             <motion.div variants={itemVariants}>
-              <div className="bg-white mb-4 round-[10px]">
+              <div className="bg-white mb-4 round-[10px] ml-4">
                 <SideSearchForm
                   ref={sideSearchFormRef}
                   initialParams={initialParams}
@@ -114,14 +121,6 @@ export default function PageClient({ initialParams }: { initialParams: InitialPa
                 />
               </div>
             </motion.div>
-
-            <motion.div
-              className="md:col-span-3"
-              variants={itemVariants}
-            >
-              <TabComponent selectedResearchFields={selectedResearchFields} initialParams={initialParams} ranking={ranking} />
-            </motion.div>
-
           </motion.div>
         </motion.div>
       </div>
