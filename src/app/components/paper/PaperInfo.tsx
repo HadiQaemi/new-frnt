@@ -148,7 +148,7 @@ const PaperInfo: React.FC<PaperInfoProps> = ({
 
   return (
     <div>
-      <div ref={containerRef} className='bg-white border-[#1e3a5f] border-t-[5px] rounded-tl-[10px] rounded-tr-[10px]'>
+      <div ref={containerRef} className='bg-white border-[#1e3a5f] border-t-[5px] rounded-tl-[10px] rounded-tr-[10px] overflow-hidden'>
         <div className="bg-[#f7fafc] p-2 pl-4 text-[#353839] font-[700] text-sm">
           Loom Record
         </div>

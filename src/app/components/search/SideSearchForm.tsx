@@ -565,7 +565,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
 
     return (
         <div>
-            <form onSubmit={handleSubmit} className="bg-white text-[#353839] border-[#ECA400] border-t-[5px] rounded-tl-[10px] rounded-tr-[10px] rounded-[10px] shadow-[0_0_8px_0_rgba(0,0,0,0.13)]">
+            <form onSubmit={handleSubmit} className="bg-white text-[#353839] border-[#ECA400] border-t-[5px] rounded-tl-[10px] rounded-tr-[10px] rounded-[10px] shadow-[0_0_8px_0_rgba(0,0,0,0.13)] overflow-hidden">
                 <div className="bg-[#FDF6EC] p-2 pl-4 font-[700] text-sm">
                     Search
                 </div>
