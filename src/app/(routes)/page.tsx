@@ -15,7 +15,7 @@ function clampYear(raw: string | undefined, fallback: number) {
   return fallback;
 }
 function isResourceType(x: unknown): x is ResourceType {
-  return x === 'article' || x === 'dataset' || x === 'loom' || x === 'all';
+  return x === 'article' || x === 'dataset' || x === 'chapter' || x === 'all';
 }
 function isSearchType(x: unknown): x is SearchType {
   return x === 'keyword' || x === 'semantic' || x === 'hybrid';
@@ -45,7 +45,7 @@ export default async function Page({
     end_year: clampYear(typeof sp.end_year === 'string' ? sp.end_year : undefined, 2025),
     page: Math.max(1, Number(sp.page) || 1),
     per_page: Math.min(100, Math.max(1, Number(sp.per_page) || 10)),
-    resource_type: isResourceType(rtRaw) ? rtRaw : 'loom',
+    resource_type: isResourceType(rtRaw) ? rtRaw : 'all',
     sort_by: isSortBy(sbRaw) ? sbRaw : 'alphabet',
     sort_order: isSortOrder(soRaw) ? soRaw : 'ASC',
     search_type: isSearchType(stRaw) ? stRaw : 'keyword',
