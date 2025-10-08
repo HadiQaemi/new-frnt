@@ -7,7 +7,7 @@ interface TableProps {
 
 export function Table({ headers, children }: TableProps) {
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto text-[#353839]">
       <table className="min-w-full divide-y divide-gray-200">
         <thead>
           <tr>

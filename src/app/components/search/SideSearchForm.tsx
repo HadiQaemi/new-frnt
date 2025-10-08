@@ -565,8 +565,8 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
 
     return (
         <div>
-            <form onSubmit={handleSubmit} className="bg-white border-[#ECA400] border-t-[5px] rounded-tl-[10px] rounded-tr-[10px] rounded-[10px] shadow-[0_0_8px_0_rgba(0,0,0,0.13)]">
-                <div className="bg-[#FDF6EC] p-2 pl-4 text-[#353839] font-[700] text-sm">
+            <form onSubmit={handleSubmit} className="bg-white text-[#353839] border-[#ECA400] border-t-[5px] rounded-tl-[10px] rounded-tr-[10px] rounded-[10px] shadow-[0_0_8px_0_rgba(0,0,0,0.13)]">
+                <div className="bg-[#FDF6EC] p-2 pl-4 font-[700] text-sm">
                     Search
                 </div>
 
@@ -591,7 +591,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                             value={titleSearch}
                             onChange={(e) => setTitleSearch(e.target.value)}
                             placeholder="Keywords"
-                            className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                            className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-[#353839]"
                         />
                     </div>
 
@@ -639,14 +639,14 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                                     value={startYear}
                                     onChange={(e) => setStartYear(e.target.value)}
                                     placeholder="Year start"
-                                    className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                                    className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-[#353839]"
                                 />
                                 <input
                                     type="text"
                                     value={endYear}
                                     onChange={(e) => setEndYear(e.target.value)}
                                     placeholder="Year end"
-                                    className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                                    className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-[#353839]"
                                 />
                             </div>
 
@@ -656,26 +656,25 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                                     onChange={(e) => setResourceType(e.target.value as ResourceType)}
                                     className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
                                 >
-                                    <option value="">--Type of Resource--</option>
-                                    <option value="all" className="py-2">
+                                    <option value="all" className="py-2 text-[#353839]">
                                         {resourceType === "all" ?
                                             "All" :
                                             "All"}
                                     </option>
-                                    <option value="loom" className="py-2">
-                                        {resourceType === "loom" ?
-                                            "Loom" :
-                                            "Loom"}
+                                    <option value="chapter" className="py-2 text-[#353839]">
+                                        {resourceType === "chapter" ?
+                                            "Chapters" :
+                                            "Chapters"}
                                     </option>
-                                    <option value="article" className="py-2">
+                                    <option value="article" className="py-2 text-[#353839]">
                                         {resourceType === "article" ?
-                                            "Article" :
-                                            "Article"}
+                                            "Articles" :
+                                            "Articles"}
                                     </option>
-                                    <option value="dataset" className="py-2">
+                                    <option value="dataset" className="py-2 text-[#353839]">
                                         {resourceType === "dataset" ?
-                                            "Dataset" :
-                                            "Dataset"}
+                                            "Datasets" :
+                                            "Datasets"}
                                     </option>
                                 </select>
                             </div>
@@ -686,21 +685,20 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                                     onChange={(e) => setSearchType(e.target.value as SearchType)}
                                     className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
                                 >
-                                    <option value="">--Type of Search--</option>
-                                    <option value="keyword" className="py-2">
+                                    <option value="keyword" className="py-2 text-[#353839]">
                                         {searchType === "keyword" ?
-                                            "Keyword based" :
-                                            "Keyword based"}
+                                            "Keyword search" :
+                                            "Keyword search"}
                                     </option>
-                                    <option value="semantic" className="py-2">
+                                    <option value="semantic" className="py-2 text-[#353839]">
                                         {searchType === "semantic" ?
                                             "Semantic search" :
                                             "Semantic search"}
                                     </option>
-                                    <option value="hybrid" className="py-2">
+                                    <option value="hybrid" className="py-2 text-[#353839]">
                                         {searchType === "hybrid" ?
-                                            "Hybrid" :
-                                            "Hybrid"}
+                                            "Hybrid search" :
+                                            "Hybrid search"}
                                     </option>
                                 </select>
                             </div>
@@ -711,12 +709,12 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                                     onChange={(e) => setSortBy(e.target.value as SortBy)}
                                     className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
                                 >
-                                    <option value="alphabet" className="py-2">
+                                    <option value="alphabet" className="py-2 text-[#353839]">
                                         {sortBy === "alphabet" ?
                                             "Alphabetical" :
                                             "Alphabetical"}
                                     </option>
-                                    <option value="time" className="py-2">
+                                    <option value="time" className="py-2 text-[#353839]">
                                         {sortBy === "time" ?
                                             "Chronological" :
                                             "Chronological"}
@@ -727,12 +725,12 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                                     onChange={(e) => setSortOrder(e.target.value as SortOrder)}
                                     className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
                                 >
-                                    <option value="ASC" className="py-2">
+                                    <option value="ASC" className="py-2 text-[#353839]">
                                         {sortOrder === "ASC" ?
                                             "Ascending" :
                                             "Ascending"}
                                     </option>
-                                    <option value="DESC" className="py-2">
+                                    <option value="DESC" className="py-2 text-[#353839]">
                                         {sortOrder === "DESC" ?
                                             "Descending" :
                                             "Descending"}
@@ -761,7 +759,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="px-4 py-2 text-white bg-[#1e3a5f] rounded-md disabled:opacity-50"
+                            className="px-4 py-2 text-white bg-[#eca400] rounded-md disabled:opacity-50"
                         >
                             {isSubmitting ? 'Filtering...' : 'Filter'}
                         </button>
@@ -770,7 +768,7 @@ const SideSearchForm = React.forwardRef<SideSearchFormRef, SideSearchFormProps>(
                             type="button"
                             onClick={handleReset}
                             disabled={isSubmitting}
-                            className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 disabled:opacity-50"
+                            className="px-4 py-2 text-gray-700 bg-[#FDF6EC] rounded-md hover:bg-gray-300 disabled:opacity-50"
                         >
                             Reset
                         </button>

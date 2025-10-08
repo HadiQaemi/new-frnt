@@ -15,7 +15,7 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, language = 'r' }) => {
 
     return (
         <div className="code-block rounded-lg overflow-hidden">
-            <pre className="p-4 bg-gray-900 overflow-x-auto">
+            <pre className="p-4 bg-gray-900 overflow-x-auto text-[#353839]">
                 <code className={`language-${language}`}>
                     {code}
                 </code>

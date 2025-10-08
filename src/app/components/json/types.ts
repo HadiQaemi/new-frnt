@@ -25,7 +25,7 @@ export interface TreeNodeProps {
   color?: string;
 }
 
-export type ResourceType = 'article' | 'dataset' | 'loom' | 'all';
+export type ResourceType = 'article' | 'dataset' | 'chapter' | 'all';
 export type SearchType = 'keyword' | 'semantic' | 'hybrid';
 export type SortBy = 'alphabet' | 'time';
 export type SortOrder = 'ASC' | 'DESC';

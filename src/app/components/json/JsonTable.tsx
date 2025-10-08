@@ -181,7 +181,7 @@ const JsonTable: React.FC<JsonTableProps> = ({ data, styles, button, color, Comp
             </div>
 
             <div className="overflow-x-auto">
-                <table className="w-full border-collapse">
+                <table className="w-full border-collapse text-[#353839]">
                     <thead>
                         <tr className="bg-gray-50">
                             {rowTitles?.length > 0 ? (

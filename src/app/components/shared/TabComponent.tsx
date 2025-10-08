@@ -240,8 +240,8 @@ const TabComponent: React.FC<TabComponentProps> = ({
         return pages;
     };
     return (
-        <div className="w-full mx-auto bg-white mr-4 border-[#1e3a5f] border-t-[5px] mb-5 rounded-tl-[10px] rounded-tr-[10px] rounded-[10px] shadow-[0_0_8px_0_rgba(0,0,0,0.13)]">
-            <div className="bg-[#f7fafc] p-2 text-[#353839] font-[700] text-sm">
+        <div className="w-full mx-auto bg-white text-[#353839] mr-4 border-[#1e3a5f] border-t-[5px] mb-5 rounded-tl-[10px] rounded-tr-[10px] rounded-[10px] shadow-[0_0_8px_0_rgba(0,0,0,0.13)]">
+            <div className="bg-[#f7fafc] p-2 font-[700] text-sm">
                 Loom Records
             </div>
             <div className="space-y-2">
@@ -255,7 +255,7 @@ const TabComponent: React.FC<TabComponentProps> = ({
                             <div className="block">
                                 <Link
                                     href={`/article/${item.article_id}`}
-                                    className="text-[#000] cursor-pointer hover:text-[#555] block"
+                                    className="cursor-pointer hover:text-[#555] block"
                                 >
                                     <h4 className="font-inter font-[700]">{item.name}</h4>
                                 </Link>

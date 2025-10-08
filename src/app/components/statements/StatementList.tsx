@@ -299,7 +299,7 @@ export default function ListStatements({ data, statements, statementId = null, i
                                         </h6>
                                     </div>
 
-                                    <div className='my-4 max-h-[60vh] overflow-y-auto text-sm text-justify pr-2'>
+                                    <div className='my-4 max-h-[55vh] overflow-y-auto text-sm text-justify pr-2 pb-[30px] mb-[30px]'>
                                         {item && <TruncatedAbstract text={item.abstract} />}
                                     </div>
 
