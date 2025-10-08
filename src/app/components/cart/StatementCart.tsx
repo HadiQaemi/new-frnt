@@ -333,12 +333,12 @@ const CartComponent: React.FC = () => {
         <div className="relative z-50">
             <button
                 onClick={toggleCart}
-                className="fixed bottom-6 right-6 p-3 bg-blue-600 rounded-full shadow-lg hover:bg-blue-700 transition-colors text-white"
+                className="fixed bottom-6 right-6 p-3 bg-[#087CA7] rounded-full shadow-lg transition-colors text-white"
                 aria-label="Shopping Cart"
             >
                 <FileArchive className="h-6 w-6" />
                 {items.length > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center">
+                    <span className="absolute -top-2 -right-2 bg-[#FF7538] text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center">
                         {items.length}
                     </span>
                 )}

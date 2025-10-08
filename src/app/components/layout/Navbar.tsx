@@ -33,7 +33,7 @@ const Navbar = () => {
     }
 
     return (
-        <nav className="h-[5rem] border-b border-gray-200 w-full top-0 z-50 sticky bg-[#eca400]">
+        <nav className="h-[5rem] border-b border-gray-200 w-full top-0 z-50 sticky bg-[#FDF6EB]">
             <div className="w-full px-4 mx-auto sm:px-6 md:px-8 lg:px-12 xl:max-w-screen-xl 2xl:max-w-screen-2xl">
                 <div className="flex items-center justify-between h-full pt-[20px]">
                     <div className="flex items-center animate-fade-in">
@@ -46,8 +46,8 @@ const Navbar = () => {
                                 className="object-contain pt-1"
                             /> */}
                             {/* <div className="relative -top-[45px] left-[55px] text-[#191e20] text-md font-bold"> */}
-                            <div className="relative text-[#191e20]">
-                                <div className='p-0 m-0 text-xl font-bold'>TIB Knowledge L<span className="text-[#FDF6EC]">oo</span>m</div>
+                            <div className="relative text-[#36454F]">
+                                <div className='p-0 m-0 text-xl font-bold'>TIB Knowledge L<span className="text-[#eca400]">oo</span>m</div>
                                 <div className='p-0 m-0 text-[10px] text-[#555] font-semibold'>Weaving Knowledge Threads</div>
                             </div>
                         </Link>
@@ -60,8 +60,8 @@ const Navbar = () => {
                                 <Link
                                     key={href}
                                     href={href}
-                                    className={`font-semibold text-[#FDF6EC] pb-1 transition-all ${isActive ? "border-b-2 border-[#FDF6EC]" : "border-b-2 border-transparent"
-                                        } hover:border-b-2 hover:border-[#FDF6EC]`}
+                                    className={`font-semibold text-[#36454F] pb-1 transition-all ${isActive ? "border-b-2 border-[#36454F]" : "border-b-2 border-transparent"
+                                        } hover:border-b-2 hover:border-[#36454F]`}
                                 >
                                     {label}
                                 </Link>
