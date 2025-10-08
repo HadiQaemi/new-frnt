@@ -56,14 +56,18 @@ const HasOutput: React.FC<HasOutput> = ({ has_output, label, components }) => {
     return (
         <div>
             {label && (
-                <URLOrText button="Output data" color="#00b050" content={label} />
+                <div className='flex text-sm font-thin my-[5px]'>
+                    <URLOrText button="Output data" color="#00b050" content={label} />
+                </div>
             )}
             {source_url && (
-                <URLOrText button={label ? '' : 'Output data'} color="#00b050" content={source_url} />
+                <div className='flex text-sm font-thin my-[5px]'>
+                    <URLOrText button={label ? '' : 'Output data'} color="#00b050" content={source_url} />
+                </div>
             )}
             {character && (
-                <div className='flex'>
-                    {`Size: `}
+                <div className='flex text-sm font-thin my-[5px]'>
+                    <span className="mr-1">Size:</span>
                     <URLOrText
                         button={!label && !source_url ? 'Output data' : ''}
                         color="#00b050"
@@ -72,11 +76,13 @@ const HasOutput: React.FC<HasOutput> = ({ has_output, label, components }) => {
                 </div>
             )}
             {comment && (
-                <URLOrText
-                    button={!label && !source_url && !character ? 'Output data' : ''}
-                    color="#00b050"
-                    content={comment}
-                />
+                <div className='flex text-sm font-thin my-[5px]'>
+                    <URLOrText
+                        button={!label && !source_url && !character ? 'Output data' : ''}
+                        color="#00b050"
+                        content={comment}
+                    />
+                </div>
             )}
 
             {!source_table && has_parts && (
@@ -94,7 +100,7 @@ const HasOutput: React.FC<HasOutput> = ({ has_output, label, components }) => {
                                     <span key={`CustomPopover-Components-${nanoid()}`}>
                                         {index === 0 ? 'Components: ' : ', '}
                                         <span
-                                            className="cursor-pointer overlay-trigger mb-2 font-bold underline"
+                                            className="cursor-pointer overlay-trigger mb-2 text-sm font-thin underline"
                                             onClick={(e) => {
                                                 e.stopPropagation()
                                                 handlePopoverToggle(type.label, activePopover !== type.label)
@@ -110,7 +116,7 @@ const HasOutput: React.FC<HasOutput> = ({ has_output, label, components }) => {
                             (
                                 <span key={`no-see_also-${nanoid()}`}>
                                     {index === 0 ? 'Components: ' : ', '}
-                                    <span className="overlay-trigger mb-2 font-bold">
+                                    <span className="overlay-trigger mb-2 text-sm font-thin">
                                         {type.label}
                                     </span>
                                 </span>
@@ -120,7 +126,9 @@ const HasOutput: React.FC<HasOutput> = ({ has_output, label, components }) => {
             )}
 
             {source_table && (
-                <JsonTable Components={components} data={source_table} color="#00b050" />
+                <div className='flex text-sm font-thin my-[5px]'>
+                    <JsonTable Components={components} data={source_table} color="#00b050" />
+                </div>
             )}
 
             {has_expressions?.map((type: any) => {

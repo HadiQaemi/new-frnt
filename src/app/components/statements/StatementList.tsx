@@ -247,12 +247,17 @@ export default function ListStatements({ data, statements, statementId = null, i
             {data.basises.length > 0 && (
                 <div className={`max-h-[calc(100vh-2rem)] overflow-y-visible md:col-span-1 sticky top-5 sticky ${activeHeader !== null ? 'top-[calc(9rem)]' : 'top-[calc(5rem)]'} transition-[top] duration-300 ease-in-out ${isSidebarOpen ? '' : ''}`}>
                     <div className={`p-0 max-h-[85vh] text-[#353839] border-t-[5px] rounded-[10px] shadow-[0_0_8px_0_rgba(0,0,0,0.13)] overflow-hidden ${data.basises[0].publication_issue.type === "Article"
-                        ? "border-[#087CA7]"
+                        ? "border-[#86BBD8]"
                         : (data.basises[0].publication_issue.type === "Chapter"
                             ? "border-[#FFB703]"
                             : "border-[#FF7538]")
                         }`} key={`article-${nanoid()}`}>
-                        <div className='bg-[#FDF6EB] p-2 pl-4 text-[#353839] font-[700] text-sm'>
+                        <div className={`${data.basises[0].publication_issue.type === "Article"
+                            ? "bg-[#087CA7] text-[#fff]"
+                            : (data.basises[0].publication_issue.type === "Chapter"
+                                ? "bg-[#FDF6EB] text-[#353839]"
+                                : "bg-[#FDF6EB] text-[#353839]")
+                            } p-2 pl-4 font-[700] text-sm`}>
                             Source {data.basises[0].publication_issue.type}
                         </div>
                         {data.basises.map((item: any) => {

@@ -181,7 +181,7 @@ const JsonTable: React.FC<JsonTableProps> = ({ data, styles, button, color, Comp
             </div>
 
             <div className="overflow-x-auto">
-                <table className="w-full border-collapse text-[#353839]">
+                <table className="w-full border-collapse text-[#353839] text-sm font-thin">
                     <thead>
                         <tr className="bg-gray-50">
                             {rowTitles?.length > 0 ? (
@@ -200,7 +200,7 @@ const JsonTable: React.FC<JsonTableProps> = ({ data, styles, button, color, Comp
                                             onToggle={(show) => handlePopoverToggle(column.col_titles, show)}
                                             trigger={
                                                 <span
-                                                    className="cursor-pointer overlay-trigger mb-2 font-bold underline"
+                                                    className="cursor-pointer overlay-trigger mb-2 text-sm font-thin underline"
                                                     onClick={(e) => {
                                                         e.stopPropagation()
                                                         handlePopoverToggle(column.col_titles, activePopover !== column.col_titles)
@@ -236,7 +236,7 @@ const JsonTable: React.FC<JsonTableProps> = ({ data, styles, button, color, Comp
                                                 onToggle={(show) => handlePopoverToggle(rowTitles[(currentPage - 1) * pageSize + rowIndex], show)}
                                                 trigger={
                                                     <span
-                                                        className="cursor-pointer overlay-trigger mb-2 font-bold underline"
+                                                        className="cursor-pointer overlay-trigger mb-2 text-sm font-thin underline"
                                                         onClick={(e) => {
                                                             e.stopPropagation()
                                                             handlePopoverToggle(rowTitles[(currentPage - 1) * pageSize + rowIndex], activePopover !== rowTitles[(currentPage - 1) * pageSize + rowIndex])

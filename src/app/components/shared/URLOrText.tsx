@@ -109,7 +109,6 @@ const URLOrText: React.FC<URLOrTextProps> = ({
             );
         }
 
-        // Pagination calculations
         const totalItems = tableData.data.length;
         const totalPages = Math.ceil(totalItems / itemsPerPage);
         const startIndex = (currentPage - 1) * itemsPerPage;
@@ -132,7 +131,6 @@ const URLOrText: React.FC<URLOrTextProps> = ({
             }
         };
 
-        // Generate page numbers for pagination
         const getPageNumbers = () => {
             const pages = [];
             const maxVisiblePages = 5;
@@ -261,25 +259,23 @@ const URLOrText: React.FC<URLOrTextProps> = ({
                     )}
                 </div>
             ) : (
-                <div className="flex mb-2 w-full text-[#353839]">
-                    <div className="flex-grow text-left w-[85%] font-bold">
-                        <div className="inline-block" dangerouslySetInnerHTML={{ __html: content.replace(/[\[\]']+/g, '') }} />
-                        {type === "source_url" && (
-                            <div className="inline">
-                                <button
-                                    onClick={openModal}
-                                    className="px-3 py-1 text-gray-700 rounded text-sm"
-                                >
-                                    <Search size={16} />
-                                </button>
-                            </div>
-                        )}
-                    </div>
+                <div className="flex w-full text-[#353839] text-sm font-thin">
+                    <div dangerouslySetInnerHTML={{ __html: content.replace(/[\[\]']+/g, '') }} />
+                    {type === "source_url" && (
+                        <div className="inline">
+                            <button
+                                onClick={openModal}
+                                className="px-3 pt-1 text-gray-700 rounded"
+                            >
+                                <Search className='relative' size={16} />
+                            </button>
+                        </div>
+                    )}
                     {/* {type === "source_url" && (
                         <div className="w-[15%] flex justify-end">
                             <button
                                 onClick={openModal}
-                                className="px-3 py-1 text-gray-700 rounded text-sm"
+                                className="px-3 py-1 text-gray-700 rounded"
                             >
                                 <Search />
                             </button>
@@ -299,7 +295,6 @@ const URLOrText: React.FC<URLOrTextProps> = ({
                                 ×
                             </button>
                         </div>
-
                         <div className="flex gap-2 mb-4">
                             <input
                                 type="text"
@@ -321,10 +316,7 @@ const URLOrText: React.FC<URLOrTextProps> = ({
                                 )}
                             </button>
                         </div>
-
-                        <div className="flex-1 overflow-hidden">
-                            {renderTable()}
-                        </div>
+                        {renderTable()}
                     </div>
                 </div>
             )}

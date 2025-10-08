@@ -38,10 +38,10 @@ type Props = {
 //     }
 //   }
 
-//   const title = paper.name || 'Article - ORKG reborn';
+//   const title = paper.name || 'Article - TIB Knowledge Loom';
 //   const description = paper.abstract
 //     ? (paper.abstract.length > 200 ? paper.abstract.substring(0, 197) + '...' : paper.abstract)
-//     : 'Scientific article on ORKG reborn';
+//     : 'Scientific article on TIB Knowledge Loom';
 
 //   const uploadDir = path.join(process.cwd(), 'public', 'uploads');
 //   const fullPath = path.join(uploadDir, `article-${id}.jpg`)
@@ -104,7 +104,7 @@ type Props = {
 //     title: title,
 //     description,
 //     openGraph: {
-//       title: `ORKG reborn: ${title}`,
+//       title: `TIB Knowledge Loom: ${title}`,
 //       description,
 //       url: paper.rebornDOI || `${REBORN_URL}/article/${id}`,
 //       type: 'article',

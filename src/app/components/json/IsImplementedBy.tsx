@@ -70,7 +70,7 @@ const IsImplementedBy: FC<IsImplementedByProps> = ({
     return (
         <>
             <div className="d-flex mb-4 border-[#71b4ef] border-l-[5px] border-t-[5px] border-l-[#71b4ef] rounded-tl-[10px]">
-                <div className='bg-[#f7fafc] text-[#353839] relative p-1 text-[12px] pl-4 rounded-tl-[5px] font-[700]'>
+                <div className='bg-[#f7fafc] text-[#353839] relative p-1 text-[12px] pl-2 rounded-tl-[5px] font-[700]'>
                     Implementation
                 </div>
                 <div className='p-2'>

@@ -11,13 +11,13 @@ import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: {
-    template: 'ORKG reborn: %s',
-    default: 'ORKG reborn'
+    template: 'TIB Knowledge Loom: %s',
+    default: 'TIB Knowledge Loom'
   },
-  description: 'ORKG reborn is a digital library of machine-readable scientific knowledge.',
+  description: 'The TIB Knowledge Loom is an Open Science Digital Library for FAIR scientific knowledge.',
   openGraph: {
     type: 'website',
-    siteName: 'ORKG reborn',
+    siteName: 'TIB Knowledge Loom',
     images: [
       {
         url: `${REBORN_URL}/logo.jpg`,

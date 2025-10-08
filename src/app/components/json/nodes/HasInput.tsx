@@ -39,26 +39,30 @@ const HasInput: FC<HasInputData> = ({ has_input, label, components }) => {
     return (
         <div>
             {label && (
-                <URLOrText
-                    button="Input data"
-                    color="#00b050"
-                    content={label}
-                />
+                <div className='flex text-sm font-thin my-[5px]'>
+                    <URLOrText
+                        button="Input data"
+                        color="#00b050"
+                        content={label}
+                    />
+                </div>
             )}
 
             {source_url && (
-                <URLOrText
-                    button={label ? '' : 'Input data'}
-                    color="#00b050"
-                    content={source_url}
-                    type="source_url"
-                    source={source}
-                />
+                <div className='flex text-sm font-thin my-[5px]'>
+                    <URLOrText
+                        button={label ? '' : 'Input data'}
+                        color="#00b050"
+                        content={source_url}
+                        type="source_url"
+                        source={source}
+                    />
+                </div>
             )}
 
             {character && (
-                <div className='flex'>
-                    {`Size: `}
+                <div className='flex text-sm font-thin my-[5px]'>
+                    <span className="mr-1">Size:</span>
                     <URLOrText
                         button={!label && !source_url ? 'Input data' : ''}
                         color="#00b050"
@@ -68,11 +72,13 @@ const HasInput: FC<HasInputData> = ({ has_input, label, components }) => {
             )}
 
             {comment && (
-                <URLOrText
-                    button={!label && !source_url && !character ? 'Input data' : ''}
-                    color="#00b050"
-                    content={comment}
-                />
+                <div className='flex text-sm font-thin my-[5px]'>
+                    <URLOrText
+                        button={!label && !source_url && !character ? 'Input data' : ''}
+                        color="#00b050"
+                        content={comment}
+                    />
+                </div>
             )}
             {!source_table && has_parts && (
                 has_parts.map((type: any, index: number) => {
@@ -86,10 +92,10 @@ const HasInput: FC<HasInputData> = ({ has_input, label, components }) => {
                                 show={activePopover === type.label}
                                 onToggle={(show) => handlePopoverToggle(type.label, show)}
                                 trigger={
-                                    <span key={`CustomPopover-Components-${nanoid()}`}>
+                                    <span key={nanoid()} className='text-sm font-thin'>
                                         {index === 0 ? 'Components: ' : ', '}
                                         <span
-                                            className="cursor-pointer overlay-trigger mb-2 font-bold underline"
+                                            className="cursor-pointer overlay-trigger mb-2 underline"
                                             onClick={(e) => {
                                                 e.stopPropagation()
                                                 handlePopoverToggle(type.label, activePopover !== type.label)
@@ -105,7 +111,7 @@ const HasInput: FC<HasInputData> = ({ has_input, label, components }) => {
                             (
                                 <span key={`no-see_also-${nanoid()}`}>
                                     {index === 0 ? 'Components: ' : ', '}
-                                    <span className="overlay-trigger mb-2 font-bold">
+                                    <span className="overlay-trigger mb-2 text-sm font-thin">
                                         {type.label}
                                     </span>
                                 </span>
@@ -115,11 +121,13 @@ const HasInput: FC<HasInputData> = ({ has_input, label, components }) => {
             )}
 
             {source_table && (
-                <JsonTable
-                    Components={components}
-                    data={source_table}
-                    color="#00b050"
-                />
+                <div className='flex text-sm font-thin my-[5px]'>
+                    <JsonTable
+                        Components={components}
+                        data={source_table}
+                        color="#00b050"
+                    />
+                </div>
             )}
             {has_expressions?.map((type: any) => {
                 return <span key={type}>

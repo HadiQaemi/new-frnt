@@ -29,14 +29,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const abstract = statement.article.abstract;
   const title = `${statement.supports?.[0]?.notation?.label ||
     statement.name ||
-    'Scientific Statement - ORKG reborn'}`;
+    'Scientific Statement - TIB Knowledge Loom'}`;
   let description = '';
   if (abstract) {
     description = abstract.substring(0, 197) + '...';
   } else if (statement.supports?.[0]?.notation?.label) {
     description = `Scientific statement: ${statement.supports[0].notation.label}`;
   } else {
-    description = 'View this scientific statement on ORKG reborn';
+    description = 'View this scientific statement on TIB Knowledge Loom';
   }
   const uploadDir = path.join(process.cwd(), 'public', 'uploads');
   const fullPath = path.join(uploadDir, `statement-${id}.jpg`)
@@ -112,7 +112,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: title,
     description,
     openGraph: {
-      title: `ORKG reborn: ${title}`,
+      title: `TIB Knowledge Loom: ${title}`,
       description,
       url: `${REBORN_URL}/statement/${id}`,
       type: 'article',
