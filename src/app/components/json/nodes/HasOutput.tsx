@@ -100,7 +100,7 @@ const HasOutput: React.FC<HasOutput> = ({ has_output, label, components }) => {
                                     <span key={`CustomPopover-Components-${nanoid()}`}>
                                         {index === 0 ? 'Components: ' : ', '}
                                         <span
-                                            className="cursor-pointer overlay-trigger mb-2 text-sm font-thin underline"
+                                            className="cursor-pointer overlay-trigger mb-2 text-sm font-bold underline"
                                             onClick={(e) => {
                                                 e.stopPropagation()
                                                 handlePopoverToggle(type.label, activePopover !== type.label)

@@ -92,10 +92,10 @@ const HasInput: FC<HasInputData> = ({ has_input, label, components }) => {
                                 show={activePopover === type.label}
                                 onToggle={(show) => handlePopoverToggle(type.label, show)}
                                 trigger={
-                                    <span key={nanoid()} className='text-sm font-thin'>
+                                    <span key={nanoid()} className='text-sm'>
                                         {index === 0 ? 'Components: ' : ', '}
                                         <span
-                                            className="cursor-pointer overlay-trigger mb-2 underline"
+                                            className="cursor-pointer overlay-trigger mb-2 text-sm font-bold underline"
                                             onClick={(e) => {
                                                 e.stopPropagation()
                                                 handlePopoverToggle(type.label, activePopover !== type.label)
